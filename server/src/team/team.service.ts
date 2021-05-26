@@ -18,4 +18,8 @@ export class TeamService {
   async findAll(): Promise<Team[]> {
     return await this.model.find().exec();
   }
+
+  async findById(id: string): Promise<Team> {
+    return await this.model.findById(id);
+  }
 }

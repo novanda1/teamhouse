@@ -23,4 +23,9 @@ export class TeamResolver {
   async findAll() {
     return await this.teamService.findAll();
   }
+
+  @Query(() => Team, { name: 'team' })
+  async find(@Args('id') id: string) {
+    return await this.teamService.findById(id);
+  }
 }
