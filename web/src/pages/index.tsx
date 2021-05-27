@@ -4,6 +4,9 @@ import {
   Button,
   Container,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
   IconButton,
   Input,
@@ -16,6 +19,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
+  Textarea,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -25,6 +30,8 @@ import { useTeamsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
 import { MdAdd } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
+import { Field, Form, Formik } from "formik";
+import { InputField } from "../components/InputField";
 
 const Home = () => {
   const router = useRouter();
@@ -94,11 +101,82 @@ const Home = () => {
       >
         <ModalOverlay />
         <ModalContent p="8">
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>
+            New Team
+            <Text fontSize="initial" fontWeight="normal" mt="1">
+              Field following field to make new team
+            </Text>
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>tes</ModalBody>
-
-          <ModalFooter>
+          <ModalBody>
+            <Formik
+              initialValues={{ name: "", description: "" }}
+              onSubmit={async (values, { setErrors }) => {
+                console.log(`values`, values);
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Box mt={4}>
+                    <Field name="name" placeholder="Team name" label="Name">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.name && form.touched.name}
+                        >
+                          <Input {...field} id="name" placeholder="Team name" />
+                          <FormErrorMessage>
+                            {form.errors.name}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Box>
+                  <Box mt={4}>
+                    <Field
+                      name="description"
+                      placeholder="Team description"
+                      label="Description"
+                    >
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.description && form.touched.description
+                          }
+                        >
+                          <Textarea
+                            {...field}
+                            id="description"
+                            placeholder="Team description"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.description}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Box>
+                  <Flex mt="10" alignItems="center">
+                    <Button
+                      type="submit"
+                      isLoading={isSubmitting}
+                      colorScheme="purple"
+                    >
+                      New team
+                    </Button>
+                    <Button
+                      ml="3"
+                      variant="link"
+                      mr="auto"
+                      onClick={closeNewTeamModal}
+                    >
+                      Cancel
+                    </Button>
+                  </Flex>
+                </Form>
+              )}
+            </Formik>
+          </ModalBody>
+          {/* <ModalFooter>
             <Button
               colorScheme="blue"
               mr={3}
@@ -109,7 +187,8 @@ const Home = () => {
             <Button variant="link" mr="auto">
               Secondary Action
             </Button>
-          </ModalFooter>
+         </ModalFooter>
+          */}
         </ModalContent>
       </Modal>
     </>
