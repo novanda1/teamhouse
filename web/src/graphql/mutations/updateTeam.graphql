@@ -1,0 +1,9 @@
+mutation UpdateTeam($id: String!, $options: CreateTeamInputsDTO!) {
+  updateTeam(id: $id, options: $options) {
+    _id
+    name
+    description
+    leaders
+    members
+  }
+}

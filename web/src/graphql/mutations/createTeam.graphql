@@ -1,0 +1,9 @@
+mutation createTeam($options: CreateTeamInputsDTO!) {
+  createTeam(options: $options) {
+    _id
+    name
+    description
+    leaders
+    members
+  }
+}
