@@ -86,9 +86,14 @@ const Home = () => {
         <Box></Box>
       </Wrapper>
 
-      <Modal isOpen={newTeamModal} onClose={closeNewTeamModal}>
+      <Modal
+        isOpen={newTeamModal}
+        onClose={closeNewTeamModal}
+        size="xl"
+        isCentered
+      >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent p="8">
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
           <ModalBody>tes</ModalBody>
@@ -101,7 +106,9 @@ const Home = () => {
             >
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
+            <Button variant="link" mr="auto">
+              Secondary Action
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
