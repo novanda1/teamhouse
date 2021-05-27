@@ -16,6 +16,7 @@ import { UsersModule } from './modules/users/users.module';
     MongooseModule.forRoot(configService.getMongoConnection(), {
       useNewUrlParser: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

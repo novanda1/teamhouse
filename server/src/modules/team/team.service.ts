@@ -23,4 +23,9 @@ export class TeamService {
     const team = await this.model.findById(id);
     return team;
   }
+
+  async update(id: string, options: CreateTeamInputsDTO): Promise<Team> {
+    await this.model.findOneAndUpdate({ _id: id }, { $set: options });
+    return await this.findById(id);
+  }
 }

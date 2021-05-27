@@ -28,4 +28,14 @@ export class TeamResolver {
   async find(@Args('id') id: string) {
     return await this.teamService.findById(id);
   }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Team, { name: 'updateTeam' })
+  async update(
+    @Args('id') id: string,
+    @Args('options', { type: () => CreateTeamInputsDTO })
+    options: CreateTeamInputsDTO,
+  ) {
+    return await this.teamService.update(id, options);
+  }
 }
