@@ -6,7 +6,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Heading,
   IconButton,
   Input,
@@ -16,22 +15,20 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import { MdAdd } from "react-icons/md";
 import Navbar from "../components/Navbar";
 import { Wrapper } from "../components/Wrapper";
 import { useTeamsQuery } from "../generated/graphql";
 import { withApollo } from "../utils/withApollo";
-import { MdAdd } from "react-icons/md";
-import { FiSearch } from "react-icons/fi";
-import { Field, Form, Formik } from "formik";
-import { InputField } from "../components/InputField";
 
 const Home = () => {
   const router = useRouter();
