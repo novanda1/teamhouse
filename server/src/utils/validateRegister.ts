@@ -1,4 +1,4 @@
-import { CreateUserInput } from 'src/users/dto/user-inputs.dto';
+import { CreateUserInput } from 'src/modules/users/dto/user-inputs.dto';
 
 export const validateRegister = (options: CreateUserInput) => {
   //   if (!options.email.includes('@')) {

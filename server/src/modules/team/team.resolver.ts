@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GraphqlAuthGuard } from 'src/auth/guards/graphql-auth.guard';
-import { GqlUser } from 'src/_shared/decorators';
+import { GraphqlAuthGuard } from 'src/modules/auth/guards/graphql-auth.guard';
+import { GqlUser } from 'src/shared/decorators';
 import { CreateTeamInputsDTO } from './dto/team-inputs.dto';
 import { Team } from './schema/team.schema';
 import { TeamService } from './team.service';

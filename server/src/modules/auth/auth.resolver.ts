@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GqlUser } from 'src/_shared/decorators';
-import { CreateUserInput } from 'src/users/dto/user-inputs.dto';
-import { User, UserResponse } from 'src/users/schema/user.schema';
-import { UsersService } from 'src/users/users.service';
-import { validateRegister } from 'src/_utils/validateRegister';
+import { GqlUser } from 'src/shared/decorators';
+import { validateRegister } from 'src/utils/validateRegister';
+import { CreateUserInput } from '../users/dto/user-inputs.dto';
+import { UserResponse, User } from '../users/schema/user.schema';
+import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { GraphqlAuthGuard } from './guards/graphql-auth.guard';

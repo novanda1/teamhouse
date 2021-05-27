@@ -1,8 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GraphqlAuthGuard } from 'src/auth/guards/graphql-auth.guard';
-import { User } from 'src/users/schema/user.schema';
-import { GqlUser } from 'src/_shared/decorators';
+import { GraphqlAuthGuard } from 'src/modules/auth/guards/graphql-auth.guard';
+import { GqlUser } from 'src/shared/decorators';
+import { User } from '../users/schema/user.schema';
 import projectInputDTO from './dto/project-inputs.dto';
 import { ProjectService } from './project.service';
 import { Project } from './schema/project.schema';
