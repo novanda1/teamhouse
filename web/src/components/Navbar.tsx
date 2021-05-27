@@ -17,33 +17,31 @@ function Navbar({}: Props): ReactElement {
   const isLoggedIn = useIsAuth();
 
   return (
-    <Container maxW="container.lg">
-      <Flex justifyContent="space-between" pt="1rem" mx="auto">
-        <Heading>Teamhouse</Heading>
-        <Box>
-          <List display="flex" sx={{ gap: 20 }}>
+    <Flex justifyContent="space-between" pt="1rem" mx="auto">
+      <Heading>Teamhouse</Heading>
+      <Box>
+        <List display="flex" sx={{ gap: 20 }}>
+          <ListItem>
+            <NextLink href="/">
+              <Link>Home</Link>
+            </NextLink>
+          </ListItem>
+          {isLoggedIn ? (
             <ListItem>
-              <NextLink href="/">
-                <Link>Home</Link>
+              <NextLink href="/profile">
+                <Link>Profile</Link>
               </NextLink>
             </ListItem>
-            {isLoggedIn ? (
-              <ListItem>
-                <NextLink href="/profile">
-                  <Link>Profile</Link>
-                </NextLink>
-              </ListItem>
-            ) : (
-              <ListItem>
-                <NextLink href="/login">
-                  <Link>Login</Link>
-                </NextLink>
-              </ListItem>
-            )}
-          </List>
-        </Box>
-      </Flex>
-    </Container>
+          ) : (
+            <ListItem>
+              <NextLink href="/login">
+                <Link>Login</Link>
+              </NextLink>
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Flex>
   );
 }
 
