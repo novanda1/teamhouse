@@ -1,0 +1,8 @@
+query Team($id: String!) {
+  team(id: $id) {
+    name
+    description
+    leaders
+    members
+  }
+}

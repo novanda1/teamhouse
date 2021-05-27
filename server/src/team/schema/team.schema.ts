@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { User } from 'src/users/schema/user.schema';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -18,11 +19,11 @@ export class Team {
 
   @Prop()
   @Field(() => [String])
-  leaders?: string[];
+  leaders?: string[] | User[];
 
   @Prop()
   @Field(() => [String], { nullable: true })
-  members?: string[];
+  members?: string[] | User[];
 }
 
 export type TeamDocument = Team & Document;

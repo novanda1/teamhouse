@@ -77,4 +77,12 @@ export class UsersService {
 
     return { user };
   }
+
+  async findById(id: string): Promise<User> {
+    return await this.users.findById(id);
+  }
+
+  async findByIds(ids: string[] | User[]): Promise<User[]> {
+    return await this.users.find({ _id: ids }).exec();
+  }
 }
