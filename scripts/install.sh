@@ -1,2 +1,2 @@
-cd server && yarn && cp .env.example .env &&
-cd ../web && yarn && cp .env.example .env
+cd server && yarn &&
+cd ../web && yarn 
