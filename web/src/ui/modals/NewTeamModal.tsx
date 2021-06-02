@@ -36,7 +36,7 @@ export const NewTeamModal: React.FC<Props> = ({
         <ModalHeader>
           New Team
           <Text fontSize="initial" fontWeight="normal" mt="1">
-            Field following field to make new team
+            Fill following field to make new team
           </Text>
         </ModalHeader>
         <ModalCloseButton />
