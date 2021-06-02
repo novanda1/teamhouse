@@ -7,7 +7,7 @@ interface Props {}
 export const Wrapper: React.FC<Props> = ({ children }) => {
   return (
     <>
-      <Flex justifyContent="center">
+      <Flex justifyContent="center" maxH="100vh" h="100vh">
         <Box
           sx={{
             display: "grid",

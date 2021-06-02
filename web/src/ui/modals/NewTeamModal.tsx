@@ -16,19 +16,27 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { CreateTeamMutationFn } from "../../generated/graphql";
+import {
+  CreateTeamMutationFn,
+  CreateTeamMutationHookResult,
+  CreateTeamMutationResult,
+} from "../../generated/graphql";
+import { setActiveId } from "../../store/features/team/teamSlice";
+import { AppDispatch } from "../../store/store";
 import { newTeamValidation } from "../../utils/formValidationSchema/newTeam";
 
 interface Props {
   isOpen: boolean;
   closeNewTeamModal: () => void;
-  createTeam: CreateTeamMutationFn;
+  createTeam: CreateTeamMutationFn & any;
+  setTeamState: (id: string, isOpen: boolean) => void;
 }
 
 export const NewTeamModal: React.FC<Props> = ({
   isOpen,
   closeNewTeamModal,
   createTeam,
+  setTeamState,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={closeNewTeamModal} size="xl" isCentered>
@@ -46,13 +54,19 @@ export const NewTeamModal: React.FC<Props> = ({
             initialValues={{ name: "", description: "" }}
             validationSchema={newTeamValidation}
             onSubmit={async (values, { setErrors }) => {
-              await createTeam({
+              const response: CreateTeamMutationResult = await createTeam({
                 variables: {
                   options: values,
                 },
               })
-                .then(() => closeNewTeamModal())
+                .then((r) => {
+                  closeNewTeamModal();
+                  return r;
+                })
                 .catch((err) => console.log(`err`, JSON.stringify(err)));
+
+              const responseTeam = response.data?.createTeam;
+              setTeamState(responseTeam._id, true);
             }}
           >
             {({ isSubmitting }) => (

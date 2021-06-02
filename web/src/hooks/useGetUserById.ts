@@ -6,10 +6,12 @@ interface Props {
 
 export const useGetUserById = ({ ids }: Props) => {
   const users = useUsersByIdsQuery({
+    skip: ids == [] || ids == [''] || ids == null,
     variables: {
       ids,
     },
   });
 
-  return users;
+  return users?.data?.usersByIds;
 };
+  

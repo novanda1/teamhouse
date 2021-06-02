@@ -1,13 +1,15 @@
 import {
   Box,
+  Flex,
   Heading,
   Input,
   InputGroup,
-  InputLeftElement
+  InputLeftElement,
 } from "@chakra-ui/react";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
 import { Wrapper } from "../components/Wrapper";
+import { TeamDetail } from "../modules/teams/TeamDetail";
 import { TeamList } from "../modules/teams/TeamList";
 import { withApollo } from "../utils/withApollo";
 
@@ -15,22 +17,23 @@ const Home = () => {
   return (
     <>
       <Wrapper>
-        <Box mt="10" position="sticky">
-          <Heading as="h1" size="lg" mb="60px">
+        <Box py="10" position="sticky">
+          <Heading color="brand.100" as="h1" size="lg" pb="60px">
             Teamhouse
           </Heading>
 
           <TeamList />
         </Box>
-        <Box mt="10">
-          <InputGroup>
+        <Flex py="10" flexDirection="column">
+          <InputGroup pb="60px">
             <InputLeftElement
               pointerEvents="none"
               children={<FiSearch color="gray.300" />}
             />
             <Input type="text" placeholder="Search anything" variant="filled" />
           </InputGroup>
-        </Box>
+          <TeamDetail />
+        </Flex>
         <Box></Box>
       </Wrapper>
     </>
