@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateTeamInputsDTO } from './dto/team-inputs.dto';
+import { CreateTeamInputsDTO, UpdateTeamInputDTO } from './dto/team-inputs.dto';
 import { Team, TeamDocument } from './schema/team.schema';
 
 @Injectable()
@@ -19,13 +19,23 @@ export class TeamService {
     return await this.model.find().exec();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<Team> {
     const team = await this.model.findById(id);
     return team;
   }
 
-  async update(id: string, options: CreateTeamInputsDTO): Promise<Team> {
+  async update(id: string, options: UpdateTeamInputDTO): Promise<Team> {
     await this.model.findOneAndUpdate({ _id: id }, { $set: options });
     return await this.findById(id);
+  }
+
+  async addTeamMember(teamId: string, userId: string): Promise<Team> {
+    const currentTeam = await this.model.findById(teamId);
+    const currentTeamMembers = currentTeam.members;
+
+    if (!currentTeamMembers.includes(userId)) currentTeamMembers.push(userId);
+
+    await this.update(teamId, { members: currentTeamMembers });
+    return await this.findById(teamId);
   }
 }

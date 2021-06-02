@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTeamInputsDTO {
@@ -14,3 +14,6 @@ export class CreateTeamInputsDTO {
   @Field(() => [String], { nullable: true })
   members?: string[];
 }
+
+@InputType()
+export class UpdateTeamInputDTO extends PartialType(CreateTeamInputsDTO) {}

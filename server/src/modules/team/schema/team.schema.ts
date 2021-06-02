@@ -19,11 +19,11 @@ export class Team {
 
   @Prop()
   @Field(() => [String])
-  leaders?: string[] | User[];
+  leaders?: string[];
 
   @Prop()
   @Field(() => [String], { nullable: true })
-  members?: string[] | User[];
+  members?: string[];
 }
 
 export type TeamDocument = Team & Document;

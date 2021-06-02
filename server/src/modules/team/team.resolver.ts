@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphqlAuthGuard } from 'src/modules/auth/guards/graphql-auth.guard';
 import { GqlUser } from 'src/shared/decorators';
-import { CreateTeamInputsDTO } from './dto/team-inputs.dto';
+import { CreateTeamInputsDTO, UpdateTeamInputDTO } from './dto/team-inputs.dto';
 import { Team } from './schema/team.schema';
 import { TeamService } from './team.service';
 
@@ -33,9 +33,18 @@ export class TeamResolver {
   @Mutation(() => Team, { name: 'updateTeam' })
   async update(
     @Args('id') id: string,
-    @Args('options', { type: () => CreateTeamInputsDTO })
-    options: CreateTeamInputsDTO,
+    @Args('options', { type: () => UpdateTeamInputDTO })
+    options: UpdateTeamInputDTO,
   ) {
     return await this.teamService.update(id, options);
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Team, { name: 'addTeamMember' })
+  async addMember(
+    @Args('teamId') teamId: string,
+    @Args('userId') userId: string,
+  ) {
+    return await this.teamService.addTeamMember(teamId, userId);
   }
 }
