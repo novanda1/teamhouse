@@ -41,6 +41,7 @@ export type Mutation = {
   deleteProject: Scalars['Boolean'];
   createTeam: Team;
   updateTeam: Team;
+  addTeamMember: Team;
 };
 
 
@@ -71,8 +72,14 @@ export type MutationCreateTeamArgs = {
 
 
 export type MutationUpdateTeamArgs = {
-  options: CreateTeamInputsDto;
+  options: UpdateTeamInputDto;
   id: Scalars['String'];
+};
+
+
+export type MutationAddTeamMemberArgs = {
+  userId: Scalars['String'];
+  teamId: Scalars['String'];
 };
 
 export type Project = {
@@ -122,6 +129,13 @@ export type Team = {
   members?: Maybe<Array<Scalars['String']>>;
 };
 
+export type UpdateTeamInputDto = {
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  leaders?: Maybe<Array<Scalars['String']>>;
+  members?: Maybe<Array<Scalars['String']>>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['String'];
@@ -138,6 +152,25 @@ export type ProjectInputDto = {
   title: Scalars['String'];
   description: Scalars['String'];
 };
+
+export type TeamFragmentFragment = (
+  { __typename?: 'Team' }
+  & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
+);
+
+export type AddTeamMemberMutationVariables = Exact<{
+  teamId: Scalars['String'];
+  userId: Scalars['String'];
+}>;
+
+
+export type AddTeamMemberMutation = (
+  { __typename?: 'Mutation' }
+  & { addTeamMember: (
+    { __typename?: 'Team' }
+    & TeamFragmentFragment
+  ) }
+);
 
 export type CreateTeamMutationVariables = Exact<{
   options: CreateTeamInputsDto;
@@ -194,7 +227,7 @@ export type RegisterMutation = (
 
 export type UpdateTeamMutationVariables = Exact<{
   id: Scalars['String'];
-  options: CreateTeamInputsDto;
+  options: UpdateTeamInputDto;
 }>;
 
 
@@ -280,7 +313,49 @@ export type UsersByIdsQuery = (
   )> }
 );
 
+export const TeamFragmentFragmentDoc = gql`
+    fragment TeamFragment on Team {
+  _id
+  name
+  description
+  leaders
+  members
+}
+    `;
+export const AddTeamMemberDocument = gql`
+    mutation AddTeamMember($teamId: String!, $userId: String!) {
+  addTeamMember(teamId: $teamId, userId: $userId) {
+    ...TeamFragment
+  }
+}
+    ${TeamFragmentFragmentDoc}`;
+export type AddTeamMemberMutationFn = Apollo.MutationFunction<AddTeamMemberMutation, AddTeamMemberMutationVariables>;
 
+/**
+ * __useAddTeamMemberMutation__
+ *
+ * To run a mutation, you first call `useAddTeamMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTeamMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTeamMemberMutation, { data, loading, error }] = useAddTeamMemberMutation({
+ *   variables: {
+ *      teamId: // value for 'teamId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useAddTeamMemberMutation(baseOptions?: Apollo.MutationHookOptions<AddTeamMemberMutation, AddTeamMemberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTeamMemberMutation, AddTeamMemberMutationVariables>(AddTeamMemberDocument, options);
+      }
+export type AddTeamMemberMutationHookResult = ReturnType<typeof useAddTeamMemberMutation>;
+export type AddTeamMemberMutationResult = Apollo.MutationResult<AddTeamMemberMutation>;
+export type AddTeamMemberMutationOptions = Apollo.BaseMutationOptions<AddTeamMemberMutation, AddTeamMemberMutationVariables>;
 export const CreateTeamDocument = gql`
     mutation createTeam($options: CreateTeamInputsDTO!) {
   createTeam(options: $options) {
@@ -401,7 +476,7 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateTeamDocument = gql`
-    mutation UpdateTeam($id: String!, $options: CreateTeamInputsDTO!) {
+    mutation UpdateTeam($id: String!, $options: UpdateTeamInputDTO!) {
   updateTeam(id: $id, options: $options) {
     _id
     name

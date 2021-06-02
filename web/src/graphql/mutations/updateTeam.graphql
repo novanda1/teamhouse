@@ -1,9 +1,5 @@
-mutation UpdateTeam($id: String!, $options: CreateTeamInputsDTO!) {
+mutation UpdateTeam($id: String!, $options: UpdateTeamInputDTO!) {
   updateTeam(id: $id, options: $options) {
-    _id
-    name
-    description
-    leaders
-    members
+    ...TeamFragment
   }
 }
