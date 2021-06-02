@@ -17,6 +17,7 @@ import {
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { CreateTeamMutationFn } from "../../generated/graphql";
+import { newTeamValidation } from "../../utils/formValidationSchema/newTeam";
 
 interface Props {
   isOpen: boolean;
@@ -43,6 +44,7 @@ export const NewTeamModal: React.FC<Props> = ({
         <ModalBody>
           <Formik
             initialValues={{ name: "", description: "" }}
+            validationSchema={newTeamValidation}
             onSubmit={async (values, { setErrors }) => {
               await createTeam({
                 variables: {
