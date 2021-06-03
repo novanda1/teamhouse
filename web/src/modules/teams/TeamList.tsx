@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 import { open, setActiveId } from "../../store/features/team/teamSlice";
 import { NewTeamModal } from "../../ui/modals/NewTeamModal";
 import { TeamListUi } from "../../ui/teams/TeamListUi";
+import { WaitForAuth } from "../auth/waitForAuth";
 
 export const TeamList: React.FC = () => {
   const teams = useTeamsQuery({
@@ -33,18 +34,20 @@ export const TeamList: React.FC = () => {
 
   return (
     <>
-      <TeamListUi
-        response={teams}
-        onSingleClick={onSingleClick}
-        setNewTeamModal={setNewTeamModal}
-      />
+      <WaitForAuth>
+        <TeamListUi
+          response={teams}
+          onSingleClick={onSingleClick}
+          setNewTeamModal={setNewTeamModal}
+        />
 
-      <NewTeamModal
-        closeNewTeamModal={closeNewTeamModal}
-        createTeam={createTeam}
-        isOpen={newTeamModal}
-        setTeamState={setTeamState}
-      />
+        <NewTeamModal
+          closeNewTeamModal={closeNewTeamModal}
+          createTeam={createTeam}
+          isOpen={newTeamModal}
+          setTeamState={setTeamState}
+        />
+      </WaitForAuth>
     </>
   );
 };

@@ -4,6 +4,10 @@ mutation Register($username: String!, $password: String!) {
       field
       message
     }
+    tokens {
+      accessToken
+      refreshToken
+    }
     user {
       _id
       username

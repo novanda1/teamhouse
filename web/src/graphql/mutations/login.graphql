@@ -4,6 +4,10 @@ mutation Login($username: String!, $password: String!) {
       _id
       username
     }
+    tokens{
+      accessToken
+      refreshToken
+    }
     errors {
       field
       message

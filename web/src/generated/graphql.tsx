@@ -36,6 +36,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: UserResponse;
   register: UserResponse;
+  refreshToken: RefreshTokenResponse;
   logout: Scalars['Boolean'];
   createProject: Project;
   deleteProject: Scalars['Boolean'];
@@ -120,6 +121,12 @@ export type QueryTeamArgs = {
   id: Scalars['String'];
 };
 
+export type RefreshTokenResponse = {
+  __typename?: 'RefreshTokenResponse';
+  status: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export type Team = {
   __typename?: 'Team';
   _id: Scalars['String'];
@@ -127,6 +134,12 @@ export type Team = {
   description: Scalars['String'];
   leaders: Array<Scalars['String']>;
   members?: Maybe<Array<Scalars['String']>>;
+};
+
+export type Tokens = {
+  __typename?: 'Tokens';
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
 };
 
 export type UpdateTeamInputDto = {
@@ -146,6 +159,7 @@ export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+  tokens?: Maybe<Tokens>;
 };
 
 export type ProjectInputDto = {
@@ -181,7 +195,7 @@ export type CreateTeamMutation = (
   { __typename?: 'Mutation' }
   & { createTeam: (
     { __typename?: 'Team' }
-    & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
+    & TeamFragmentFragment
   ) }
 );
 
@@ -198,6 +212,9 @@ export type LoginMutation = (
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, '_id' | 'username'>
+    )>, tokens?: Maybe<(
+      { __typename?: 'Tokens' }
+      & Pick<Tokens, 'accessToken' | 'refreshToken'>
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
@@ -218,7 +235,10 @@ export type RegisterMutation = (
     & { errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
-    )>>, user?: Maybe<(
+    )>>, tokens?: Maybe<(
+      { __typename?: 'Tokens' }
+      & Pick<Tokens, 'accessToken' | 'refreshToken'>
+    )>, user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, '_id' | 'username'>
     )> }
@@ -235,7 +255,7 @@ export type UpdateTeamMutation = (
   { __typename?: 'Mutation' }
   & { updateTeam: (
     { __typename?: 'Team' }
-    & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
+    & TeamFragmentFragment
   ) }
 );
 
@@ -359,14 +379,10 @@ export type AddTeamMemberMutationOptions = Apollo.BaseMutationOptions<AddTeamMem
 export const CreateTeamDocument = gql`
     mutation createTeam($options: CreateTeamInputsDTO!) {
   createTeam(options: $options) {
-    _id
-    name
-    description
-    leaders
-    members
+    ...TeamFragment
   }
 }
-    `;
+    ${TeamFragmentFragmentDoc}`;
 export type CreateTeamMutationFn = Apollo.MutationFunction<CreateTeamMutation, CreateTeamMutationVariables>;
 
 /**
@@ -399,6 +415,10 @@ export const LoginDocument = gql`
     user {
       _id
       username
+    }
+    tokens {
+      accessToken
+      refreshToken
     }
     errors {
       field
@@ -441,6 +461,10 @@ export const RegisterDocument = gql`
       field
       message
     }
+    tokens {
+      accessToken
+      refreshToken
+    }
     user {
       _id
       username
@@ -478,14 +502,10 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutatio
 export const UpdateTeamDocument = gql`
     mutation UpdateTeam($id: String!, $options: UpdateTeamInputDTO!) {
   updateTeam(id: $id, options: $options) {
-    _id
-    name
-    description
-    leaders
-    members
+    ...TeamFragment
   }
 }
-    `;
+    ${TeamFragmentFragmentDoc}`;
 export type UpdateTeamMutationFn = Apollo.MutationFunction<UpdateTeamMutation, UpdateTeamMutationVariables>;
 
 /**

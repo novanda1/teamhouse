@@ -8,10 +8,16 @@ export const teamSlice = createSlice({
     },
     reducers:{
         open:(state, action:PayloadAction<boolean>) => {
-            state.isOpen = action.payload
+            return {
+                ...state,
+                isOpen: action.payload
+            }
         },
         setActiveId: (state, action: PayloadAction<string>) => {
-            state.activeId = action.payload
+            return {
+                ...state,
+                activeId: action.payload
+            }
         }
     }
 })

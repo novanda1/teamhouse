@@ -18,11 +18,8 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import {
   CreateTeamMutationFn,
-  CreateTeamMutationHookResult,
   CreateTeamMutationResult,
 } from "../../generated/graphql";
-import { setActiveId } from "../../store/features/team/teamSlice";
-import { AppDispatch } from "../../store/store";
 import { newTeamValidation } from "../../utils/formValidationSchema/newTeam";
 
 interface Props {

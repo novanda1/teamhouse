@@ -1,37 +1,48 @@
-import { Container, Box, Button, Link, Flex } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Box, Button, Container, Flex, Link } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { InputField } from "../components/InputField";
-import Navbar from "../components/Navbar";
 import { useLoginMutation } from "../generated/graphql";
+import { useTokenStore } from "../modules/auth/useTokenStore";
 import { toErrorMap } from "../utils/toErrorMap";
 import { withApollo } from "../utils/withApollo";
 
 interface Props {}
 
 function Login({}: Props): ReactElement {
+  const hasTokens = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
   const [login] = useLoginMutation();
-  const router = useRouter();
-  const next = router.query?.next; // /login?next=thisIsTheOutput
+
+  const { push, query } = useRouter();
+  const next = query?.next; // /login?next=thisIsTheOutput
+
+  useEffect(() => {
+    if (hasTokens) {
+      push(!next ? "/" : `${next}`);
+    }
+  }, [hasTokens, push, next]);
 
   return (
     <>
-      <Navbar />
-      <Container mt="16" variant="small">
+      <Container mt="40" variant="small">
         <Formik
           initialValues={{ username: "", password: "" }}
-          onSubmit={async (values, { setErrors }) => {
+          onSubmit={async (values, { setErrors, setSubmitting }) => {
             const response = await login({
               variables: values,
             });
+
+            const user = response.data?.login.user;
 
             console.log("error", response.data.login);
             if (response?.data.login.errors) {
               setErrors(toErrorMap(response.data?.login.errors));
             } else if (response.data?.login.user) {
-              next ? router.push(`${next}`) : router.push("/");
+              setSubmitting(true);
+              const tokens = response.data?.login.tokens;
+              if (tokens) useTokenStore.getState().setTokens(tokens);
             }
           }}
         >
@@ -41,6 +52,7 @@ function Login({}: Props): ReactElement {
                 name="username"
                 placeholder="username"
                 label="Username"
+                autoComplete="username"
                 required
               />
               <Box mt={4}>
@@ -49,6 +61,7 @@ function Login({}: Props): ReactElement {
                   placeholder="password"
                   label="Password"
                   type="password"
+                  autoComplete="current-password"
                   required
                 />
               </Box>
