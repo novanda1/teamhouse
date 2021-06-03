@@ -36,3 +36,12 @@ export class UserResponse {
   @Field(() => User, { nullable: true })
   user?: User;
 }
+
+@ObjectType()
+export class RefreshTokenResponse {
+  @Field()
+  status: string;
+
+  @Field()
+  token: string;
+}

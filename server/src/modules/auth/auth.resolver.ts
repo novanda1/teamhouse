@@ -3,7 +3,11 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlUser } from 'src/shared/decorators';
 import { validateRegister } from 'src/utils/validateRegister';
 import { CreateUserInput } from '../users/dto/user-inputs.dto';
-import { UserResponse, User } from '../users/schema/user.schema';
+import {
+  RefreshTokenResponse,
+  User,
+  UserResponse,
+} from '../users/schema/user.schema';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
@@ -27,9 +31,15 @@ export class AuthResolver {
   ): Promise<UserResponse> {
     const user = await this.userService.validateUser(username, password);
 
-    if (user) {
-      const token = await this.auth.getToken(user.user);
+    if (!user?.errors) {
+      const token = await this.auth.generateAccessToken(user.user);
+      const refresh_token = await this.auth.generateRefreshToken(
+        user.user,
+        jwtConstants.refreshTokenExpires,
+      );
+
       res.cookie(jwtConstants.cookieName, token.access_token);
+      res.cookie(jwtConstants.refreshTokenKey, refresh_token.access_token);
     }
 
     return user;
@@ -47,11 +57,37 @@ export class AuthResolver {
     const user = await this.userService.create(options);
 
     if (user) {
-      const token = await this.auth.getToken(user.user);
+      const token = await this.auth.generateAccessToken(user.user);
+      const refresh_token = await this.auth.generateRefreshToken(
+        user.user,
+        jwtConstants.refreshTokenExpires,
+      );
+
       res.cookie(jwtConstants.cookieName, token.access_token);
+      res.cookie(jwtConstants.refreshTokenKey, refresh_token.access_token);
     }
 
     return user;
+  }
+
+  @Mutation(() => RefreshTokenResponse, { name: 'refreshToken' })
+  async refreshToken(@Context() { req, res }): Promise<RefreshTokenResponse> {
+    const { token } = await this.auth.createAccessTokenFromRefreshToken(
+      req.cookies[jwtConstants.refreshTokenKey],
+    );
+
+    if (token.access_token) {
+      res.cookie(jwtConstants.cookieName, token.access_token);
+      return {
+        status: 'success',
+        token: token.access_token,
+      };
+    }
+
+    return {
+      status: 'failed',
+      token: '',
+    };
   }
 
   @UseGuards(GraphqlAuthGuard)

@@ -31,6 +31,6 @@ import { UsersModule } from './modules/users/users.module';
     ProjectModule,
     TeamModule,
   ],
-  providers: [AppService, AuthService],
+  providers: [AppService],
 })
 export class AppModule {}
