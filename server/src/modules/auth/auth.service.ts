@@ -1,12 +1,11 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenExpiredError } from 'jsonwebtoken';
+import * as ms from 'ms';
 import { User } from '../users/schema/user.schema';
 import { UsersService } from '../users/users.service';
 import { RefreshTokenService } from './refreshToken.service';
 import { RefreshToken } from './schema/token.schema';
-import * as ms from 'ms';
-import { jwtConstants } from './constants';
 
 export interface RefreshTokenPayload {
   username: string;
