@@ -38,6 +38,11 @@ export class AuthResolver {
         jwtConstants.refreshTokenExpires,
       );
 
+      user.tokens = {
+        accessToken: token.access_token,
+        refreshToken: refresh_token.access_token,
+      };
+
       res.cookie(jwtConstants.cookieName, token.access_token);
       res.cookie(jwtConstants.refreshTokenKey, refresh_token.access_token);
     }
@@ -55,11 +60,12 @@ export class AuthResolver {
       return { errors };
     }
     const user = await this.userService.create(options);
+    const userFound = await this.userService.findOne(options.username);
 
-    if (user) {
-      const token = await this.auth.generateAccessToken(user.user);
+    if (!user.errors && userFound) {
+      const token = await this.auth.generateAccessToken(userFound);
       const refresh_token = await this.auth.generateRefreshToken(
-        user.user,
+        userFound,
         jwtConstants.refreshTokenExpires,
       );
 

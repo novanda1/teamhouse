@@ -11,10 +11,7 @@ export class RefreshTokenService {
     private readonly model: Model<RefreshTokenDocument>,
   ) {}
 
-  public async createRefreshToken(
-    user: User,
-    ttl: number,
-  ): Promise<RefreshToken> {
+  public async createRefreshToken(user: User, ttl: any): Promise<RefreshToken> {
     const token = new this.model();
 
     token.user_id = user._id;

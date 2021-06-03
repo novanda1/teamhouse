@@ -29,12 +29,23 @@ class FieldError {
 }
 
 @ObjectType()
+class Tokens {
+  @Field()
+  accessToken: string;
+  @Field()
+  refreshToken: string;
+}
+
+@ObjectType()
 export class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
   @Field(() => User, { nullable: true })
   user?: User;
+
+  @Field(() => Tokens, { nullable: true })
+  tokens?: Tokens;
 }
 
 @ObjectType()

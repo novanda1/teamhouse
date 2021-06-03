@@ -30,12 +30,12 @@ export class AuthService {
   }
 
   async generateRefreshToken(user: User, expiresIn: number) {
-    const token = this.token.createRefreshToken(user, ms(expiresIn));
+    const token = await this.token.createRefreshToken(user, expiresIn);
 
     const payload = {
       username: user?.username,
       user_id: user?._id,
-      jwtId: String((await token)._id),
+      jwtId: String(token._id),
     };
 
     return {
