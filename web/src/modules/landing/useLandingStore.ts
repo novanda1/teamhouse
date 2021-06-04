@@ -1,37 +1,35 @@
-import produce, { Draft } from "immer";
-import { WritableDraft } from "immer/dist/internal";
-import create, { State, StateCreator } from "zustand";
+import produce from "immer";
+import create from "zustand";
 import { combine } from "zustand/middleware";
 
-type mid = 'idle' | 'team'
-type DefaultState = {
-    teamId: string
-    layout: {
-        mid: mid
-    }
-}
+/**
+ * good for reference
+ * but didn't used yet
+ */
 
-const defaultState = () => {
-    const teamId: string = ''
-    const layout = { 
-        mid: 'idle'
-    }
+// export type ILandingState = {
+//   section: {
+//     main: {
+//       active: "idle" | "team";
+//       teamId: string;
+//     };
+//   };
+// }
 
-    return {
-        layout,
-        teamId
-    }
-}
+// const defaultState: () => ILandingState = () => {
+//   return {
+//     section: {
+//       main: {
+//         active: "idle",
+//         teamId: "",
+//       },
+//     },
+//   };
+// };
 
-export  const useLandingStore = create(
-    combine(defaultState() as DefaultState, (set) => ({
-        // set: (fn:(draft:WritableDraft<DefaultState>) => void) => (set(produce(fn))) 
-        setLayout : (x: { layout: { mid: mid } }) =>  {    
-            set(x)
-        },
-        setTeamId: (x: {teamId:string}) => {
-            set(x)
-        }
-    })
-    )
-)
+// export const useLandingStore = create(
+//   combine(defaultState(), (set) => ({
+//     // set: (fn) => set(produce<IState>(fn)),
+//     set: (fn) => set(produce(fn)),
+//   }))
+// );

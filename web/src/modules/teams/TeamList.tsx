@@ -1,14 +1,12 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useTeamsQuery, useCreateTeamMutation } from "../../generated/graphql";
-import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
-import { open, setActiveId } from "../../store/features/team/teamSlice";
+import { useCreateTeamMutation, useTeamsQuery } from "../../generated/graphql";
 import { NewTeamModal } from "../../ui/modals/NewTeamModal";
 import { TeamHeadUi, TeamListUiWrapper, TeamUi } from "../../ui/teams/Team";
-import { WaitForAuth } from "../auth/waitForAuth";
-import { useLandingStore } from "../landing/useLandingStore";
+import { WaitForAuth } from "../auth/WaitForAuth";
 
 export const TeamList: React.FC = () => {
-  const landingStore = useLandingStore();
+  const { push, query } = useRouter();
   const [newTeamModal, setNewTeamModal] = useState(false);
   const teams = useTeamsQuery({
     notifyOnNetworkStatusChange: true,
@@ -22,16 +20,11 @@ export const TeamList: React.FC = () => {
 
   // funcs
   const closeNewTeamModal = () => setNewTeamModal(false);
-  const setTeamState = (id: string, isOpen: boolean) => {};
-  const onSingleClick = (id: string) => {
-    const condition =
-      landingStore.teamId === id && landingStore.layout.mid !== "idle";
-    console.log(`condition`, condition);
-    landingStore.setLayout({ layout: { mid: condition ? "idle" : "team" } });
-    landingStore.setTeamId({ teamId: id });
+  const onSingleClick = async (id: string) => {
+    await push(`/team/${id}`);
   };
 
-  console.log(landingStore.layout);
+  console.log();
 
   return (
     <>
@@ -51,7 +44,6 @@ export const TeamList: React.FC = () => {
           closeNewTeamModal={closeNewTeamModal}
           createTeam={createTeam}
           isOpen={newTeamModal}
-          setTeamState={setTeamState}
         />
       </WaitForAuth>
     </>

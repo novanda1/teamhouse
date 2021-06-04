@@ -15,6 +15,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   CreateTeamMutationFn,
@@ -26,15 +27,14 @@ interface Props {
   isOpen: boolean;
   closeNewTeamModal: () => void;
   createTeam: CreateTeamMutationFn & any;
-  setTeamState: (id: string, isOpen: boolean) => void;
 }
 
 export const NewTeamModal: React.FC<Props> = ({
   isOpen,
   closeNewTeamModal,
   createTeam,
-  setTeamState,
 }) => {
+  const { push } = useRouter();
   return (
     <Modal isOpen={isOpen} onClose={closeNewTeamModal} size="xl" isCentered>
       <ModalOverlay />
@@ -50,7 +50,7 @@ export const NewTeamModal: React.FC<Props> = ({
           <Formik
             initialValues={{ name: "", description: "" }}
             validationSchema={newTeamValidation}
-            onSubmit={async (values, { setErrors }) => {
+            onSubmit={async (values) => {
               const response: CreateTeamMutationResult = await createTeam({
                 variables: {
                   options: values,
@@ -62,8 +62,8 @@ export const NewTeamModal: React.FC<Props> = ({
                 })
                 .catch((err) => console.log(`err`, JSON.stringify(err)));
 
-              const responseTeam = response.data?.createTeam;
-              setTeamState(responseTeam._id, true);
+              const id = response.data?.createTeam?._id;
+              if (id) push(`/team/${id}`);
             }}
           >
             {({ isSubmitting }) => (

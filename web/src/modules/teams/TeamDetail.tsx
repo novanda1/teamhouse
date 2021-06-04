@@ -1,16 +1,16 @@
 import { Avatar, Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
+import { IoIosAdd } from "react-icons/io";
 import { useTeamsQuery } from "../../generated/graphql";
 import { useGetUserById } from "../../hooks/useGetUserById";
-import { IoIosAdd } from "react-icons/io";
-import { useLandingStore } from "../landing/useLandingStore";
 
 interface Props {}
 
 export const TeamDetail: React.FC<Props> = () => {
-  const landingStore = useLandingStore();
+  const { query } = useRouter();
   const { data } = useTeamsQuery({});
-  const team = data?.teams.find((t) => t._id === landingStore.teamId);
+  const team = data?.teams.find((t) => t._id === query.id);
 
   // funcs
   const leaders = useGetUserById({ ids: team?.leaders });
@@ -19,7 +19,7 @@ export const TeamDetail: React.FC<Props> = () => {
   return (
     <>
       <Box backgroundColor="whiteAlpha.50" height="full" rounded="lg">
-        {landingStore.layout.mid === "team" && (
+        {query?.id !== undefined && (
           <>
             {/* Heading */}
             <Box p="6" borderBottom="1px solid rgba(255, 255, 255, 0.2);">

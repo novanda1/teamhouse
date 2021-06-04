@@ -20,8 +20,9 @@ function Login({}: Props): ReactElement {
 
   useEffect(() => {
     if (hasTokens) {
-      push(!next ? "/" : `${next}`);
+      push(!next ? "/home" : `${next}`);
     }
+    console.log(`hasTokens`, hasTokens)
   }, [hasTokens, push, next]);
 
   return (
