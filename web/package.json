@@ -25,7 +25,6 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.2.0",
-    "react-redux": "^7.2.4",
     "yup": "^0.32.9",
     "zustand": "^3.5.1"
   },
@@ -37,7 +36,6 @@
     "@graphql-codegen/typescript-react-apollo": "2.2.4",
     "@types/react": "^17.0.6",
     "@types/react-icons": "^3.0.0",
-    "@types/react-redux": "^7.1.16",
     "typescript": "^4.2.4"
   }
 }
