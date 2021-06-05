@@ -32,7 +32,7 @@ export const TeamUi: React.FC<{ t: Team; onClick: any }> = ({ t, onClick }) => {
 
 export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = ({ onAddTeam }) => {
   return (
-    <Flex justifyContent="space-between">
+    <Flex justifyContent="space-between" w="full">
       <Heading as="h3" size="md" mb="2">
         Team
       </Heading>
