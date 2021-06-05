@@ -1,4 +1,3 @@
-  
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useTokenStore } from "./useTokenStore";
@@ -9,7 +8,7 @@ export const useVerifyLoggedIn = () => {
 
   useEffect(() => {
     if (!hasTokens) {
-      push(`/login`)
+      push(`/`);
     }
   }, [hasTokens, asPath, replace, push]);
 

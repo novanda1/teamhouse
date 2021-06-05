@@ -1,14 +1,13 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { Provider } from "react-redux";
-import { store } from "../store/store";
+import { AppProps } from "next/dist/next-server/lib/router/router";
 import theme from "../theme";
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
       <Component {...pageProps} />
     </ChakraProvider>
   );
-}
+};
 
 export default MyApp;
