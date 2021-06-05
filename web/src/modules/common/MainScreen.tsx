@@ -5,14 +5,13 @@ import { Dashboard } from "./Dashboard";
 import { MainContent } from "./MainContent";
 
 export const MainScreen: React.FC = () => {
-  return (
-    <>
-      <Wrapper>
-        <Dashboard />
-        <MainContent />
-        <Box></Box>
-      </Wrapper>
-      ;
-    </>
-  );
+    return (
+        <>
+            <Wrapper>
+                <Dashboard />
+                <MainContent />
+                <Box></Box>
+            </Wrapper>
+        </>
+    );
 };
