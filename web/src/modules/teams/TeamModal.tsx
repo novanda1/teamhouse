@@ -81,12 +81,12 @@ export const TeamModal: React.FC<Props> = ({}) => {
     <Modal
       isOpen={teamStore.modalIsOpen}
       onClose={handleClose}
-      size="xl"
+      size="lg"
       isCentered
     >
       <ModalOverlay />
-      <ModalContent p="8">
-        <ModalHeader>
+      <ModalContent py="6" px="3">
+        <ModalHeader pb="1">
           {teamStore.modalType == "add" ? "New Team" : "Edit Team"}
           <Text fontSize="initial" fontWeight="normal" mt="1">
             {isAddModal
@@ -127,7 +127,12 @@ export const TeamModal: React.FC<Props> = ({}) => {
                       <FormControl
                         isInvalid={form.errors.name && form.touched.name}
                       >
-                        <Input {...field} id="name" placeholder="Team name" />
+                        <Input
+                          {...field}
+                          id="name"
+                          placeholder="Team name"
+                          variant="filled"
+                        />
                         <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -149,6 +154,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
                           {...field}
                           id="description"
                           placeholder="Team description"
+                          variant="filled"
                         />
                         <FormErrorMessage>
                           {form.errors.description}

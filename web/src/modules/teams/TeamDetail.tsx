@@ -58,7 +58,7 @@ export const TeamDetail: React.FC<Props> = () => {
                   />
                 </Box>
               </Flex>
-              <Text mt="2">
+              <Text mt="1">
                 <Text fontSize="sm" as="span" fontWeight="light">
                   with{" "}
                 </Text>
