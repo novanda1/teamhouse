@@ -1,4 +1,5 @@
 import { Avatar, Flex, Heading, IconButton } from "@chakra-ui/react";
+import NextLink from "next/link";
 import React from "react";
 import { MdAdd } from "react-icons/md";
 import { Team, TeamsQueryResult } from "../../generated/graphql";
@@ -6,25 +7,27 @@ import { Fn } from "../../types";
 
 interface TeamListUiProps {
   response: TeamsQueryResult;
-  onSingleClick: (id: string) => void;
 }
 
-export const TeamUi: React.FC<{ t: Team; onClick: any }> = ({ t, onClick }) => {
+export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
   return (
     <>
-      <Flex
-        py="2"
-        key={t._id}
-        alignItems="center"
-        w="full"
-        sx={{ _hover: { cursor: "pointer" } }}
-        onClick={onClick}
-      >
-        <Avatar name={t.name} size="sm" />
-        <Heading as="h4" size="sm" ml="4">
-          {t.name}
-        </Heading>
-      </Flex>
+      <NextLink href={`/team/${t._id}`}>
+        <a style={{ width: "100%" }}>
+          <Flex
+            py="2"
+            key={t._id}
+            alignItems="center"
+            w="full"
+            sx={{ _hover: { cursor: "pointer" } }}
+          >
+            <Avatar name={t.name} size="sm" />
+            <Heading as="h4" size="sm" ml="4">
+              {t.name}
+            </Heading>
+          </Flex>
+        </a>
+      </NextLink>
     </>
   );
 };
