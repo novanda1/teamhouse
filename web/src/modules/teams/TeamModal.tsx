@@ -16,54 +16,107 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import {
-  CreateTeamMutationFn,
+  CreateTeamInputsDto,
   CreateTeamMutationResult,
+  UpdateTeamMutationResult,
+  useCreateTeamMutation,
+  useUpdateTeamMutation,
 } from "../../generated/graphql";
 import { newTeamValidation } from "../../utils/formValidationSchema/newTeam";
+import { ITeamStore, useTeamStore } from "./useTeamStore";
 
-interface Props {
-  isOpen: boolean;
-  closeNewTeamModal: () => void;
-  createTeam: CreateTeamMutationFn & any;
-}
+interface Props {}
 
-export const NewTeamModal: React.FC<Props> = ({
-  isOpen,
-  closeNewTeamModal,
-  createTeam,
-}) => {
+export const TeamModal: React.FC<Props> = ({}) => {
   const { push } = useRouter();
+  const teamStore = useTeamStore();
+  const [createTeam] = useCreateTeamMutation({
+    update: (cache) => {
+      cache.evict({ fieldName: "teams" });
+    },
+  });
+  const [updateTeam] = useUpdateTeamMutation();
+
+  const isAddModal = teamStore.modalType === "add";
+  const handleClose = () =>
+    void teamStore.set((s: ITeamStore) => {
+      s.modalIsOpen = false;
+      s.modalData = null;
+      s.modalType = "";
+    });
+
+  const onSubmit = async (
+    s: ITeamStore,
+    variables: CreateTeamInputsDto,
+    type: "add" | "update" | ""
+  ) => {
+    const response =
+      type === "add"
+        ? await createTeam({
+            variables: { options: variables },
+          })
+        : await updateTeam({
+            variables: {
+              id: s.modalData._id,
+              options: {
+                /** @todo make this better */
+                name: variables.name,
+                description: variables.description,
+              },
+            },
+          });
+
+    teamStore.set(
+      (s: ITeamStore) => void (s.form.createTeamResponse = response)
+    );
+
+    handleClose();
+
+    return response as UpdateTeamMutationResult & CreateTeamMutationResult;
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={closeNewTeamModal} size="xl" isCentered>
+    <Modal
+      isOpen={teamStore.modalIsOpen}
+      onClose={handleClose}
+      size="xl"
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent p="8">
         <ModalHeader>
-          New Team
+          {teamStore.modalType == "add" ? "New Team" : "Edit Team"}
           <Text fontSize="initial" fontWeight="normal" mt="1">
-            Fill following field to make new team
+            {isAddModal
+              ? "Fill following field to make new team"
+              : "Edit your team"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Formik
-            initialValues={{ name: "", description: "" }}
+            initialValues={
+              teamStore.modalType === "add"
+                ? teamStore.form.initialData
+                : teamStore.modalData
+            }
             validationSchema={newTeamValidation}
             onSubmit={async (values) => {
-              const response: CreateTeamMutationResult = await createTeam({
-                variables: {
-                  options: values,
-                },
-              })
-                .then((r) => {
-                  closeNewTeamModal();
-                  return r;
-                })
-                .catch((err) => console.log(`err`, JSON.stringify(err)));
+              console.log("ok");
+
+              const response = await onSubmit(
+                teamStore,
+                values,
+                teamStore.modalType
+              );
 
               const id = response.data?.createTeam?._id;
-              if (id) push(`/team/${id}`);
+
+              if (teamStore.modalType == "add") {
+                if (id) push(`/team/${id}`);
+              }
             }}
           >
             {({ isSubmitting }) => (
@@ -110,14 +163,9 @@ export const NewTeamModal: React.FC<Props> = ({
                     isLoading={isSubmitting}
                     colorScheme="purple"
                   >
-                    New team
+                    {isAddModal ? "Create" : "Save"}
                   </Button>
-                  <Button
-                    ml="3"
-                    variant="link"
-                    mr="auto"
-                    onClick={closeNewTeamModal}
-                  >
+                  <Button ml="3" variant="link" mr="auto" onClick={handleClose}>
                     Cancel
                   </Button>
                 </Flex>

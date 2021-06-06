@@ -4,6 +4,9 @@ import React from "react";
 import { IoIosAdd } from "react-icons/io";
 import { useTeamsQuery } from "../../generated/graphql";
 import { useGetUserById } from "../../hooks/useGetUserById";
+import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
+import { ITeamStore, useTeamStore } from "./useTeamStore";
+import { TeamModal } from "./TeamModal";
 
 interface Props {}
 
@@ -12,20 +15,49 @@ export const TeamDetail: React.FC<Props> = () => {
   const { data } = useTeamsQuery({});
   const team = data?.teams.find((t) => t._id === query.id);
 
-  // funcs
   const leaders = useGetUserById({ ids: team?.leaders });
   const members = useGetUserById({ ids: team?.members });
 
+  // update team
+  const teamStore = useTeamStore();
+  const handleOpenModal = () => {
+    const modalData = (({ __typename, ...o }) => o)(team);
+    console.log(`modalData`, modalData);
+    teamStore.set((s: ITeamStore) => {
+      s.modalData = modalData;
+      s.modalType = "update";
+      s.modalIsOpen = true;
+    });
+  };
+
   return (
     <>
+      <TeamModal />
       <Box backgroundColor="whiteAlpha.50" height="full" rounded="lg">
         {query?.id !== undefined && (
           <>
             {/* Heading */}
             <Box p="6" borderBottom="1px solid rgba(255, 255, 255, 0.2);">
-              <Heading as="h3" size="md">
-                {team?.name}
-              </Heading>
+              <Flex w="full" alignItems="center" justifyContent="space-between">
+                <Heading as="h3" size="md">
+                  {team?.name}
+                </Heading>
+                <Box>
+                  <IconButton
+                    size="sm"
+                    aria-label="options"
+                    bg="transparent"
+                    icon={<HiPencil />}
+                    onClick={handleOpenModal}
+                  />
+                  <IconButton
+                    size="sm"
+                    aria-label="options"
+                    bg="transparent"
+                    icon={<HiOutlineDotsVertical />}
+                  />
+                </Box>
+              </Flex>
               <Text mt="2">
                 <Text fontSize="sm" as="span" fontWeight="light">
                   with{" "}

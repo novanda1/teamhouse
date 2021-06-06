@@ -1,13 +1,14 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { useCreateTeamMutation, useTeamsQuery } from "../../generated/graphql";
-import { NewTeamModal } from "../../ui/modals/NewTeamModal";
 import { TeamHeadUi, TeamListUiWrapper, TeamUi } from "../../ui/teams/Team";
 import { WaitForAuth } from "../auth/WaitForAuth";
+import { TeamModal } from "./TeamModal";
+import { ITeamStore, useTeamStore } from "./useTeamStore";
 
 export const TeamList: React.FC = () => {
   const { push, query } = useRouter();
-  const [newTeamModal, setNewTeamModal] = useState(false);
+  const teamStore = useTeamStore();
   const teams = useTeamsQuery({
     notifyOnNetworkStatusChange: true,
   });
@@ -19,7 +20,6 @@ export const TeamList: React.FC = () => {
   });
 
   // funcs
-  const closeNewTeamModal = () => setNewTeamModal(false);
   const onSingleClick = async (id: string) => {
     await push(`/team/${id}`);
   };
@@ -29,22 +29,21 @@ export const TeamList: React.FC = () => {
   return (
     <>
       <WaitForAuth>
-        <TeamListUiWrapper
-          response={teams}
-          onSingleClick={onSingleClick}
-          setNewTeamModal={setNewTeamModal}
-        >
-          <TeamHeadUi onAddTeam={() => setNewTeamModal(true)}></TeamHeadUi>
+        <TeamListUiWrapper response={teams} onSingleClick={onSingleClick}>
+          <TeamHeadUi
+            onAddTeam={() =>
+              teamStore.set((s: ITeamStore) => {
+                s.modalType = "add";
+                s.modalIsOpen = true;
+              })
+            }
+          ></TeamHeadUi>
           {teams.data?.teams.map((t) => (
             <TeamUi key={t._id} onClick={() => onSingleClick(t._id)} t={t} />
           ))}
         </TeamListUiWrapper>
 
-        <NewTeamModal
-          closeNewTeamModal={closeNewTeamModal}
-          createTeam={createTeam}
-          isOpen={newTeamModal}
-        />
+        <TeamModal />
       </WaitForAuth>
     </>
   );

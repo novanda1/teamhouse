@@ -1,12 +1,11 @@
 import { Avatar, Flex, Heading, IconButton } from "@chakra-ui/react";
 import React from "react";
-import { MdAdd, MdPermCameraMic } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { Team, TeamsQueryResult } from "../../generated/graphql";
 import { Fn } from "../../types";
 
 interface TeamListUiProps {
   response: TeamsQueryResult;
-  setNewTeamModal: (set: boolean) => void;
   onSingleClick: (id: string) => void;
 }
 
