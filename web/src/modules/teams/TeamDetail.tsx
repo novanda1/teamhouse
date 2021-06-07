@@ -9,16 +9,15 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { IoIosAdd } from "react-icons/io";
 import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
 import { useGetUser } from "../../hooks/useGetUser";
-import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
-import { TeamModal } from "./TeamModal";
 
 interface Props {}
 

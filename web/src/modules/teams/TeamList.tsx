@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { useTeamsQuery } from "../../generated/graphql";
 import { TeamHeadUi, TeamListUiWrapper, TeamUi } from "../../ui/teams/Team";
 import { WaitForAuth } from "../auth/WaitForAuth";
-import { TeamModal } from "./TeamModal";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 
 export const TeamList: React.FC = () => {
