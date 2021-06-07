@@ -22,7 +22,6 @@ export const TeamDetail: React.FC<Props> = () => {
   const teamStore = useTeamStore();
   const handleOpenModal = () => {
     const modalData = (({ __typename, ...o }) => o)(team);
-    console.log(`modalData`, modalData);
     teamStore.set((s: ITeamStore) => {
       s.modalData = modalData;
       s.modalType = "update";

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserInput } from './dto/user-inputs.dto';
+import { CreateUserInput, UpdateUserInput } from './dto/user-inputs.dto';
 import { User, UserDocument, UserResponse } from './schema/user.schema';
 import * as argon2 from 'argon2';
 
@@ -78,11 +78,29 @@ export class UsersService {
     return { user };
   }
 
-  async findById(id: string): Promise<User> {
-    return await this.users.findById(id);
+  // async findById(id: string): Promise<User> {
+  //   return await this.users.findById(id);
+  // }
+
+  // async findByIds(ids: string[] | User[]): Promise<User[]> {
+  //   return await this.users.find({ _id: ids }).exec();
+  // }
+
+  async find(username: string): Promise<User> {
+    return await this.users.findOne({ username });
   }
 
-  async findByIds(ids: string[] | User[]): Promise<User[]> {
-    return await this.users.find({ _id: ids }).exec();
+  async finds(usernames: string[]): Promise<User[]> {
+    const result = [];
+    usernames.map((u) => {
+      const user = this.find(u);
+      result.push(user);
+    });
+
+    return result;
+  }
+
+  async update(_id: string, options: UpdateUserInput): Promise<User> {
+    return await this.users.findOneAndUpdate({ _id }, { $set: options });
   }
 }

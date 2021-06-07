@@ -1,0 +1,20 @@
+fragment UserResponse on UserResponse {
+  errors {
+    field
+    message
+  }
+  tokens {
+    accessToken {
+      token
+      expires
+    }
+    refreshToken {
+      token
+      expires
+    }
+  }
+  user {
+    _id
+    username
+  }
+}

@@ -7,12 +7,14 @@ export class UsersResolver {
   constructor(private readonly userService: UsersService) {}
 
   @Query(() => User, { name: 'user' })
-  async find(@Args('id') id: string): Promise<User> {
-    return await this.userService.findById(id);
+  async find(@Args('username') username: string): Promise<User> {
+    return await this.userService.find(username);
   }
 
-  @Query(() => [User], { name: 'usersByIds' })
-  async finds(@Args('ids', { type: () => [String] }) ids: string[]) {
-    return await this.userService.findByIds(ids);
+  @Query(() => [User], { name: 'usersByUsernames' })
+  async finds(
+    @Args('usernames', { type: () => [String] }) usernames: string[],
+  ) {
+    return await this.userService.finds(usernames);
   }
 }

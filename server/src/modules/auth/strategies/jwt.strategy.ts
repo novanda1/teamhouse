@@ -21,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: cookieExtractor,
       secretOrKey: jwtConstants.secret,
+      ignoreExpiration: true,
     });
   }
 

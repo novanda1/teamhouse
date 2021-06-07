@@ -1,6 +1,12 @@
 query Me {
   me {
-    _id
-    username
+    user {
+      _id
+      username
+    }
+    tokens {
+      accessTokenValid
+      refreshTokenValid
+    }
   }
 }

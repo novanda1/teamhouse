@@ -1,0 +1,6 @@
+query UsersByUsernames($usernames: [String!]!) {
+  usersByUsernames(usernames: $usernames) {
+    _id
+    username
+  }
+}

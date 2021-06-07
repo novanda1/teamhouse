@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlUser } from 'src/shared/decorators';
+import { getExpirationToken } from 'src/utils/getExpirationToken';
 import { validateRegister } from 'src/utils/validateRegister';
 import { CreateUserInput } from '../users/dto/user-inputs.dto';
 import {
@@ -12,6 +13,7 @@ import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { GraphqlAuthGuard } from './guards/graphql-auth.guard';
+import { MeQueryResponse } from './schema/token.schema';
 
 @Resolver()
 export class AuthResolver {
@@ -39,8 +41,14 @@ export class AuthResolver {
       );
 
       user.tokens = {
-        accessToken: token.access_token,
-        refreshToken: refresh_token.access_token,
+        accessToken: {
+          token: token.access_token,
+          expires: getExpirationToken(jwtConstants.expireIn),
+        },
+        refreshToken: {
+          token: refresh_token.access_token,
+          expires: getExpirationToken(jwtConstants.refreshTokenExpires),
+        },
       };
 
       res.cookie(jwtConstants.cookieName, token.access_token);
@@ -97,9 +105,26 @@ export class AuthResolver {
   }
 
   @UseGuards(GraphqlAuthGuard)
-  @Query(() => User, { name: 'me' })
-  async me(@GqlUser() user: User) {
-    return await this.userService.findOne(user.username);
+  @Query(() => MeQueryResponse, { name: 'me' })
+  async me(
+    @GqlUser() user: User,
+    @Context() { req },
+  ): Promise<MeQueryResponse> {
+    const u = await this.userService.findOne(user?.username);
+    const accessTokenValid = await this.auth.isTokenVerified(
+      req.cookies[jwtConstants.cookieName],
+    );
+    const refreshTokenValid = await this.auth.isTokenVerified(
+      req.cookies[jwtConstants.refreshTokenKey],
+    );
+
+    return {
+      user: u,
+      tokens: {
+        accessTokenValid,
+        refreshTokenValid,
+      },
+    };
   }
 
   @UseGuards(GraphqlAuthGuard)

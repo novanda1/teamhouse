@@ -29,11 +29,27 @@ class FieldError {
 }
 
 @ObjectType()
-class Tokens {
+class AccessToken {
   @Field()
-  accessToken: string;
+  token: string;
   @Field()
-  refreshToken: string;
+  expires: Date;
+}
+
+@ObjectType()
+class RefreshToken {
+  @Field()
+  token: string;
+  @Field()
+  expires: Date;
+}
+
+@ObjectType()
+export class Tokens {
+  @Field()
+  accessToken: AccessToken;
+  @Field()
+  refreshToken: RefreshToken;
 }
 
 @ObjectType()

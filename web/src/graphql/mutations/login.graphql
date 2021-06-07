@@ -1,16 +1,5 @@
 mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
-    user {
-      _id
-      username
-    }
-    tokens{
-      accessToken
-      refreshToken
-    }
-    errors {
-      field
-      message
-    }
+    ...UserResponse
   }
 }

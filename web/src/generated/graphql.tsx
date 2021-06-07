@@ -12,6 +12,14 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
+};
+
+export type AccessToken = {
+  __typename?: 'AccessToken';
+  token: Scalars['String'];
+  expires: Scalars['DateTime'];
 };
 
 export type CreateTeamInputsDto = {
@@ -26,10 +34,23 @@ export type CreateUserInput = {
   password: Scalars['String'];
 };
 
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type IsValidToken = {
+  __typename?: 'IsValidToken';
+  accessTokenValid: Scalars['Boolean'];
+  refreshTokenValid: Scalars['Boolean'];
+};
+
+export type MeQueryResponse = {
+  __typename?: 'MeQueryResponse';
+  user?: Maybe<User>;
+  tokens: IsValidToken;
 };
 
 export type Mutation = {
@@ -94,8 +115,8 @@ export type Project = {
 export type Query = {
   __typename?: 'Query';
   user: User;
-  usersByIds: Array<User>;
-  me: User;
+  usersByUsernames: Array<User>;
+  me: MeQueryResponse;
   projects: Array<Project>;
   teams: Array<Team>;
   team: Team;
@@ -103,12 +124,12 @@ export type Query = {
 
 
 export type QueryUserArgs = {
-  id: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
-export type QueryUsersByIdsArgs = {
-  ids: Array<Scalars['String']>;
+export type QueryUsersByUsernamesArgs = {
+  usernames: Array<Scalars['String']>;
 };
 
 
@@ -119,6 +140,12 @@ export type QueryProjectsArgs = {
 
 export type QueryTeamArgs = {
   id: Scalars['String'];
+};
+
+export type RefreshToken = {
+  __typename?: 'RefreshToken';
+  token: Scalars['String'];
+  expires: Scalars['DateTime'];
 };
 
 export type RefreshTokenResponse = {
@@ -138,8 +165,8 @@ export type Team = {
 
 export type Tokens = {
   __typename?: 'Tokens';
-  accessToken: Scalars['String'];
-  refreshToken: Scalars['String'];
+  accessToken: AccessToken;
+  refreshToken: RefreshToken;
 };
 
 export type UpdateTeamInputDto = {
@@ -170,6 +197,26 @@ export type ProjectInputDto = {
 export type TeamFragmentFragment = (
   { __typename?: 'Team' }
   & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
+);
+
+export type UserResponseFragment = (
+  { __typename?: 'UserResponse' }
+  & { errors?: Maybe<Array<(
+    { __typename?: 'FieldError' }
+    & Pick<FieldError, 'field' | 'message'>
+  )>>, tokens?: Maybe<(
+    { __typename?: 'Tokens' }
+    & { accessToken: (
+      { __typename?: 'AccessToken' }
+      & Pick<AccessToken, 'token' | 'expires'>
+    ), refreshToken: (
+      { __typename?: 'RefreshToken' }
+      & Pick<RefreshToken, 'token' | 'expires'>
+    ) }
+  )>, user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, '_id' | 'username'>
+  )> }
 );
 
 export type AddTeamMemberMutationVariables = Exact<{
@@ -209,16 +256,7 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, '_id' | 'username'>
-    )>, tokens?: Maybe<(
-      { __typename?: 'Tokens' }
-      & Pick<Tokens, 'accessToken' | 'refreshToken'>
-    )>, errors?: Maybe<Array<(
-      { __typename?: 'FieldError' }
-      & Pick<FieldError, 'field' | 'message'>
-    )>> }
+    & UserResponseFragment
   ) }
 );
 
@@ -232,16 +270,7 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'UserResponse' }
-    & { errors?: Maybe<Array<(
-      { __typename?: 'FieldError' }
-      & Pick<FieldError, 'field' | 'message'>
-    )>>, tokens?: Maybe<(
-      { __typename?: 'Tokens' }
-      & Pick<Tokens, 'accessToken' | 'refreshToken'>
-    )>, user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, '_id' | 'username'>
-    )> }
+    & UserResponseFragment
   ) }
 );
 
@@ -265,8 +294,14 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'username'>
+    { __typename?: 'MeQueryResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'username'>
+    )>, tokens: (
+      { __typename?: 'IsValidToken' }
+      & Pick<IsValidToken, 'accessTokenValid' | 'refreshTokenValid'>
+    ) }
   ) }
 );
 
@@ -308,7 +343,7 @@ export type TeamsQuery = (
 );
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['String'];
+  username: Scalars['String'];
 }>;
 
 
@@ -320,14 +355,14 @@ export type UserQuery = (
   ) }
 );
 
-export type UsersByIdsQueryVariables = Exact<{
-  ids: Array<Scalars['String']> | Scalars['String'];
+export type UsersByUsernamesQueryVariables = Exact<{
+  usernames: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type UsersByIdsQuery = (
+export type UsersByUsernamesQuery = (
   { __typename?: 'Query' }
-  & { usersByIds: Array<(
+  & { usersByUsernames: Array<(
     { __typename?: 'User' }
     & Pick<User, '_id' | 'username'>
   )> }
@@ -340,6 +375,28 @@ export const TeamFragmentFragmentDoc = gql`
   description
   leaders
   members
+}
+    `;
+export const UserResponseFragmentDoc = gql`
+    fragment UserResponse on UserResponse {
+  errors {
+    field
+    message
+  }
+  tokens {
+    accessToken {
+      token
+      expires
+    }
+    refreshToken {
+      token
+      expires
+    }
+  }
+  user {
+    _id
+    username
+  }
 }
     `;
 export const AddTeamMemberDocument = gql`
@@ -412,21 +469,10 @@ export type CreateTeamMutationOptions = Apollo.BaseMutationOptions<CreateTeamMut
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
-    user {
-      _id
-      username
-    }
-    tokens {
-      accessToken
-      refreshToken
-    }
-    errors {
-      field
-      message
-    }
+    ...UserResponse
   }
 }
-    `;
+    ${UserResponseFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -457,21 +503,10 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
   register(options: {username: $username, password: $password}) {
-    errors {
-      field
-      message
-    }
-    tokens {
-      accessToken
-      refreshToken
-    }
-    user {
-      _id
-      username
-    }
+    ...UserResponse
   }
 }
-    `;
+    ${UserResponseFragmentDoc}`;
 export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
@@ -536,8 +571,14 @@ export type UpdateTeamMutationOptions = Apollo.BaseMutationOptions<UpdateTeamMut
 export const MeDocument = gql`
     query Me {
   me {
-    _id
-    username
+    user {
+      _id
+      username
+    }
+    tokens {
+      accessTokenValid
+      refreshTokenValid
+    }
   }
 }
     `;
@@ -680,8 +721,8 @@ export type TeamsQueryHookResult = ReturnType<typeof useTeamsQuery>;
 export type TeamsLazyQueryHookResult = ReturnType<typeof useTeamsLazyQuery>;
 export type TeamsQueryResult = Apollo.QueryResult<TeamsQuery, TeamsQueryVariables>;
 export const UserDocument = gql`
-    query User($id: String!) {
-  user(id: $id) {
+    query User($username: String!) {
+  user(username: $username) {
     _id
     username
   }
@@ -700,7 +741,7 @@ export const UserDocument = gql`
  * @example
  * const { data, loading, error } = useUserQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      username: // value for 'username'
  *   },
  * });
  */
@@ -715,9 +756,9 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const UsersByIdsDocument = gql`
-    query UsersByIds($ids: [String!]!) {
-  usersByIds(ids: $ids) {
+export const UsersByUsernamesDocument = gql`
+    query UsersByUsernames($usernames: [String!]!) {
+  usersByUsernames(usernames: $usernames) {
     _id
     username
   }
@@ -725,29 +766,29 @@ export const UsersByIdsDocument = gql`
     `;
 
 /**
- * __useUsersByIdsQuery__
+ * __useUsersByUsernamesQuery__
  *
- * To run a query within a React component, call `useUsersByIdsQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUsersByUsernamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersByUsernamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUsersByIdsQuery({
+ * const { data, loading, error } = useUsersByUsernamesQuery({
  *   variables: {
- *      ids: // value for 'ids'
+ *      usernames: // value for 'usernames'
  *   },
  * });
  */
-export function useUsersByIdsQuery(baseOptions: Apollo.QueryHookOptions<UsersByIdsQuery, UsersByIdsQueryVariables>) {
+export function useUsersByUsernamesQuery(baseOptions: Apollo.QueryHookOptions<UsersByUsernamesQuery, UsersByUsernamesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersByIdsQuery, UsersByIdsQueryVariables>(UsersByIdsDocument, options);
+        return Apollo.useQuery<UsersByUsernamesQuery, UsersByUsernamesQueryVariables>(UsersByUsernamesDocument, options);
       }
-export function useUsersByIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersByIdsQuery, UsersByIdsQueryVariables>) {
+export function useUsersByUsernamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersByUsernamesQuery, UsersByUsernamesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersByIdsQuery, UsersByIdsQueryVariables>(UsersByIdsDocument, options);
+          return Apollo.useLazyQuery<UsersByUsernamesQuery, UsersByUsernamesQueryVariables>(UsersByUsernamesDocument, options);
         }
-export type UsersByIdsQueryHookResult = ReturnType<typeof useUsersByIdsQuery>;
-export type UsersByIdsLazyQueryHookResult = ReturnType<typeof useUsersByIdsLazyQuery>;
-export type UsersByIdsQueryResult = Apollo.QueryResult<UsersByIdsQuery, UsersByIdsQueryVariables>;
+export type UsersByUsernamesQueryHookResult = ReturnType<typeof useUsersByUsernamesQuery>;
+export type UsersByUsernamesLazyQueryHookResult = ReturnType<typeof useUsersByUsernamesLazyQuery>;
+export type UsersByUsernamesQueryResult = Apollo.QueryResult<UsersByUsernamesQuery, UsersByUsernamesQueryVariables>;

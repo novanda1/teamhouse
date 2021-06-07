@@ -1,7 +1,6 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenExpiredError } from 'jsonwebtoken';
-import * as ms from 'ms';
 import { User } from '../users/schema/user.schema';
 import { UsersService } from '../users/users.service';
 import { RefreshTokenService } from './refreshToken.service';
@@ -101,13 +100,13 @@ export class AuthService {
   private async getUserFromRefreshTokenPayload(
     payload: RefreshTokenPayload,
   ): Promise<User> {
-    const subId = payload.user_id;
+    const username = payload.username;
 
-    if (!subId) {
+    if (!username) {
       throw new UnprocessableEntityException('Refresh token malformed');
     }
 
-    return this.usersService.findById(subId);
+    return this.usersService.find(username);
   }
 
   private async getStoredTokenFromRefreshTokenPayload(
@@ -120,5 +119,18 @@ export class AuthService {
     }
 
     return this.token.findTokenByUserId(userId);
+  }
+
+  async isTokenVerified(token: string): Promise<boolean> {
+    try {
+      const valid = await this.jwtService.verifyAsync(token);
+      return valid !== null;
+    } catch (e) {
+      if (e instanceof TokenExpiredError) {
+        return false;
+      } else {
+        return false;
+      }
+    }
   }
 }

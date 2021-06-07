@@ -104,7 +104,6 @@ export const TeamModal: React.FC<Props> = ({}) => {
             }
             validationSchema={newTeamValidation}
             onSubmit={async (values) => {
-              console.log("ok");
 
               const response = await onSubmit(
                 teamStore,
