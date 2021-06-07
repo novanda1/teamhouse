@@ -29,6 +29,15 @@ export class TeamService {
     return await this.findById(id);
   }
 
+  async delete(id: string): Promise<boolean> {
+    try {
+      const deleted = await this.model.findOneAndDelete({ _id: id });
+      return deleted !== null;
+    } catch {
+      return false;
+    }
+  }
+
   async addTeamMember(teamId: string, userId: string): Promise<Team> {
     const currentTeam = await this.model.findById(teamId);
     const currentTeamMembers = currentTeam.members;

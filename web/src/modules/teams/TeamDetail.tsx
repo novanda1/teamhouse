@@ -1,8 +1,20 @@
-import { Avatar, Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { IoIosAdd } from "react-icons/io";
-import { useTeamsQuery } from "../../generated/graphql";
+import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
 import { useGetUser } from "../../hooks/useGetUser";
 import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
@@ -11,12 +23,21 @@ import { TeamModal } from "./TeamModal";
 interface Props {}
 
 export const TeamDetail: React.FC<Props> = () => {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const { data } = useTeamsQuery({});
+  const [deleteTeam] = useDeleteTeamMutation({
+    update: (cache) => {
+      cache.evict({ fieldName: "teams" });
+    },
+  });
   const team = data?.teams.find((t) => t._id === query.id);
 
   const leaders = useGetUser({ username: team?.leaders });
   const members = useGetUser({ username: team?.members });
+
+  //
+  const toast = useToast();
+  const [isDeleteButtonLoading, setIsDeleteButtonLoading] = useState(false);
 
   // update team
   const teamStore = useTeamStore();
@@ -49,12 +70,48 @@ export const TeamDetail: React.FC<Props> = () => {
                     icon={<HiPencil />}
                     onClick={handleOpenModal}
                   />
-                  <IconButton
-                    size="sm"
-                    aria-label="options"
-                    bg="transparent"
-                    icon={<HiOutlineDotsVertical />}
-                  />
+                  <Popover placement="bottom-end">
+                    <PopoverTrigger>
+                      <IconButton
+                        size="sm"
+                        aria-label="options"
+                        bg="transparent"
+                        icon={<HiOutlineDotsVertical />}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent w="max-content" minW="150px">
+                      <Button
+                        variant="outline"
+                        w="full"
+                        display="flex"
+                        justifyContent="flex-start"
+                        pl="4"
+                        sx={{ fontWeight: "normal" }}
+                        isLoading={isDeleteButtonLoading}
+                        onClick={async (set) => {
+                          setIsDeleteButtonLoading(true);
+                          const deleted = await deleteTeam({
+                            variables: {
+                              id: team._id,
+                            },
+                          });
+
+                          if (deleted.data.deleteTeam) {
+                            toast({
+                              title: "Team deleted.",
+                              description: "The team successfully deleted.",
+                              status: "success",
+                              duration: 3000,
+                              isClosable: true,
+                            });
+                            push("/home");
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
                 </Box>
               </Flex>
               <Text mt="1">

@@ -42,6 +42,12 @@ export class TeamResolver {
   }
 
   @UseGuards(GraphqlAuthGuardThrow)
+  @Mutation(() => Boolean, { name: 'deleteTeam' })
+  async delete(@Args('id') id: string) {
+    return await this.teamService.delete(id);
+  }
+
+  @UseGuards(GraphqlAuthGuardThrow)
   @Mutation(() => Team, { name: 'addTeamMember' })
   async addMember(
     @Args('teamId') teamId: string,

@@ -1,5 +1,5 @@
-mutation AddTeamMember($teamId: String!, $userId: String!) {
-  addTeamMember(teamId: $teamId, userId: $userId) {
+mutation AddTeamMember($teamId: String!, $username: String!) {
+  addTeamMember(teamId: $teamId, username: $username) {
     ...TeamFragment
   }
 }
