@@ -1,14 +1,34 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 import { GraphqlAuthGuardThrow } from 'src/modules/auth/guards/graphql-auth.guard';
 import { GqlUser } from 'src/shared/decorators';
+import { FieldError } from '../users/schema/user.schema';
+import { UsersService } from '../users/users.service';
 import { CreateTeamInputsDTO, UpdateTeamInputDTO } from './dto/team-inputs.dto';
 import { Team } from './schema/team.schema';
 import { TeamService } from './team.service';
 
+@ObjectType()
+class AddTeamMemberResponse<T> {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+  @Field(() => Team, { nullable: true })
+  data?: T;
+}
+
 @Resolver()
 export class TeamResolver {
-  constructor(private readonly teamService: TeamService) {}
+  constructor(
+    private readonly teamService: TeamService,
+    private readonly userService: UsersService,
+  ) {}
 
   @UseGuards(GraphqlAuthGuardThrow)
   @Mutation(() => Team, { name: 'createTeam' })
@@ -48,11 +68,33 @@ export class TeamResolver {
   }
 
   @UseGuards(GraphqlAuthGuardThrow)
-  @Mutation(() => Team, { name: 'addTeamMember' })
+  @Mutation(() => AddTeamMemberResponse, { name: 'addTeamMember' })
   async addMember(
     @Args('teamId') teamId: string,
     @Args('username') username: string,
-  ) {
-    return await this.teamService.addTeamMember(teamId, username);
+  ): Promise<AddTeamMemberResponse<Team>> {
+    const user = await this.userService.find(username);
+
+    const team = await this.teamService.addTeamMember(teamId, username);
+
+    if (!user)
+      return {
+        errors: [{ field: 'username', message: 'username didnt exists' }],
+      };
+
+    if (team === 'already added') {
+      return {
+        errors: [{ field: 'username', message: 'already added' }],
+      };
+    }
+
+    if (!team)
+      return {
+        errors: [{ field: 'team', message: 'team didnt exists' }],
+      };
+
+    return {
+      data: team as Team,
+    };
   }
 }

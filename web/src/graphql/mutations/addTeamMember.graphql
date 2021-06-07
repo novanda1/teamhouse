@@ -1,5 +1,10 @@
 mutation AddTeamMember($teamId: String!, $username: String!) {
   addTeamMember(teamId: $teamId, username: $username) {
-    ...TeamFragment
+    errors {
+      ...ErrorsFragment
+    }
+    data {
+      ...TeamFragment
+    }
   }
 }

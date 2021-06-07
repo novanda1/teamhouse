@@ -21,7 +21,7 @@ export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
 
 @ObjectType()
-class FieldError {
+export class FieldError {
   @Field()
   field: string;
   @Field()

@@ -38,13 +38,26 @@ export class TeamService {
     }
   }
 
-  async addTeamMember(teamId: string, userId: string): Promise<Team> {
+  async addTeamMember(
+    teamId: string,
+    userId: string,
+  ): Promise<Team | string> | null {
     const currentTeam = await this.model.findById(teamId);
     const currentTeamMembers = currentTeam.members;
+    const alreadyAdded = currentTeamMembers.includes(userId);
 
-    if (!currentTeamMembers.includes(userId)) currentTeamMembers.push(userId);
+    if (!alreadyAdded) {
+      currentTeamMembers.push(userId);
+    } else {
+      /** @todo make this better */
+      return 'already added';
+    }
 
-    await this.update(teamId, { members: currentTeamMembers });
-    return await this.findById(teamId);
+    try {
+      await this.update(teamId, { members: currentTeamMembers });
+      return await this.findById(teamId);
+    } catch {
+      return null;
+    }
   }
 }

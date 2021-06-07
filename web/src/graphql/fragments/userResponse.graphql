@@ -1,7 +1,6 @@
-fragment UserResponse on UserResponse {
+fragment UserResponseFragment on UserResponse {
   errors {
-    field
-    message
+    ...ErrorsFragment
   }
   tokens {
     accessToken {
