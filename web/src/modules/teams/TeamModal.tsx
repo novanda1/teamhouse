@@ -104,7 +104,6 @@ export const TeamModal: React.FC<Props> = ({}) => {
             }
             validationSchema={newTeamValidation}
             onSubmit={async (values) => {
-
               const response = await onSubmit(
                 teamStore,
                 values,
@@ -128,7 +127,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
                       >
                         <Input
                           {...field}
-                          id="name"
+                          id={`name-${teamStore.modalType}`}
                           placeholder="Team name"
                           variant="filled"
                         />
@@ -142,6 +141,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
                     name="description"
                     placeholder="Team description"
                     label="Description"
+                    id={`description-${teamStore.modalType}`}
                   >
                     {({ field, form }) => (
                       <FormControl

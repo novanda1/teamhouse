@@ -52,7 +52,6 @@ export const TeamDetail: React.FC<Props> = () => {
 
   return (
     <>
-      <TeamModal />
       <Box backgroundColor="whiteAlpha.50" height="full" rounded="lg">
         {query?.id !== undefined && (
           <>

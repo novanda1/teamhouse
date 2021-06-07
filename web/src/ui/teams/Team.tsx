@@ -1,6 +1,6 @@
 import { Avatar, Flex, Heading, IconButton } from "@chakra-ui/react";
 import NextLink from "next/link";
-import React from "react";
+import React, { memo } from "react";
 import { MdAdd } from "react-icons/md";
 import { Team, TeamsQueryResult } from "../../generated/graphql";
 import { Fn } from "../../types";
@@ -32,7 +32,7 @@ export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
   );
 };
 
-export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = ({ onAddTeam }) => {
+export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = memo(({ onAddTeam }) => {
   return (
     <Flex justifyContent="space-between" w="full">
       <Heading as="h3" size="md" mb="2">
@@ -47,7 +47,7 @@ export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = ({ onAddTeam }) => {
       />
     </Flex>
   );
-};
+});
 
 export const TeamListUiWrapper: React.FC<TeamListUiProps> = ({ children }) => {
   return (

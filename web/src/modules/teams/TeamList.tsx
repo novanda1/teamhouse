@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useTeamsQuery } from "../../generated/graphql";
 import { TeamHeadUi, TeamListUiWrapper, TeamUi } from "../../ui/teams/Team";
 import { WaitForAuth } from "../auth/WaitForAuth";
@@ -11,24 +11,22 @@ export const TeamList: React.FC = () => {
     notifyOnNetworkStatusChange: true,
   });
 
+  const openAddTeamModal = useCallback(() => {
+    teamStore.set((s: ITeamStore) => {
+      s.modalType = "add";
+      s.modalIsOpen = true;
+    });
+  }, [teamStore.set]);
+
   return (
     <>
       <WaitForAuth>
         <TeamListUiWrapper response={teams}>
-          <TeamHeadUi
-            onAddTeam={() =>
-              teamStore.set((s: ITeamStore) => {
-                s.modalType = "add";
-                s.modalIsOpen = true;
-              })
-            }
-          ></TeamHeadUi>
+          <TeamHeadUi onAddTeam={openAddTeamModal}></TeamHeadUi>
           {teams.data?.teams.map((t) => (
             <TeamUi key={t._id} t={t} />
           ))}
         </TeamListUiWrapper>
-
-        <TeamModal />
       </WaitForAuth>
     </>
   );
