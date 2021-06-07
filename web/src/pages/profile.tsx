@@ -24,7 +24,7 @@ function profile({}: Props): ReactElement {
     <>
       <Navbar />
       <Container mt="16" maxW="container.lg">
-        {data?.me.username}
+        {data?.me.user.username}
       </Container>
     </>
   );

@@ -52,7 +52,11 @@ export const LoginPage: React.FC<Props> = () => {
               } else if (response.data?.login.user) {
                 setSubmitting(true);
                 const tokens = response.data?.login.tokens;
-                if (tokens) useTokenStore.getState().setTokens(tokens);
+                if (tokens)
+                  useTokenStore.getState().setTokens({
+                    accessToken: tokens.accessToken.token,
+                    refreshToken: tokens.refreshToken.token,
+                  });
               }
             }}
           >
