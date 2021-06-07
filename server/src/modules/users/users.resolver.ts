@@ -1,20 +1,59 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Args, Field, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { GqlUser } from 'src/shared/decorators';
+import { GqlResponse } from 'src/types/graphql';
+import GqlNotUserResponse from 'src/utils/GqlNotUserResponse';
+import { GraphqlAuthGuard } from '../auth/guards/graphql-auth.guard';
 import { User } from './schema/user.schema';
 import { UsersService } from './users.service';
+
+/**
+ * @todo make this fully generated class
+ * problem: cant pass Obj on @Field
+ */
+@ObjectType()
+class UserDataResponse<T> extends GqlResponse {
+  @Field(() => User, { nullable: true })
+  data?: T;
+}
+
+@ObjectType()
+class UsersDataResponse<T> extends GqlResponse {
+  @Field(() => [User], { nullable: true })
+  data?: T;
+}
 
 @Resolver()
 export class UsersResolver {
   constructor(private readonly userService: UsersService) {}
 
-  @Query(() => User, { name: 'user' })
-  async find(@Args('username') username: string): Promise<User> {
-    return await this.userService.find(username);
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => UserDataResponse, { name: 'user' })
+  async find(
+    @Args('username') username: string,
+    @GqlUser() user,
+  ): Promise<UserDataResponse<User>> {
+    if (!user) return GqlNotUserResponse;
+    const u = await this.userService.find(username);
+
+    return {
+      status: 'success',
+      data: u,
+    };
   }
 
-  @Query(() => [User], { name: 'usersByUsernames' })
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => UsersDataResponse, { name: 'usersByUsernames' })
   async finds(
     @Args('usernames', { type: () => [String] }) usernames: string[],
-  ) {
-    return await this.userService.finds(usernames);
+    @GqlUser() user,
+  ): Promise<UsersDataResponse<[User]>> {
+    if (!user) return GqlNotUserResponse;
+
+    const users = (await this.userService.finds(usernames)) as [User];
+    return {
+      status: 'success',
+      data: users,
+    };
   }
 }

@@ -1,6 +1,10 @@
 query UsersByUsernames($usernames: [String!]!) {
   usersByUsernames(usernames: $usernames) {
-    _id
-    username
+    status
+    data {
+      _id
+      username
+    }
   }
 }
+  

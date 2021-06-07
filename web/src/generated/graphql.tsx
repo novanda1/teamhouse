@@ -114,8 +114,8 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
-  user: User;
-  usersByUsernames: Array<User>;
+  user: UserDataResponse;
+  usersByUsernames: UsersDataResponse;
   me: MeQueryResponse;
   projects: Array<Project>;
   teams: Array<Team>;
@@ -182,11 +182,23 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type UserDataResponse = {
+  __typename?: 'UserDataResponse';
+  status: Scalars['String'];
+  data?: Maybe<User>;
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
   tokens?: Maybe<Tokens>;
+};
+
+export type UsersDataResponse = {
+  __typename?: 'UsersDataResponse';
+  status: Scalars['String'];
+  data?: Maybe<Array<User>>;
 };
 
 export type ProjectInputDto = {
@@ -350,8 +362,12 @@ export type UserQueryVariables = Exact<{
 export type UserQuery = (
   { __typename?: 'Query' }
   & { user: (
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'username'>
+    { __typename?: 'UserDataResponse' }
+    & Pick<UserDataResponse, 'status'>
+    & { data?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'username'>
+    )> }
   ) }
 );
 
@@ -362,10 +378,14 @@ export type UsersByUsernamesQueryVariables = Exact<{
 
 export type UsersByUsernamesQuery = (
   { __typename?: 'Query' }
-  & { usersByUsernames: Array<(
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'username'>
-  )> }
+  & { usersByUsernames: (
+    { __typename?: 'UsersDataResponse' }
+    & Pick<UsersDataResponse, 'status'>
+    & { data?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'username'>
+    )>> }
+  ) }
 );
 
 export const TeamFragmentFragmentDoc = gql`
@@ -723,8 +743,11 @@ export type TeamsQueryResult = Apollo.QueryResult<TeamsQuery, TeamsQueryVariable
 export const UserDocument = gql`
     query User($username: String!) {
   user(username: $username) {
-    _id
-    username
+    status
+    data {
+      _id
+      username
+    }
   }
 }
     `;
@@ -759,8 +782,11 @@ export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UsersByUsernamesDocument = gql`
     query UsersByUsernames($usernames: [String!]!) {
   usersByUsernames(usernames: $usernames) {
-    _id
-    username
+    status
+    data {
+      _id
+      username
+    }
   }
 }
     `;

@@ -5,11 +5,19 @@ import { AuthGuard } from '@nestjs/passport';
 @Injectable()
 export class GraphqlAuthGuard extends AuthGuard('jwt') {
   handleRequest(err: any, user: any) {
-    if (err || !user) {
-      return user;
-    }
     return user;
   }
+  getRequest(context: GqlExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req;
+  }
+}
+
+/**
+ * throwing err when unauthenticated
+ */
+@Injectable()
+export class GraphqlAuthGuardThrow extends AuthGuard('jwt') {
   getRequest(context: GqlExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;

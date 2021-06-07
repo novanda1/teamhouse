@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { IoIosAdd } from "react-icons/io";
 import { useTeamsQuery } from "../../generated/graphql";
-import { useGetUserById } from "../../hooks/useGetUserById";
+import { useGetUser } from "../../hooks/useGetUser";
 import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 import { TeamModal } from "./TeamModal";
@@ -15,8 +15,8 @@ export const TeamDetail: React.FC<Props> = () => {
   const { data } = useTeamsQuery({});
   const team = data?.teams.find((t) => t._id === query.id);
 
-  const leaders = useGetUserById({ ids: team?.leaders });
-  const members = useGetUserById({ ids: team?.members });
+  const leaders = useGetUser({ username: team?.leaders });
+  const members = useGetUser({ username: team?.members });
 
   // update team
   const teamStore = useTeamStore();

@@ -4,7 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthService } from './modules/auth/auth.service';
+// import { AuthService } from './modules/auth/auth.service';
 import { configService } from './modules/config/config.service';
 import { ProjectModule } from './modules/project/project.module';
 import { TeamModule } from './modules/team/team.module';
