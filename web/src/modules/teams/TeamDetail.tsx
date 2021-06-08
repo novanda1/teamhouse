@@ -23,7 +23,7 @@ interface Props {}
 
 export const TeamDetail: React.FC<Props> = () => {
   const { query, push } = useRouter();
-  const { data } = useTeamsQuery({});
+  const { data, loading } = useTeamsQuery({});
   const [deleteTeam] = useDeleteTeamMutation({
     // update: (cache) => {
     //   // cache.evict({ fieldName: "teams" });
@@ -183,7 +183,8 @@ export const TeamDetail: React.FC<Props> = () => {
       </>
     );
 
-  if (query.id && !team?._id) return <>Sorry, we could not find that team</>;
+  if (query.id && !team?._id && !loading)
+    return <>Sorry, we could not find that team</>;
 
   return <></>;
 };
