@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { IoIosAdd } from "react-icons/io";
 import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
@@ -58,6 +58,39 @@ export const TeamDetail: React.FC<Props> = () => {
     });
   };
 
+  const handleDeleteTeam = useCallback(async () => {
+    setIsDeleteButtonLoading(true);
+    const deleted = await deleteTeam({
+      variables: {
+        id: team._id,
+      },
+
+      update: (cache) => {
+        // cache.evict({ fieldName: "teams" });
+        cache.modify({
+          fields: {
+            teams(existing: [], { readField }) {
+              return existing.filter(
+                (teamRef) => team._id !== readField("_id", teamRef)
+              );
+            },
+          },
+        });
+      },
+    });
+
+    if (deleted.data.deleteTeam) {
+      toast({
+        title: "Team deleted.",
+        description: "The team successfully deleted.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      push("/home");
+    }
+  }, [deleteTeam, team]);
+
   if (team?._id)
     return (
       <>
@@ -100,39 +133,7 @@ export const TeamDetail: React.FC<Props> = () => {
                           pl="4"
                           sx={{ fontWeight: "normal" }}
                           isLoading={isDeleteButtonLoading}
-                          onClick={async (set) => {
-                            setIsDeleteButtonLoading(true);
-                            const deleted = await deleteTeam({
-                              variables: {
-                                id: team._id,
-                              },
-
-                              update: (cache) => {
-                                // cache.evict({ fieldName: "teams" });
-                                cache.modify({
-                                  fields: {
-                                    teams(existing: [], { readField }) {
-                                      return existing.filter(
-                                        (teamRef) =>
-                                          team._id !== readField("_id", teamRef)
-                                      );
-                                    },
-                                  },
-                                });
-                              },
-                            });
-
-                            if (deleted.data.deleteTeam) {
-                              toast({
-                                title: "Team deleted.",
-                                description: "The team successfully deleted.",
-                                status: "success",
-                                duration: 3000,
-                                isClosable: true,
-                              });
-                              push("/home");
-                            }
-                          }}
+                          onClick={handleDeleteTeam}
                         >
                           Delete
                         </Button>
