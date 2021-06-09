@@ -16,10 +16,11 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   CreateTeamInputsDto,
   CreateTeamMutationResult,
+  TeamsDocument,
   UpdateTeamMutationResult,
   useCreateTeamMutation,
   useUpdateTeamMutation,
@@ -33,8 +34,13 @@ export const TeamModal: React.FC<Props> = ({}) => {
   const { push } = useRouter();
   const teamStore = useTeamStore();
   const [createTeam] = useCreateTeamMutation({
-    update: (cache) => {
-      cache.evict({ fieldName: "teams" });
+    update: (cache, { data: { createTeam } }) => {
+      let { teams } = cache.readQuery({ query: TeamsDocument });
+      teams = [...teams, createTeam];
+      cache.writeQuery({
+        query: TeamsDocument,
+        data: { teams },
+      });
     },
   });
   const [updateTeam] = useUpdateTeamMutation();
@@ -68,9 +74,9 @@ export const TeamModal: React.FC<Props> = ({}) => {
             },
           });
 
-    teamStore.set(
-      (s: ITeamStore) => void (s.form.createTeamResponse = response)
-    );
+    // teamStore.set(
+    //   (s: ITeamStore) => void (s.form.createTeamResponse = response)
+    // );
 
     handleClose();
 
