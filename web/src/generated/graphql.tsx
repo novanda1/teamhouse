@@ -22,6 +22,12 @@ export type AccessToken = {
   expires: Scalars['DateTime'];
 };
 
+export type AddTeamMemberResponse = {
+  __typename?: 'AddTeamMemberResponse';
+  errors?: Maybe<Array<FieldError>>;
+  data?: Maybe<Team>;
+};
+
 export type CreateTeamInputsDto = {
   name: Scalars['String'];
   description: Scalars['String'];
@@ -64,7 +70,7 @@ export type Mutation = {
   createTeam: Team;
   updateTeam: Team;
   deleteTeam: Scalars['Boolean'];
-  addTeamMember: Team;
+  addTeamMember: AddTeamMemberResponse;
 };
 
 
@@ -212,16 +218,21 @@ export type ProjectInputDto = {
   description: Scalars['String'];
 };
 
+export type ErrorsFragmentFragment = (
+  { __typename?: 'FieldError' }
+  & Pick<FieldError, 'field' | 'message'>
+);
+
 export type TeamFragmentFragment = (
   { __typename?: 'Team' }
   & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
 );
 
-export type UserResponseFragment = (
+export type UserResponseFragmentFragment = (
   { __typename?: 'UserResponse' }
   & { errors?: Maybe<Array<(
     { __typename?: 'FieldError' }
-    & Pick<FieldError, 'field' | 'message'>
+    & ErrorsFragmentFragment
   )>>, tokens?: Maybe<(
     { __typename?: 'Tokens' }
     & { accessToken: (
@@ -246,8 +257,14 @@ export type AddTeamMemberMutationVariables = Exact<{
 export type AddTeamMemberMutation = (
   { __typename?: 'Mutation' }
   & { addTeamMember: (
-    { __typename?: 'Team' }
-    & TeamFragmentFragment
+    { __typename?: 'AddTeamMemberResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & ErrorsFragmentFragment
+    )>>, data?: Maybe<(
+      { __typename?: 'Team' }
+      & TeamFragmentFragment
+    )> }
   ) }
 );
 
@@ -284,8 +301,16 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'UserResponse' }
-    & UserResponseFragment
+    & UserResponseFragmentFragment
   ) }
+);
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type RegisterMutationVariables = Exact<{
@@ -298,7 +323,7 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'UserResponse' }
-    & UserResponseFragment
+    & UserResponseFragmentFragment
   ) }
 );
 
@@ -413,11 +438,16 @@ export const TeamFragmentFragmentDoc = gql`
   members
 }
     `;
-export const UserResponseFragmentDoc = gql`
-    fragment UserResponse on UserResponse {
+export const ErrorsFragmentFragmentDoc = gql`
+    fragment ErrorsFragment on FieldError {
+  field
+  message
+}
+    `;
+export const UserResponseFragmentFragmentDoc = gql`
+    fragment UserResponseFragment on UserResponse {
   errors {
-    field
-    message
+    ...ErrorsFragment
   }
   tokens {
     accessToken {
@@ -434,14 +464,20 @@ export const UserResponseFragmentDoc = gql`
     username
   }
 }
-    `;
+    ${ErrorsFragmentFragmentDoc}`;
 export const AddTeamMemberDocument = gql`
     mutation AddTeamMember($teamId: String!, $username: String!) {
   addTeamMember(teamId: $teamId, username: $username) {
-    ...TeamFragment
+    errors {
+      ...ErrorsFragment
+    }
+    data {
+      ...TeamFragment
+    }
   }
 }
-    ${TeamFragmentFragmentDoc}`;
+    ${ErrorsFragmentFragmentDoc}
+${TeamFragmentFragmentDoc}`;
 export type AddTeamMemberMutationFn = Apollo.MutationFunction<AddTeamMemberMutation, AddTeamMemberMutationVariables>;
 
 /**
@@ -536,10 +572,10 @@ export type DeleteTeamMutationOptions = Apollo.BaseMutationOptions<DeleteTeamMut
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
-    ...UserResponse
+    ...UserResponseFragment
   }
 }
-    ${UserResponseFragmentDoc}`;
+    ${UserResponseFragmentFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -567,13 +603,43 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
   register(options: {username: $username, password: $password}) {
-    ...UserResponse
+    ...UserResponseFragment
   }
 }
-    ${UserResponseFragmentDoc}`;
+    ${UserResponseFragmentFragmentDoc}`;
 export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**

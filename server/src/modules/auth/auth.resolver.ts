@@ -132,6 +132,7 @@ export class AuthResolver {
   logout(@Context() { res }) {
     return new Promise((resolve) => {
       res.clearCookie(jwtConstants.cookieName);
+      res.clearCookie(jwtConstants.refreshTokenKey);
 
       resolve(true);
     });

@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback } from "react";
 import { IoMdPerson } from "react-icons/io";
-import { useMeQuery } from "../../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 
 const SingleMenu: React.FC<{
@@ -21,26 +21,48 @@ const SingleMenu: React.FC<{
   icon?: ReactElement;
 }> = ({ to, icon, title }) => {
   const { push } = useRouter();
+  const [logout] = useLogoutMutation();
+  const isLogout = to === "/logout";
   const onClick = useCallback(() => {
     push(to);
   }, [push]);
   return (
     <>
       <ListItem display="flex">
-        <ButtonNoOutline
-          bg="transparent"
-          color="whiteAlpha.900"
-          w="full"
-          rounded="none"
-          onClick={onClick}
-        >
-          <Flex alignItems="center">
-            {icon}
-            <Text ml={icon ? "1" : "0"} fontSize="sm">
-              {title}
-            </Text>
-          </Flex>
-        </ButtonNoOutline>
+        {isLogout ? (
+          <ButtonNoOutline
+            as={isLogout ? "a" : "button"}
+            // @ts-ignore
+            href={isLogout ? "/logout" : ""}
+            bg="transparent"
+            color="whiteAlpha.900"
+            w="full"
+            rounded="none"
+            onClick={onClick}
+          >
+            <Flex alignItems="center">
+              {icon}
+              <Text ml={icon ? "1" : "0"} fontSize="sm">
+                {title}
+              </Text>
+            </Flex>
+          </ButtonNoOutline>
+        ) : (
+          <ButtonNoOutline
+            bg="transparent"
+            color="whiteAlpha.900"
+            w="full"
+            rounded="none"
+            onClick={onClick}
+          >
+            <Flex alignItems="center">
+              {icon}
+              <Text ml={icon ? "1" : "0"} fontSize="sm">
+                {title}
+              </Text>
+            </Flex>
+          </ButtonNoOutline>
+        )}
       </ListItem>
     </>
   );
@@ -73,7 +95,7 @@ export const RightPanel: React.FC = () => {
                   title="Profile"
                   to="/profile"
                 />
-                <SingleMenu title="Log out" to="/profile" />
+                <SingleMenu title="Log out" to="/logout" />
               </UnorderedList>
             </PopoverContent>
           </Popover>

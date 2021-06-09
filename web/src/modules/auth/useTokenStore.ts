@@ -19,7 +19,7 @@ const getAccessToken = (): ITokenStore => {
       return {
         isLoggedIn: "loading",
         accessToken: cookieCutter.get(accessTokenKey) || "",
-        refreshToken: cookieCutter.get(refreshTokenKey)
+        refreshToken: cookieCutter.get(refreshTokenKey) || ""
       }
     } catch {}
   }
