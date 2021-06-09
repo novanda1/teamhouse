@@ -1,6 +1,7 @@
-import { Avatar, Flex, Heading, IconButton } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Avatar, Button, Flex, Heading, IconButton } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { memo } from "react";
+import { useCallback } from "react";
 import { MdAdd } from "react-icons/md";
 import { Team, TeamsQueryResult } from "../../generated/graphql";
 import { Fn } from "../../types";
@@ -10,24 +11,26 @@ interface TeamListUiProps {
 }
 
 export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
+  const { push } = useRouter();
+  const onClick = useCallback(() => {
+    push(`/team/${t._id}`);
+  }, [push]);
   return (
     <>
-      <NextLink href={`/team/${t._id}`}>
-        <a style={{ width: "100%" }}>
-          <Flex
-            py="2"
-            key={t._id}
-            alignItems="center"
-            w="full"
-            sx={{ _hover: { cursor: "pointer" } }}
-          >
-            <Avatar name={t.name} size="sm" />
-            <Heading as="h4" size="sm" ml="4">
-              {t.name}
-            </Heading>
-          </Flex>
-        </a>
-      </NextLink>
+      <Button variant="unstyled" onClick={onClick}>
+        <Flex
+          py="2"
+          key={t._id}
+          alignItems="center"
+          _hover={{ bgColor: "transparent" }}
+          w="full"
+        >
+          <Avatar name={t.name} size="sm" />
+          <Heading as="h4" size="sm" ml="4">
+            {t.name}
+          </Heading>
+        </Flex>
+      </Button>
     </>
   );
 };

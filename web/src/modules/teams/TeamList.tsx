@@ -1,14 +1,18 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { useTeamsQuery } from "../../generated/graphql";
 import { TeamHeadUi, TeamListUiWrapper, TeamUi } from "../../ui/teams/Team";
 import { WaitForAuth } from "../auth/WaitForAuth";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 
-export const TeamList: React.FC = () => {
+export const TeamList: React.FC = memo(() => {
   const teamStore = useTeamStore();
   const teams = useTeamsQuery({
     notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    console.log(`teams`, teams);
+  }, []);
 
   const openAddTeamModal = useCallback(() => {
     teamStore.set((s: ITeamStore) => {
@@ -29,4 +33,4 @@ export const TeamList: React.FC = () => {
       </WaitForAuth>
     </>
   );
-};
+});

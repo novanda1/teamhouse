@@ -18,6 +18,12 @@ export interface ITeamStore {
       | Promise<CreateTeamMutationResult | UpdateTeamMutationResult>
       | any;
   };
+  /**
+   * @todo make this better
+   * make this on cache store but didnt refetch
+   * IYKWIM
+   */
+  teams?: Team[];
 }
 
 const getInitialTeamStore = (): ITeamStore => {

@@ -1,9 +1,15 @@
 import { NextPage } from "next";
+import { useEffect } from "react";
 import { WaitForAuth } from "../../modules/auth/WaitForAuth";
 import { MainScreen } from "../../modules/common/MainScreen";
+import { usePanelStore, IPanelStore } from "../../modules/common/usePanelStore";
 import { withApollo } from "../../utils/withApollo";
 
 const Team: NextPage = () => {
+  const panel = usePanelStore();
+  useEffect(() => {
+    panel.set((s: IPanelStore) => void (s.mainPanel = "team"));
+  }, []);
   return (
     <>
       <WaitForAuth>

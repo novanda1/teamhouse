@@ -1,4 +1,3 @@
-  
 import { createWithApollo } from "./createWithApollo";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { NextPageContext } from "next";
@@ -13,7 +12,23 @@ const createClient = (ctx: NextPageContext) =>
           ? ctx?.req?.headers.cookie
           : undefined) || "",
     },
-    cache: new InMemoryCache({}),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            teams: {
+              keyArgs: [],
+              merge(existing, incoming) {
+                return {
+                  ...incoming,
+                  teams: [...(existing.teams || []), ...incoming.teams],
+                };
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 
 export const withApollo = createWithApollo(createClient);

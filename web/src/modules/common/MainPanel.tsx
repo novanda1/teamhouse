@@ -2,9 +2,25 @@ import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
 import { TeamDetail } from "../teams/TeamDetail";
+import { usePanelStore } from "./usePanelStore";
 
 interface Props {}
-export const MainContent: React.FC<Props> = () => {
+
+const MainPanelContent: React.FC = () => {
+  const panel = usePanelStore();
+  switch (panel.mainPanel) {
+    case "team":
+      return <TeamDetail />;
+    case "profile":
+      return <>profl</>;
+    case "idle":
+      return <></>;
+    default:
+      return <></>;
+  }
+};
+
+export const MainPanel: React.FC<Props> = () => {
   return (
     <>
       <Flex py="10" flexDirection="column">
@@ -15,7 +31,7 @@ export const MainContent: React.FC<Props> = () => {
           />
           <Input type="text" placeholder="Search anything" variant="filled" />
         </InputGroup>
-        <TeamDetail />
+        {<MainPanelContent />}
       </Flex>
     </>
   );

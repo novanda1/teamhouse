@@ -2,7 +2,7 @@ import React from "react";
 import { Wrapper } from "../../components/Wrapper";
 import { TeamModal } from "../teams/TeamModal";
 import { Dashboard } from "./Dashboard";
-import { MainContent } from "./MainContent";
+import { MainPanel } from "./MainPanel";
 import { RightPanel } from "./RightPanel";
 
 export const MainScreen: React.FC = () => {
@@ -10,7 +10,7 @@ export const MainScreen: React.FC = () => {
     <>
       <Wrapper>
         <Dashboard />
-        <MainContent />
+        <MainPanel />
         <RightPanel />
       </Wrapper>
       <TeamModal />

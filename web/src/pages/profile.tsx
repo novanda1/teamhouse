@@ -1,31 +1,19 @@
-import { Container } from "@chakra-ui/react";
-import React, { ReactElement } from "react";
-import Navbar from "../components/Navbar";
-import { useMeQuery } from "../generated/graphql";
+import React, { ReactElement, useEffect } from "react";
+import { MainScreen } from "../modules/common/MainScreen";
+import { usePanelStore, IPanelStore } from "../modules/common/usePanelStore";
 import { withApollo } from "../utils/withApollo";
 
 interface Props {}
 
 function profile({}: Props): ReactElement {
-  const { data, loading } = useMeQuery();
-
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <Container mt="16" maxW="container.lg">
-          Loading
-        </Container>
-      </>
-    );
-  }
+  const panel = usePanelStore();
+  useEffect(() => {
+    panel.set((s: IPanelStore) => void (s.mainPanel = "profile"));
+  }, []);
 
   return (
     <>
-      <Navbar />
-      <Container mt="16" maxW="container.lg">
-        {data?.me.user.username}
-      </Container>
+      <MainScreen />
     </>
   );
 }
