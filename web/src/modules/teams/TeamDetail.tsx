@@ -17,6 +17,7 @@ import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
 import { IoIosAdd } from "react-icons/io";
 import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
 import { useGetUser } from "../../hooks/useGetUser";
+import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 
 interface Props {}
@@ -127,23 +128,26 @@ export const TeamDetail: React.FC<Props> = () => {
                           size="sm"
                           aria-label="options"
                           bg="transparent"
+                          color="white"
                           icon={<HiOutlineDotsVertical />}
                         />
                       </PopoverTrigger>
                       <PopoverContent
                         w="max-content"
+                        p="0"
+                        overflow="hidden"
                         _focus={{ outline: "none" }}
                       >
-                        <Button
-                          variant="outline"
+                        <ButtonNoOutline
+                          bg="transparent"
+                          color="whiteAlpha.900"
                           w="full"
-                          pl="4"
-                          fontSize="sm"
+                          rounded="none"
                           isLoading={isDeleteButtonLoading}
                           onClick={handleDeleteTeam}
                         >
-                          Delete
-                        </Button>
+                          <Text fontSize="sm">Delete</Text>
+                        </ButtonNoOutline>
                       </PopoverContent>
                     </Popover>
                   </Box>
@@ -169,7 +173,9 @@ export const TeamDetail: React.FC<Props> = () => {
                     <Heading size="sm" pb="4">
                       People
                     </Heading>
-                    <Button ml="2" size="xs">Add New</Button>
+                    <Button ml="2" size="xs">
+                      Add New
+                    </Button>
                   </Flex>
                   {people?.map((l) => (
                     <Avatar key={l._id} size="md" name={l.username} />
