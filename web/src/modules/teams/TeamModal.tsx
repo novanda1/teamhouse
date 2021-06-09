@@ -94,6 +94,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
               : "Edit your team"}
           </Text>
         </ModalHeader>
+        <ModalCloseButton _focus={{ outlineColor: "transparent" }} />
         <ModalBody>
           <Formik
             initialValues={
@@ -176,6 +177,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
                     variant="unstyled"
                     mr="auto"
                     onClick={handleClose}
+                    _focus={{ boxShadow: "none" }}
                   >
                     Cancel
                   </Button>
