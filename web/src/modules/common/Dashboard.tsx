@@ -1,6 +1,7 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { memo, useCallback } from "react";
+import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { TeamList } from "../teams/TeamList";
 
 interface Props {}
@@ -14,9 +15,13 @@ export const Dashboard: React.FC<Props> = memo(() => {
     <>
       <Box py="10" position="sticky">
         <Heading color="brand.100" as="h1" size="lg" pb="60px">
-          <Button variant="unstyled" sx={{ font: "inherit" }} onClick={onClick}>
+          <ButtonNoOutline
+            variant="unstyled"
+            sx={{ font: "inherit" }}
+            onClick={onClick}
+          >
             Teamhouse
-          </Button>
+          </ButtonNoOutline>
         </Heading>
         <TeamList />
       </Box>

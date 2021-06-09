@@ -12,9 +12,7 @@ const Team: NextPage = () => {
   }, []);
   return (
     <>
-      <WaitForAuth>
-        <MainScreen />
-      </WaitForAuth>
+      <MainScreen />
     </>
   );
 };

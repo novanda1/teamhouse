@@ -12,23 +12,7 @@ const createClient = (ctx: NextPageContext) =>
           ? ctx?.req?.headers.cookie
           : undefined) || "",
     },
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            teams: {
-              keyArgs: [],
-              merge(existing, incoming) {
-                return {
-                  ...incoming,
-                  teams: [...(existing.teams || []), ...incoming.teams],
-                };
-              },
-            },
-          },
-        },
-      },
-    }),
+    cache: new InMemoryCache({}),
   });
 
 export const withApollo = createWithApollo(createClient);

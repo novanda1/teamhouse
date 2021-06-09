@@ -104,17 +104,15 @@ export const TeamDetail: React.FC<Props> = () => {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Heading as="h3" size="md">
+                  <Heading
+                    as="h3"
+                    size="md"
+                    _hover={{ cursor: "pointer" }}
+                    onClick={handleOpenModal}
+                  >
                     {team?.name}
                   </Heading>
                   <Box>
-                    <IconButton
-                      size="sm"
-                      aria-label="options"
-                      bg="transparent"
-                      icon={<HiPencil />}
-                      onClick={handleOpenModal}
-                    />
                     <Popover placement="bottom-end">
                       <PopoverTrigger>
                         <IconButton
@@ -124,14 +122,15 @@ export const TeamDetail: React.FC<Props> = () => {
                           icon={<HiOutlineDotsVertical />}
                         />
                       </PopoverTrigger>
-                      <PopoverContent w="max-content" minW="150px">
+                      <PopoverContent
+                        w="max-content"
+                        _focus={{ outline: "none" }}
+                      >
                         <Button
                           variant="outline"
                           w="full"
-                          display="flex"
-                          justifyContent="flex-start"
                           pl="4"
-                          sx={{ fontWeight: "normal" }}
+                          fontSize="sm"
                           isLoading={isDeleteButtonLoading}
                           onClick={handleDeleteTeam}
                         >

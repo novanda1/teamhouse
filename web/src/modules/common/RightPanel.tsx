@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback } from "react";
 import { IoMdPerson } from "react-icons/io";
+import { useMeQuery } from "../../generated/graphql";
 
 const SingleMenu: React.FC<{
   title: string;
@@ -26,10 +27,16 @@ const SingleMenu: React.FC<{
   return (
     <>
       <ListItem display="flex">
-        <Button bg="transparent" w="full" rounded="none" onClick={onClick}>
+        <Button
+          bg="transparent"
+          w="full"
+          rounded="none"
+          fontSize="sm"
+          onClick={onClick}
+        >
           <Flex alignItems="center">
             {icon}
-            <Text ml="1">{title}</Text>
+            <Text ml={icon ? "1" : "0"}>{title}</Text>
           </Flex>
         </Button>
       </ListItem>
@@ -38,6 +45,7 @@ const SingleMenu: React.FC<{
 };
 
 export const RightPanel: React.FC = () => {
+  const me = useMeQuery();
   return (
     <>
       <Flex py="10" flexDirection="column">
@@ -48,7 +56,7 @@ export const RightPanel: React.FC = () => {
                 aria-label="profile"
                 bg="transparent"
                 rounded="full"
-                icon={<Avatar name="a" size="sm" />}
+                icon={<Avatar name={me.data?.me.user.username} size="sm" />}
               />
             </PopoverTrigger>
             <PopoverContent

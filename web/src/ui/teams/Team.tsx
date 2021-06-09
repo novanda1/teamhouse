@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { MdAdd } from "react-icons/md";
 import { Team, TeamsQueryResult } from "../../generated/graphql";
 import { Fn } from "../../types";
+import { ButtonNoOutline } from "../ButtonNoOutline";
 
 interface TeamListUiProps {
   response: TeamsQueryResult;
@@ -17,7 +18,7 @@ export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
   }, [push]);
   return (
     <>
-      <Button variant="unstyled" onClick={onClick}>
+      <ButtonNoOutline w="full" h="auto" variant="unstyled" onClick={onClick}>
         <Flex
           py="2"
           key={t._id}
@@ -30,7 +31,7 @@ export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
             {t.name}
           </Heading>
         </Flex>
-      </Button>
+      </ButtonNoOutline>
     </>
   );
 };
