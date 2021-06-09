@@ -45,7 +45,7 @@ export const LoginPage: React.FC<Props> = () => {
                 variables: values,
               });
 
-              const user = response.data?.login.user;
+              // const user = response.data?.login.user;
 
               if (response?.data.login.errors) {
                 setErrors(toErrorMap(response.data?.login.errors));

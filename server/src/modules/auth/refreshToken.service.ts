@@ -22,17 +22,17 @@ export class RefreshTokenService {
 
     token.expires = expiration;
 
-    try {
-      return await token.save();
-    } catch {
-      // already
+    // already
+    const existing = await this.model.findOne({ user_id: user._id });
+    if (existing)
       return await this.model.findOneAndUpdate(
         { user_id: user._id },
         {
           $set: { expires: token.expires },
         },
       );
-    }
+
+    return await token.save();
   }
 
   public async findTokenByUserId(

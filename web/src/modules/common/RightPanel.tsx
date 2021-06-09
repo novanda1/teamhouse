@@ -7,12 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  UnorderedList,
+  UnorderedList
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback } from "react";
 import { IoMdPerson } from "react-icons/io";
-import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import { useMeQuery } from "../../generated/graphql";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 
 const SingleMenu: React.FC<{
@@ -21,48 +21,26 @@ const SingleMenu: React.FC<{
   icon?: ReactElement;
 }> = ({ to, icon, title }) => {
   const { push } = useRouter();
-  const [logout] = useLogoutMutation();
-  const isLogout = to === "/logout";
   const onClick = useCallback(() => {
     push(to);
   }, [push]);
   return (
     <>
       <ListItem display="flex">
-        {isLogout ? (
-          <ButtonNoOutline
-            as={isLogout ? "a" : "button"}
-            // @ts-ignore
-            href={isLogout ? "/logout" : ""}
-            bg="transparent"
-            color="whiteAlpha.900"
-            w="full"
-            rounded="none"
-            onClick={onClick}
-          >
-            <Flex alignItems="center">
-              {icon}
-              <Text ml={icon ? "1" : "0"} fontSize="sm">
-                {title}
-              </Text>
-            </Flex>
-          </ButtonNoOutline>
-        ) : (
-          <ButtonNoOutline
-            bg="transparent"
-            color="whiteAlpha.900"
-            w="full"
-            rounded="none"
-            onClick={onClick}
-          >
-            <Flex alignItems="center">
-              {icon}
-              <Text ml={icon ? "1" : "0"} fontSize="sm">
-                {title}
-              </Text>
-            </Flex>
-          </ButtonNoOutline>
-        )}
+        <ButtonNoOutline
+          bg="transparent"
+          color="whiteAlpha.900"
+          w="full"
+          rounded="none"
+          onClick={onClick}
+        >
+          <Flex alignItems="center">
+            {icon}
+            <Text ml={icon ? "1" : "0"} fontSize="sm">
+              {title}
+            </Text>
+          </Flex>
+        </ButtonNoOutline>
       </ListItem>
     </>
   );
