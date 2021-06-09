@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   Flex,
   IconButton,
   ListItem,
@@ -14,6 +13,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement, useCallback } from "react";
 import { IoMdPerson } from "react-icons/io";
 import { useMeQuery } from "../../generated/graphql";
+import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 
 const SingleMenu: React.FC<{
   title: string;
@@ -27,18 +27,20 @@ const SingleMenu: React.FC<{
   return (
     <>
       <ListItem display="flex">
-        <Button
+        <ButtonNoOutline
           bg="transparent"
+          color="whiteAlpha.900"
           w="full"
           rounded="none"
-          fontSize="sm"
           onClick={onClick}
         >
           <Flex alignItems="center">
             {icon}
-            <Text ml={icon ? "1" : "0"}>{title}</Text>
+            <Text ml={icon ? "1" : "0"} fontSize="sm">
+              {title}
+            </Text>
           </Flex>
-        </Button>
+        </ButtonNoOutline>
       </ListItem>
     </>
   );
@@ -63,6 +65,7 @@ export const RightPanel: React.FC = () => {
               w="max-content"
               _focus={{ outline: "none" }}
               bgColor="gray.700"
+              overflow="hidden"
             >
               <UnorderedList listStyleType="none" m="0">
                 <SingleMenu

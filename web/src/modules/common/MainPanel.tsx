@@ -29,7 +29,12 @@ export const MainPanel: React.FC<Props> = () => {
             pointerEvents="none"
             children={<FiSearch color="gray.300" />}
           />
-          <Input type="text" placeholder="Search anything" variant="filled" />
+          <Input
+            type="text"
+            placeholder="Search anything"
+            variant="filled"
+            _focus={{ borderColor: "purple.700" }}
+          />
         </InputGroup>
         {<MainPanelContent />}
       </Flex>

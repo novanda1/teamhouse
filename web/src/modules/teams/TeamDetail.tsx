@@ -42,6 +42,14 @@ export const TeamDetail: React.FC<Props> = () => {
 
   const leaders = useGetUser({ username: team?.leaders });
   const members = useGetUser({ username: team?.members });
+  const [people, setPeople] = useState([]);
+
+  useEffect(() => {
+    if (leaders && members)
+      setPeople(() => {
+        return [...leaders, ...members];
+      });
+  }, [leaders, members]);
 
   //
   const toast = useToast();
@@ -140,7 +148,7 @@ export const TeamDetail: React.FC<Props> = () => {
                     </Popover>
                   </Box>
                 </Flex>
-                <Text mt="1">
+                <Text>
                   <Text fontSize="sm" as="span" fontWeight="light">
                     with{" "}
                   </Text>
@@ -149,30 +157,21 @@ export const TeamDetail: React.FC<Props> = () => {
                     {leaders ? leaders[0].username : ""}
                   </Text>
                 </Text>
-                <Text mt="4">{team?.description}</Text>
+                <Text mt="2" size="sm" color="whiteAlpha.800">
+                  {team?.description}
+                </Text>
               </Box>
 
               {/* content */}
               <Flex p="6" flexDirection="column" sx={{ gap: 30 }}>
                 <Box>
-                  <Heading size="md" pb="4">
-                    Leaders
-                  </Heading>
-                  {leaders?.map((l) => (
-                    <Avatar key={l._id} size="md" name={l.username} />
-                  ))}
-                </Box>
-                <Box>
-                  <Flex pb="4" alignItems="center" sx={{ gap: 10 }}>
-                    <Heading size="md">Members</Heading>
-                    <IconButton
-                      icon={<IoIosAdd size="85%" />}
-                      aria-label="add member"
-                      size="xs"
-                      w="0"
-                    />
+                  <Flex>
+                    <Heading size="sm" pb="4">
+                      People
+                    </Heading>
+                    <Button ml="2" size="xs">Add New</Button>
                   </Flex>
-                  {members?.map((l) => (
+                  {people?.map((l) => (
                     <Avatar key={l._id} size="md" name={l.username} />
                   ))}
                 </Box>

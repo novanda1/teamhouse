@@ -94,7 +94,6 @@ export const TeamModal: React.FC<Props> = ({}) => {
               : "Edit your team"}
           </Text>
         </ModalHeader>
-        <ModalCloseButton />
         <ModalBody>
           <Formik
             initialValues={
@@ -104,6 +103,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
             }
             validationSchema={newTeamValidation}
             onSubmit={async (values) => {
+              if (!teamStore.modalIsOpen) return;
               const response = await onSubmit(
                 teamStore,
                 values,
@@ -170,7 +170,13 @@ export const TeamModal: React.FC<Props> = ({}) => {
                   >
                     {isAddModal ? "Create" : "Save"}
                   </Button>
-                  <Button ml="3" variant="link" mr="auto" onClick={handleClose}>
+                  <Button
+                    type="button"
+                    ml="3"
+                    variant="unstyled"
+                    mr="auto"
+                    onClick={handleClose}
+                  >
                     Cancel
                   </Button>
                 </Flex>
