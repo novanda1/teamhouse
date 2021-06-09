@@ -1,5 +1,6 @@
 import {
   Avatar,
+  ButtonProps,
   Flex,
   IconButton,
   ListItem,
@@ -7,11 +8,11 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  UnorderedList
+  UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback } from "react";
-import { IoMdPerson } from "react-icons/io";
+import { IoMdPerson, IoIosSettings } from "react-icons/io";
 import { useMeQuery } from "../../generated/graphql";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 
@@ -19,7 +20,8 @@ const SingleMenu: React.FC<{
   title: string;
   to: string;
   icon?: ReactElement;
-}> = ({ to, icon, title }) => {
+  p?: ButtonProps;
+}> = ({ to, icon, title, p }) => {
   const { push } = useRouter();
   const onClick = useCallback(() => {
     push(to);
@@ -28,13 +30,14 @@ const SingleMenu: React.FC<{
     <>
       <ListItem display="flex">
         <ButtonNoOutline
+          {...p}
           bg="transparent"
           color="whiteAlpha.900"
           w="full"
           rounded="none"
           onClick={onClick}
         >
-          <Flex alignItems="center">
+          <Flex alignItems="center" mr="auto">
             {icon}
             <Text ml={icon ? "1" : "0"} fontSize="sm">
               {title}
@@ -73,7 +76,16 @@ export const RightPanel: React.FC = () => {
                   title="Profile"
                   to="/profile"
                 />
-                <SingleMenu title="Log out" to="/logout" />
+                <SingleMenu
+                  icon={<IoIosSettings size="20px" />}
+                  title="Settings"
+                  to="/profile"
+                />
+                <SingleMenu
+                  title="Log out"
+                  to="/logout"
+                  p={{ backgroundColor: "gray.800" }}
+                />
               </UnorderedList>
             </PopoverContent>
           </Popover>
