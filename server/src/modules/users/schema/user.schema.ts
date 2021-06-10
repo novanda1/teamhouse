@@ -13,6 +13,18 @@ export class User {
   username: string;
 
   @Prop()
+  @Field()
+  firstname: string;
+
+  @Prop()
+  @Field()
+  lastname: string;
+
+  @Prop()
+  @Field({ nullable: true })
+  bio?: string;
+
+  @Prop()
   password: string;
 }
 

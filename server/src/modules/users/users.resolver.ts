@@ -1,9 +1,17 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Field, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 import { GqlUser } from 'src/shared/decorators';
 import { GqlResponse } from 'src/types/graphql';
 import GqlNotUserResponse from 'src/utils/GqlNotUserResponse';
 import { GraphqlAuthGuard } from '../auth/guards/graphql-auth.guard';
+import { UpdateUserInput } from './dto/user-inputs.dto';
 import { User } from './schema/user.schema';
 import { UsersService } from './users.service';
 
@@ -55,5 +63,15 @@ export class UsersResolver {
       status: 'success',
       data: users,
     };
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => User, { name: 'updateUser' })
+  async update(
+    @Args('options') options: UpdateUserInput,
+    @GqlUser() user,
+  ): Promise<User> {
+    const id = user.id;
+    return await this.userService.update(id, options);
   }
 }

@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserInput, UpdateUserInput } from './dto/user-inputs.dto';
+import {
+  CreateUserInput,
+  LoginUserInput,
+  UpdateUserInput,
+} from './dto/user-inputs.dto';
 import { User, UserDocument, UserResponse } from './schema/user.schema';
 import * as argon2 from 'argon2';
 
@@ -45,11 +49,8 @@ export class UsersService {
     return await this.users.findOne({ username });
   }
 
-  async validateUser(
-    username: string,
-    password: string,
-  ): Promise<UserResponse> {
-    const user = await this.users.findOne({ username });
+  async validateUser(input: LoginUserInput): Promise<UserResponse> {
+    const user = await this.users.findOne({ username: input.username });
 
     if (!user) {
       return {
@@ -62,7 +63,7 @@ export class UsersService {
       };
     }
 
-    const validPass = await argon2.verify(user.password, password);
+    const validPass = await argon2.verify(user.password, input.password);
 
     if (!validPass) {
       return {

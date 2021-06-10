@@ -6,6 +6,15 @@ export class CreateUserInput {
   username: string;
 
   @Field()
+  firstname: string;
+
+  @Field()
+  lastname: string;
+
+  @Field({ nullable: true })
+  bio?: string;
+
+  @Field()
   password: string;
 }
 
@@ -13,3 +22,12 @@ export class CreateUserInput {
 export class UpdateUserInput extends PartialType(
   OmitType(CreateUserInput, ['password'] as const),
 ) {}
+
+@InputType()
+export class LoginUserInput {
+  @Field()
+  username: string;
+
+  @Field()
+  password: string;
+}

@@ -3,7 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlUser } from 'src/shared/decorators';
 import { getExpirationToken } from 'src/utils/getExpirationToken';
 import { validateRegister } from 'src/utils/validateRegister';
-import { CreateUserInput } from '../users/dto/user-inputs.dto';
+import { CreateUserInput, LoginUserInput } from '../users/dto/user-inputs.dto';
 import {
   RefreshTokenResponse,
   User,
@@ -24,14 +24,10 @@ export class AuthResolver {
 
   @Mutation(() => UserResponse, { name: 'login' })
   async login(
-    @Args('username')
-    username: string,
-
-    @Args('password')
-    password: string,
+    @Args('input') input: LoginUserInput,
     @Context() { res },
   ): Promise<UserResponse> {
-    const user = await this.userService.validateUser(username, password);
+    const user = await this.userService.validateUser(input);
 
     if (!user?.errors) {
       const token = await this.auth.generateAccessToken(user.user);
