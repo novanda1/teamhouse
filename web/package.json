@@ -16,6 +16,7 @@
     "@fontsource/roboto": "^4.4.5",
     "@reduxjs/toolkit": "^1.5.1",
     "cookie-cutter": "^0.2.0",
+    "focus-visible": "^5.2.0",
     "formik": "^2.2.8",
     "framer-motion": "^4",
     "graphql": "^15.5.0",

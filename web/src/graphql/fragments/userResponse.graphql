@@ -13,7 +13,6 @@ fragment UserResponseFragment on UserResponse {
     }
   }
   user {
-    _id
-    username
+    ...UserFragment
   }
 }

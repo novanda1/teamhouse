@@ -42,7 +42,7 @@ export const LoginPage: React.FC<Props> = () => {
             initialValues={{ username: "", password: "" }}
             onSubmit={async (values, { setErrors, setSubmitting }) => {
               const response = await login({
-                variables: values,
+                variables: { input: values },
               });
 
               // const user = response.data?.login.user;

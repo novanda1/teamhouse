@@ -6,6 +6,16 @@ const config: ThemeConfig = {
 };
 
 const theme = extendTheme<Theme>({ config }, {
+  styles : {
+    global: {
+      // ".js-focus-visible" : { 
+      //     ":focus:not([data-focus-visible-added])" : {
+      //       outline: "none",
+      //       boxShadow: "none"
+      //   }
+      // }
+    }
+  },
     fonts: { 
       mono: "Menlo",
     },

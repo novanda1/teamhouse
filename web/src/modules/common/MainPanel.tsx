@@ -1,6 +1,7 @@
 import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
+import { Profile } from "../me/Profile";
 import { TeamDetail } from "../teams/TeamDetail";
 import { usePanelStore } from "./usePanelStore";
 
@@ -12,7 +13,7 @@ const MainPanelContent: React.FC = () => {
     case "team":
       return <TeamDetail />;
     case "profile":
-      return <>profl</>;
+      return <Profile />;
     case "idle":
       return <></>;
     default:

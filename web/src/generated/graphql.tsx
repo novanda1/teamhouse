@@ -37,6 +37,9 @@ export type CreateTeamInputsDto = {
 
 export type CreateUserInput = {
   username: Scalars['String'];
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  bio?: Maybe<Scalars['String']>;
   password: Scalars['String'];
 };
 
@@ -53,6 +56,11 @@ export type IsValidToken = {
   refreshTokenValid: Scalars['Boolean'];
 };
 
+export type LoginUserInput = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type MeQueryResponse = {
   __typename?: 'MeQueryResponse';
   user?: Maybe<User>;
@@ -61,6 +69,7 @@ export type MeQueryResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  updateUser: User;
   login: UserResponse;
   register: UserResponse;
   refreshToken: RefreshTokenResponse;
@@ -74,9 +83,13 @@ export type Mutation = {
 };
 
 
+export type MutationUpdateUserArgs = {
+  options: UpdateUserInput;
+};
+
+
 export type MutationLoginArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
+  input: LoginUserInput;
 };
 
 
@@ -188,10 +201,20 @@ export type UpdateTeamInputDto = {
   members?: Maybe<Array<Scalars['String']>>;
 };
 
+export type UpdateUserInput = {
+  username?: Maybe<Scalars['String']>;
+  firstname?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['String'];
   username: Scalars['String'];
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  bio?: Maybe<Scalars['String']>;
 };
 
 export type UserDataResponse = {
@@ -228,6 +251,11 @@ export type TeamFragmentFragment = (
   & Pick<Team, '_id' | 'name' | 'description' | 'leaders' | 'members'>
 );
 
+export type UserFragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, '_id' | 'username' | 'firstname' | 'lastname' | 'bio'>
+);
+
 export type UserResponseFragmentFragment = (
   { __typename?: 'UserResponse' }
   & { errors?: Maybe<Array<(
@@ -244,7 +272,7 @@ export type UserResponseFragmentFragment = (
     ) }
   )>, user?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, '_id' | 'username'>
+    & UserFragmentFragment
   )> }
 );
 
@@ -292,8 +320,7 @@ export type DeleteTeamMutation = (
 );
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+  input: LoginUserInput;
 }>;
 
 
@@ -314,8 +341,7 @@ export type LogoutMutation = (
 );
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+  options: CreateUserInput;
 }>;
 
 
@@ -341,6 +367,19 @@ export type UpdateTeamMutation = (
   ) }
 );
 
+export type UpdateUserMutationVariables = Exact<{
+  options: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: (
+    { __typename?: 'User' }
+    & UserFragmentFragment
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -350,7 +389,7 @@ export type MeQuery = (
     { __typename?: 'MeQueryResponse' }
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, '_id' | 'username'>
+      & UserFragmentFragment
     )>, tokens: (
       { __typename?: 'IsValidToken' }
       & Pick<IsValidToken, 'accessTokenValid' | 'refreshTokenValid'>
@@ -444,6 +483,15 @@ export const ErrorsFragmentFragmentDoc = gql`
   message
 }
     `;
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  _id
+  username
+  firstname
+  lastname
+  bio
+}
+    `;
 export const UserResponseFragmentFragmentDoc = gql`
     fragment UserResponseFragment on UserResponse {
   errors {
@@ -460,11 +508,11 @@ export const UserResponseFragmentFragmentDoc = gql`
     }
   }
   user {
-    _id
-    username
+    ...UserFragment
   }
 }
-    ${ErrorsFragmentFragmentDoc}`;
+    ${ErrorsFragmentFragmentDoc}
+${UserFragmentFragmentDoc}`;
 export const AddTeamMemberDocument = gql`
     mutation AddTeamMember($teamId: String!, $username: String!) {
   addTeamMember(teamId: $teamId, username: $username) {
@@ -570,8 +618,8 @@ export type DeleteTeamMutationHookResult = ReturnType<typeof useDeleteTeamMutati
 export type DeleteTeamMutationResult = Apollo.MutationResult<DeleteTeamMutation>;
 export type DeleteTeamMutationOptions = Apollo.BaseMutationOptions<DeleteTeamMutation, DeleteTeamMutationVariables>;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password) {
+    mutation Login($input: LoginUserInput!) {
+  login(input: $input) {
     ...UserResponseFragment
   }
 }
@@ -591,8 +639,7 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  * @example
  * const [loginMutation, { data, loading, error }] = useLoginMutation({
  *   variables: {
- *      username: // value for 'username'
- *      password: // value for 'password'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -634,8 +681,8 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
+    mutation Register($options: CreateUserInput!) {
+  register(options: $options) {
     ...UserResponseFragment
   }
 }
@@ -655,8 +702,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  * @example
  * const [registerMutation, { data, loading, error }] = useRegisterMutation({
  *   variables: {
- *      username: // value for 'username'
- *      password: // value for 'password'
+ *      options: // value for 'options'
  *   },
  * });
  */
@@ -701,12 +747,44 @@ export function useUpdateTeamMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateTeamMutationHookResult = ReturnType<typeof useUpdateTeamMutation>;
 export type UpdateTeamMutationResult = Apollo.MutationResult<UpdateTeamMutation>;
 export type UpdateTeamMutationOptions = Apollo.BaseMutationOptions<UpdateTeamMutation, UpdateTeamMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($options: UpdateUserInput!) {
+  updateUser(options: $options) {
+    ...UserFragment
+  }
+}
+    ${UserFragmentFragmentDoc}`;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
     user {
-      _id
-      username
+      ...UserFragment
     }
     tokens {
       accessTokenValid
@@ -714,7 +792,7 @@ export const MeDocument = gql`
     }
   }
 }
-    `;
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useMeQuery__
