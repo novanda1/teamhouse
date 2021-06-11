@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useTokenStore } from "./useTokenStore";
+import React, { useEffect } from "react";
+import { ITokenStore, useTokenStore } from "./useTokenStore";
 import { useVerifyLoggedIn } from "./useVerifyLoggedIn";
 
 interface WaitForWsAndAuthProps {}
@@ -7,12 +7,13 @@ interface WaitForWsAndAuthProps {}
 export const WaitForAuth: React.FC<WaitForWsAndAuthProps> = ({ children }) => {
   useVerifyLoggedIn();
   const hasTokens = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
-  const [loggedIn, setLoggedIn] = useState(false);
+  const tokens = useTokenStore();
 
   useEffect(() => {
-    if (hasTokens) setLoggedIn(hasTokens);
+    if (hasTokens)
+      tokens.set((s: ITokenStore) => void (s.isLoggedIn = "loggedIn"));
   }, [hasTokens]);
 
-  if (loggedIn) return <>{children}</>;
+  if (tokens.isLoggedIn === "loggedIn") return <>{children}</>;
   return <></>;
 };

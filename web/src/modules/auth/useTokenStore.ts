@@ -17,7 +17,7 @@ const getAccessToken = (): ITokenStore => {
   if (!isServer) {
     try {
       return {
-        isLoggedIn: "loading",
+        isLoggedIn: "notLoggedIn",
         accessToken: cookieCutter.get(accessTokenKey) || "",
         refreshToken: cookieCutter.get(refreshTokenKey) || ""
       }
@@ -25,7 +25,7 @@ const getAccessToken = (): ITokenStore => {
   }
 
   return {
-    isLoggedIn: "loading",
+    isLoggedIn: "notLoggedIn",
     accessToken: "",
     refreshToken: ""
   };
