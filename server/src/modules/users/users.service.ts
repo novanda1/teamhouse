@@ -102,6 +102,7 @@ export class UsersService {
   }
 
   async update(_id: string, options: UpdateUserInput): Promise<User> {
-    return await this.users.findOneAndUpdate({ _id }, { $set: options });
+    await this.users.findOneAndUpdate({ _id }, { $set: options });
+    return await this.users.findById(_id);
   }
 }

@@ -14,6 +14,12 @@ export class CreateUserInput {
   @Field({ nullable: true })
   bio?: string;
 
+  @Field({ nullable: true })
+  profileImg?: string;
+
+  @Field({ nullable: true })
+  coverImg?: string;
+
   @Field()
   password: string;
 }

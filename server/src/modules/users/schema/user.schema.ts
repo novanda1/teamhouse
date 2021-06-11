@@ -25,6 +25,14 @@ export class User {
   bio?: string;
 
   @Prop()
+  @Field({ nullable: true })
+  profileImg?: string;
+
+  @Prop()
+  @Field({ nullable: true })
+  coverImg?: string;
+
+  @Prop()
   password: string;
 }
 
