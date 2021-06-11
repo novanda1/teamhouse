@@ -14,6 +14,9 @@ const theme = extendTheme<Theme>({ config }, {
       //       boxShadow: "none"
       //   }
       // }
+      body: {
+        color: "gray.200"
+      }
     }
   },
     fonts: { 
