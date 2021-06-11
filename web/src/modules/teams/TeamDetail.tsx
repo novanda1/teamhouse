@@ -18,6 +18,7 @@ import { IoIosAdd } from "react-icons/io";
 import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
 import { useGetUser } from "../../hooks/useGetUser";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
+import { AddMember } from "./AddMember";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 
 interface Props {}
@@ -173,9 +174,7 @@ export const TeamDetail: React.FC<Props> = () => {
                     <Heading size="sm" pb="4">
                       People
                     </Heading>
-                    <Button ml="2" size="xs">
-                      Add New
-                    </Button>
+                    <AddMember />
                   </Flex>
                   {people?.map((l) => (
                     <Avatar key={l._id} size="md" name={l.username} />
