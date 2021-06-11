@@ -39,6 +39,7 @@ export class User {
 export type UserDocument = User & Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index({ username: 'text', firstname: 'text', lastname: 'text' });
 
 @ObjectType()
 export class FieldError {

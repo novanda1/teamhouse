@@ -105,4 +105,8 @@ export class UsersService {
     await this.users.findOneAndUpdate({ _id }, { $set: options });
     return await this.users.findById(_id);
   }
+
+  async search(query: string): Promise<User[]> {
+    return await this.users.find({ $text: { $search: query } });
+  }
 }

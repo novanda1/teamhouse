@@ -74,4 +74,10 @@ export class UsersResolver {
     const id = user.id;
     return await this.userService.update(id, options);
   }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [User], { name: 'searchUser' })
+  async search(@Args('query') query: string): Promise<User[]> {
+    return await this.userService.search(query);
+  }
 }
