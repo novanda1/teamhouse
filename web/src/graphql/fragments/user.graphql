@@ -4,4 +4,6 @@ fragment UserFragment on User {
   firstname
   lastname
   bio
+  profileImg
+  coverImg
 }

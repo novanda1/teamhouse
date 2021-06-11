@@ -40,6 +40,8 @@ export type CreateUserInput = {
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   bio?: Maybe<Scalars['String']>;
+  profileImg?: Maybe<Scalars['String']>;
+  coverImg?: Maybe<Scalars['String']>;
   password: Scalars['String'];
 };
 
@@ -206,6 +208,8 @@ export type UpdateUserInput = {
   firstname?: Maybe<Scalars['String']>;
   lastname?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  profileImg?: Maybe<Scalars['String']>;
+  coverImg?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -215,6 +219,8 @@ export type User = {
   firstname: Scalars['String'];
   lastname: Scalars['String'];
   bio?: Maybe<Scalars['String']>;
+  profileImg?: Maybe<Scalars['String']>;
+  coverImg?: Maybe<Scalars['String']>;
 };
 
 export type UserDataResponse = {
@@ -253,7 +259,7 @@ export type TeamFragmentFragment = (
 
 export type UserFragmentFragment = (
   { __typename?: 'User' }
-  & Pick<User, '_id' | 'username' | 'firstname' | 'lastname' | 'bio'>
+  & Pick<User, '_id' | 'username' | 'firstname' | 'lastname' | 'bio' | 'profileImg' | 'coverImg'>
 );
 
 export type UserResponseFragmentFragment = (
@@ -490,6 +496,8 @@ export const UserFragmentFragmentDoc = gql`
   firstname
   lastname
   bio
+  profileImg
+  coverImg
 }
     `;
 export const UserResponseFragmentFragmentDoc = gql`
