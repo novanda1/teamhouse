@@ -34,11 +34,29 @@ const CustomTab: React.ForwardRefExoticComponent<
       w="full"
       justifyContent="center"
       py="0"
+      _focus={{
+        boxShadow: "none",
+      }}
       {...tabProps}
     >
-      <Box py="3" w="max-content">
+      <Box
+        position="relative"
+        py="2.5"
+        w="max-content"
+        fontWeight="bold"
+        color={isSelected ? "purple.200" : "white"}
+      >
         {tabProps.children}
-        <Box></Box>
+        {isSelected && (
+          <Box
+            position="absolute"
+            bottom="0"
+            h="1"
+            w="full"
+            rounded="full"
+            bgColor="purple.200"
+          ></Box>
+        )}
       </Box>
     </StyledTab>
   );
@@ -60,7 +78,7 @@ export const Profile: React.FC = () => {
             rounded="lg"
           >
             <Image
-              src="/cover1.jpg"
+              src={u.coverImg ? u.coverImg : "/cover1.jpg"}
               alt="Picture of the author"
               minH="full"
               minW="full"
@@ -70,7 +88,11 @@ export const Profile: React.FC = () => {
           </Flex>
           <Box ml="5" sx={{ transform: "translateY(-50%)" }}>
             <Avatar
-              src="https://pbs.twimg.com/profile_images/1397231638434697217/6ztb3kG8_400x400.jpg"
+              src={
+                u.profileImg
+                  ? u.profileImg
+                  : "https://pbs.twimg.com/profile_images/1397231638434697217/6ztb3kG8_400x400.jpg"
+              }
               name={u.username}
               size="2xl"
               borderWidth="6px"
@@ -82,7 +104,9 @@ export const Profile: React.FC = () => {
             {u.firstname} {u.lastname}
           </Heading>
           <Text color="whiteAlpha.600">@{u.username}</Text>
-          <Text mt="3">{u.bio}</Text>
+          <Text mt="3" color="gray.200">
+            {u.bio}
+          </Text>
         </Box>
 
         <Box mt="5">
