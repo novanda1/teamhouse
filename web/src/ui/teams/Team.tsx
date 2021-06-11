@@ -12,7 +12,7 @@ interface TeamListUiProps {
 }
 
 export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
-  const { push } = useRouter();
+  const { push, query } = useRouter();
   const onClick = useCallback(() => {
     push(`/team/${t._id}`);
   }, [push]);
@@ -26,10 +26,31 @@ export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
           _hover={{ bgColor: "transparent" }}
           w="full"
         >
-          <Avatar name={t.name} size="sm" />
-          <Heading as="h4" size="sm" ml="4">
-            {t.name}
-          </Heading>
+          {query?.id && query.id === t._id ? (
+            <>
+              <Avatar
+                name={t.name}
+                size="sm"
+                backgroundColor="purple.100"
+                color="gray.800"
+              />
+              <Heading as="h4" size="sm" ml="4">
+                {t.name}
+              </Heading>
+            </>
+          ) : (
+            <>
+              <Avatar
+                name={t.name}
+                backgroundColor="whiteAlpha.600"
+                color="gray.900"
+                size="sm"
+              />
+              <Heading as="h4" size="sm" ml="4" color="whiteAlpha.600">
+                {t.name}
+              </Heading>
+            </>
+          )}
         </Flex>
       </ButtonNoOutline>
     </>
@@ -38,8 +59,15 @@ export const TeamUi: React.FC<{ t: Team }> = ({ t }) => {
 
 export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = memo(({ onAddTeam }) => {
   return (
-    <Flex justifyContent="space-between" w="full">
-      <Heading as="h3" size="md" mb="2">
+    <Flex justifyContent="space-between" w="full" mb="2">
+      <Heading
+        as="h3"
+        display="flex"
+        alignItems="center"
+        size="xs"
+        textTransform="uppercase"
+        color="whiteAlpha.600"
+      >
         Team
       </Heading>
       <IconButton
@@ -47,6 +75,8 @@ export const TeamHeadUi: React.FC<{ onAddTeam: Fn }> = memo(({ onAddTeam }) => {
         icon={<MdAdd size="85%" />}
         size="xs"
         w="0"
+        rounded="full"
+        backgroundColor="whiteAlpha.600"
         onClick={onAddTeam}
       />
     </Flex>
