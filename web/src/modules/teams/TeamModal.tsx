@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
@@ -44,6 +45,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
     },
   });
   const [updateTeam] = useUpdateTeamMutation();
+  const toast = useToast();
 
   const isAddModal = teamStore.modalType === "add";
   const handleClose = () =>
@@ -120,7 +122,16 @@ export const TeamModal: React.FC<Props> = ({}) => {
               const id = response.data?.createTeam?._id;
 
               if (teamStore.modalType == "add") {
-                if (id) push(`/team/${id}`);
+                if (id) {
+                  toast({
+                    title: "Team added.",
+                    description: "We've created team for you.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                  push(`/team/${id}`);
+                }
               }
             }}
           >
