@@ -25,7 +25,7 @@ export class AuthResolver {
   @Mutation(() => UserResponse, { name: 'login' })
   async login(
     @Args('input') input: LoginUserInput,
-    @Context() { res },
+    @Context() { res, req },
   ): Promise<UserResponse> {
     const user = await this.userService.validateUser(input);
 
@@ -49,6 +49,8 @@ export class AuthResolver {
 
       res.cookie(jwtConstants.cookieName, token.access_token);
       res.cookie(jwtConstants.refreshTokenKey, refresh_token.access_token);
+
+      req.session.userId = user.user._id;
     }
 
     return user;

@@ -21,10 +21,7 @@ import { UsersModule } from './modules/users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       playground: true,
-      cors: {
-        credentials: true,
-        origin: ['https://teamhouse.vercel.app', 'http://localhost:3000'],
-      },
+      cors: false,
       context: ({ req, res }) => ({ req, res }),
     }),
     UsersModule,
