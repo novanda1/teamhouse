@@ -50,7 +50,7 @@ export class AuthResolver {
       res.cookie(jwtConstants.cookieName, token.access_token);
       res.cookie(jwtConstants.refreshTokenKey, refresh_token.access_token);
 
-      req.session.userId = user.user._id;
+      // req.session.userId = user.user._id;
     }
 
     return user;
