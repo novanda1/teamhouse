@@ -9,7 +9,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: true,
+    origin: '*',
   });
 
   app.useGlobalGuards(new GraphqlAuthGuard());

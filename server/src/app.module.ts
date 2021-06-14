@@ -20,9 +20,10 @@ import { UsersModule } from './modules/users/users.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      playground: true,
       cors: {
         credentials: true,
-        origin: 'http://localhost:3000',
+        origin: '*',
       },
       context: ({ req, res }) => ({ req, res }),
     }),
