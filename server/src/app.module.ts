@@ -23,7 +23,7 @@ import { UsersModule } from './modules/users/users.module';
       playground: true,
       cors: {
         credentials: true,
-        origin: 'https://teamhouse.vercel.app/',
+        origin: 'https://teamhouse.vercel.app',
       },
       context: ({ req, res }) => ({ req, res }),
     }),
