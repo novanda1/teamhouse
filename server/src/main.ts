@@ -9,7 +9,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: '*',
+    origin: 'https://teamhouse.vercel.app',
   });
 
   app.useGlobalGuards(new GraphqlAuthGuard());
