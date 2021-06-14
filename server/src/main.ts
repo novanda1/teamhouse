@@ -14,6 +14,6 @@ async function bootstrap() {
 
   app.useGlobalGuards(new GraphqlAuthGuard());
 
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT || 8080);
 }
 bootstrap();
