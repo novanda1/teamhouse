@@ -13,7 +13,7 @@ const createClient = (ctx: NextPageContext) =>
         cookie:
           (typeof window === "undefined"
             ? ctx?.req?.headers.cookie
-            : "web") || "not",
+            : "") || "",
       },
     }),
     cache: new InMemoryCache({}),
