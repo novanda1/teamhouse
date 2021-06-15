@@ -16,7 +16,7 @@ async function bootstrap() {
       origin: [
         'https://teamhouse.vercel.app',
         'http://localhost:3000',
-        'https://teamhouse-p738l2hpg-novanda1.vercel.app/',
+        'https://teamhouse-p738l2hpg-novanda1.vercel.app',
       ],
     }),
   );
