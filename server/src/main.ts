@@ -13,7 +13,11 @@ async function bootstrap() {
   app.use(
     cors({
       credentials: true,
-      origin: ['https://teamhouse.vercel.app', 'http://localhost:3000'],
+      origin: [
+        'https://teamhouse.vercel.app',
+        'http://localhost:3000',
+        'https://teamhouse-p738l2hpg-novanda1.vercel.app/',
+      ],
     }),
   );
 
