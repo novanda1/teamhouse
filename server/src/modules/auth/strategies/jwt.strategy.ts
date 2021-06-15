@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { Strategy } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
 import { jwtConstants } from '../constants';
 
@@ -12,7 +12,7 @@ const cookieExtractor = (req: Request): string | null => {
     token = req.cookies[jwtConstants.cookieName];
   }
 
-  return token;
+  return token ? token : ExtractJwt.fromAuthHeaderAsBearerToken();
 };
 
 @Injectable()
