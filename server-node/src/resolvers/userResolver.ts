@@ -36,10 +36,11 @@ export class UserResolver {
     return 'bye';
   }
 
-  @Mutation(() => User, { name: 'createUser' })
+  @Mutation(() => UserResponse, { name: 'createUser' })
   async create(
     @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
-  ): Promise<User | null> {
+  ): Promise<UserResponse> {
+    console.log(`options`, options);
     return await this.userService.create(options);
   }
 }

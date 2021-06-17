@@ -22,6 +22,10 @@ export class TypeMetadataStorageHost {
   private schemas = new Array<SchemaMetadata>();
   private properties = new Array<PropertyMetadata>();
 
+  addPropertyMetadata(metadata: PropertyMetadata) {
+    this.properties.push(metadata);
+  }
+
   getSchemaMetadataByTarget(target: Type<unknown>): SchemaMetadata | undefined {
     return this.schemas.find((item) => item.target === target);
   }

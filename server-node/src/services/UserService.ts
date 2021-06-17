@@ -1,19 +1,37 @@
-import { model, Model } from 'mongoose';
+import { validate } from 'class-validator';
+import { Model } from 'mongoose';
 import { CreateUserDTO } from '../dto/userDTO';
-import { User, UserDocument, UserSchema } from '../schema/user';
+import { UserResponse } from '../resolvers/userResolver';
+import { User, UserDocument, UserModel } from '../schema/user';
 
 export class UserService {
-  constructor(
-    private userModel: Model<UserDocument> = model(User.name, UserSchema),
-  ) {}
+  constructor(private userModel: Model<UserDocument> = UserModel) {}
 
-  async create(options: CreateUserDTO): Promise<User | null> {
-    const user = await this.userModel.create({
-      name: 'yes',
+  async create(options: CreateUserDTO): Promise<UserResponse> {
+    return validate(options).then(async (errors): Promise<UserResponse> => {
+      if (errors.length > 0) {
+        console.log('validation failed. errors: ', errors);
+        return {
+          errors: [
+            ...errors.map((err) => {
+              return {
+                field: err.property,
+                message:
+                  err.constraints !== undefined
+                    ? err.constraints[Object.keys(err.constraints)[0]] // get first val in obj
+                    : '',
+              };
+            }),
+          ],
+        };
+      } else {
+        console.log('validation succeed');
+        const user = await this.userModel.create({
+          ...options,
+        });
+        user instanceof User;
+        return { user };
+      }
     });
-    user instanceof User;
-    // const user = await this.userModel.findOne({ email: options.email });
-
-    return user;
   }
 }
