@@ -1,12 +1,15 @@
+import { COOKIE_NAME } from '../lib/constants';
 import {
   Arg,
+  Ctx,
   Field,
   Mutation,
   ObjectType,
   Query,
   Resolver,
 } from 'type-graphql';
-import { CreateUserDTO } from '../dto/userDTO';
+import { CreateUserDTO } from '../lib/dto/userDTO';
+import { Context } from '../lib/types';
 import { User } from '../schema/userSchema';
 import { UserService } from '../services/UserService';
 
@@ -31,16 +34,33 @@ export class UserResponse {
 export class UserResolver {
   constructor(private userService: UserService = new UserService()) {}
 
-  @Query(() => String)
-  user() {
-    return 'bye';
+  @Query(() => User)
+  async me(@Ctx() { req }: Context): Promise<User | null> {
+    const user = await this.userService.find(req?.session.passport.user.userId);
+    return user;
   }
 
   @Mutation(() => UserResponse, { name: 'createUser' })
-  async create(
+  async register(
     @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
   ): Promise<UserResponse> {
     console.log(`options`, options);
     return await this.userService.create(options);
+  }
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: Context) {
+    return new Promise((resolve) =>
+      req.session.destroy((err: any) => {
+        res.clearCookie(COOKIE_NAME);
+        req.logOut();
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return; 
+        }
+
+        resolve(true);
+      }),
+    );
   }
 }

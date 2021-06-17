@@ -1,4 +1,4 @@
-import { Document, model } from 'mongoose';
+import { Document, Model, model } from 'mongoose';
 import { Field, ObjectType } from 'type-graphql';
 import { Prop } from '../lib/decorators/propDecorator';
 import { Schema } from '../lib/decorators/schemaDecorator';
@@ -32,4 +32,4 @@ export class User {
 
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
-export const UserModel = model(User.name, UserSchema);
+export const UserModel: Model<UserDocument> = model(User.name, UserSchema);
