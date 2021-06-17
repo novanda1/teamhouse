@@ -11,7 +11,7 @@ import {
 import { CreateUserDTO } from '../lib/dto/userDTO';
 import { Context } from '../lib/types';
 import { User } from '../schema/userSchema';
-import { UserService } from '../services/UserService';
+import { UserService } from '../services/userService';
 
 @ObjectType()
 class FieldError {

@@ -12,6 +12,7 @@ import { buildSchema } from 'type-graphql';
 import { redis } from './lib/config/redis';
 import sessionOpt from './lib/config/session';
 import { HelloResolver } from './resolvers/hello';
+import { TeamRefResolver, TeamResolver } from './resolvers/teamResolver';
 import { UserResolver } from './resolvers/userResolver';
 import router from './routes';
 import './services/auth/passport';
@@ -51,7 +52,7 @@ const main = async () => {
   /** apollo */
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
+      resolvers: [HelloResolver, UserResolver, TeamRefResolver, TeamResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
