@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import session from 'express-session';
 
 export type Context = {
-  req: Request & { session: Express.Session };
+  req: Request & { session: session.Session };
   res: Response;
   //   redis: Redis;
   //   userLoader: ReturnType<typeof createUserLoader>;
