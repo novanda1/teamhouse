@@ -5,8 +5,9 @@
 Creating mongoose schema.
 Convert the class syntax into the Mongoose schema syntax, so in the end, the result of the conversion would be like this:
 
-```
+```javascript
 const schema = new mongoose.Schema({
+    /** we have "name" here because we added [@Prop()](#prop-decorator) decorator */
     name: { type: String } // Notice that `String` is now uppercase.
 });
 
