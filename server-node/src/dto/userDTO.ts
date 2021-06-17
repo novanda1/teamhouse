@@ -1,4 +1,4 @@
-import { IsEmail, MinLength } from 'class-validator';
+import { IsEmail, IsString, IsUrl } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
@@ -6,20 +6,22 @@ export class CreateUserDTO {
   _id!: string;
 
   @Field(() => String)
-  @MinLength(10)
   @IsEmail()
   email!: string;
-  
-  @MinLength(10)
+
   @Field(() => String)
+  @IsString()
   firstname!: string;
 
   @Field(() => String)
+  @IsString()
   lastname!: string;
 
   @Field(() => String)
+  @IsString()
   bio!: string;
 
   @Field(() => String)
+  @IsUrl()
   picture!: string;
 }

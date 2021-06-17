@@ -7,7 +7,7 @@ import {
   Resolver,
 } from 'type-graphql';
 import { CreateUserDTO } from '../dto/userDTO';
-import { User } from '../schema/user';
+import { User } from '../schema/userSchema';
 import { UserService } from '../services/UserService';
 
 @ObjectType()

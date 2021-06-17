@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 const app: Express = express();
 
 const main = async () => {
-  const conn = await connect(process.env.DATABASE_URL as string, {
+  await connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true,

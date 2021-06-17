@@ -9,7 +9,7 @@ import { SchemaFactory } from '../lib/factories/schemaFactory';
 export class User {
   _id!: string;
 
-  @Prop()
+  @Prop({ unique: true })
   @Field(() => String)
   email!: String;
 
