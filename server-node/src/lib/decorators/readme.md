@@ -1,4 +1,4 @@
-# Whats this decorator do?
+# Whats those decorator do?
 
 ### Schema decorator
 
@@ -14,12 +14,14 @@ const schema = new mongoose.Schema({
 
 ### Prop Decorator
 
-When you do:
+Mark the value on Mongo schema, basically when you do:
 
 ```javascript
 @Prop()
 name: string;
 ```
+
+name will be add on schema.
 
 Prop function would be called, in this case with no arguments.
 
@@ -33,3 +35,5 @@ Using the Reflect API, we can get the data type that you use when you do name: s
 - string will be serialized as String
 - boolean will be serialized as Boolean
 - and so on
+
+otherwise, when you didn't add @Prop decorator, the value wouldn't added on mongo document.
