@@ -25,7 +25,7 @@ export class TeamRef {
 
   @Prop({ unique: true })
   @Field(() => String)
-  teamid!: string;
+  team_id!: string;
 
   @Prop()
   @Field(() => [String])
