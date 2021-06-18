@@ -1,9 +1,9 @@
 import { Query, Resolver, UseMiddleware } from 'type-graphql';
-import { isAuth } from '../middleware/isAuth';
+import { JWT } from '../middleware/jwt';
 
 @Resolver()
 export class HelloResolver {
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Query(() => String)
   hello() {
     return 'bye';

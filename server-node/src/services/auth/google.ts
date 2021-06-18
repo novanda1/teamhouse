@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
+import { generateAccessToken } from '../../lib/utils/jwt';
 import { User, UserModel } from '../../schema/userSchema';
 
 dotenv.config();
@@ -12,7 +13,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
-    async (accessToken, refreshToken, profile, cb) => {
+    async (__, _, profile, cb) => {
       const existing = await UserModel.findOne({
         email: profile.emails ? profile.emails[0]?.value : '',
       });
@@ -27,9 +28,10 @@ passport.use(
             bio: '',
           });
 
+      const token = generateAccessToken({ userId: user._id });
+
       cb(null, {
-        accessToken,
-        refreshToken,
+        token,
         userId: user._id,
       });
     },
