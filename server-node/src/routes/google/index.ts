@@ -17,11 +17,9 @@ googleAuthRoute.get(
 googleAuthRoute.get(
   '/google/redirect',
   passport.authenticate('google', { session: false }),
-  (req, _) => {
-    console.log(`req`, req.user);
-    // res.redirect(
-    //   `${process.env.FE_URL}/accessToken=${req?.user?.accessToken!}`,
-    // );
+  (req, res) => {
+    // @ts-ignore
+    res.redirect(`${process.env.FE_URL}/accessToken=${req?.user?.token!}`);
   },
 );
 
