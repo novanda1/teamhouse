@@ -1,6 +1,5 @@
 import { useTeamQuery } from "../generated/graphql";
 import { useGetId } from "./useGetId";
-import { useGetUser } from "./useGetUser";
 
 export const useGetSingleTeamById = () => {
   const id = useGetId();
@@ -13,9 +12,7 @@ export const useGetSingleTeamById = () => {
       })
     : null;
 
-  const leaders =
-    team && useGetUser({ username: team.data?.team.leaders });
-  const result = { team, leaders };
+  const result = { team };
 
   return result;
 };

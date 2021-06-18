@@ -64,7 +64,7 @@ const CustomTab: React.ForwardRefExoticComponent<
 
 export const Profile: React.FC = () => {
   const { data, loading } = useMeQuery();
-  const u = data?.me.user;
+  const u = data?.me;
 
   if (data && !loading)
     return (
@@ -78,7 +78,7 @@ export const Profile: React.FC = () => {
             rounded="lg"
           >
             <Image
-              src={u.coverImg ? u.coverImg : "/cover1.jpg"}
+              src={"/cover1.jpg"}
               alt="Picture of the author"
               minH="full"
               minW="full"
@@ -89,11 +89,11 @@ export const Profile: React.FC = () => {
           <Box ml="5" sx={{ transform: "translateY(-50%)" }}>
             <Avatar
               src={
-                u.profileImg
-                  ? u.profileImg
+                u.picture
+                  ? u.picture
                   : "https://pbs.twimg.com/profile_images/1397231638434697217/6ztb3kG8_400x400.jpg"
               }
-              name={u.username}
+              name={u.firstname}
               size="2xl"
               borderWidth="6px"
             />
@@ -103,7 +103,7 @@ export const Profile: React.FC = () => {
           <Heading size="md">
             {u.firstname} {u.lastname}
           </Heading>
-          <Text color="whiteAlpha.600">@{u.username}</Text>
+          <Text color="whiteAlpha.600">@{u.firstname}</Text>
           <Text mt="3" color="gray.200">
             {u.bio}
           </Text>

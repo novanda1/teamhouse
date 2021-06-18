@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Flex,
   Heading,
   IconButton,
@@ -13,10 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
-import { HiOutlineDotsVertical, HiPencil } from "react-icons/hi";
-import { IoIosAdd } from "react-icons/io";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
-import { useGetUser } from "../../hooks/useGetUser";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { AddMember } from "./AddMember";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
@@ -42,16 +39,7 @@ export const TeamDetail: React.FC<Props> = () => {
   });
   const team = data?.teams.find((t) => t._id === query.id);
 
-  const leaders = useGetUser({ username: team?.leaders });
-  const members = useGetUser({ username: team?.members });
   const [people, setPeople] = useState([]);
-
-  useEffect(() => {
-    if (leaders && members)
-      setPeople(() => {
-        return [...leaders, ...members];
-      });
-  }, [leaders, members]);
 
   //
   const toast = useToast();
@@ -159,7 +147,7 @@ export const TeamDetail: React.FC<Props> = () => {
                   </Text>
 
                   <Text as="span" fontWeight="bold">
-                    {leaders ? leaders[0].username : ""}
+                    {/* {leaders ? leaders[0].username : ""} */}
                   </Text>
                 </Text>
                 <Text mt="2" size="sm" color="whiteAlpha.800">

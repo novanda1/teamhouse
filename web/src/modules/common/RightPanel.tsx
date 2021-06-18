@@ -61,7 +61,13 @@ export const RightPanel: React.FC = () => {
                 aria-label="profile"
                 bg="transparent"
                 rounded="full"
-                icon={<Avatar name={me.data?.me.user.username} size="sm" />}
+                icon={
+                  <Avatar
+                    name={me.data?.me.firstname}
+                    src={me.data?.me.picture}
+                    size="sm"
+                  />
+                }
               />
             </PopoverTrigger>
             <PopoverContent
