@@ -7,6 +7,7 @@ import { SchemaFactory } from '../lib/factories/schemaFactory';
 @ObjectType()
 @Schema()
 export class Team {
+  @Field(() => String)
   _id!: string;
 
   @Prop({ unique: true })
@@ -21,6 +22,7 @@ export class Team {
 @ObjectType()
 @Schema()
 export class TeamRef {
+  @Field(() => String)
   _id!: string;
 
   @Prop({ unique: true })
