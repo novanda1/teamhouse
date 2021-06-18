@@ -19,7 +19,7 @@ googleAuthRoute.get(
   passport.authenticate('google', { session: false }),
   (req, res) => {
     // @ts-ignore
-    res.redirect(`${process.env.FE_URL}/accessToken=${req?.user?.token!}`);
+    res.redirect(`${process.env.FE_URL}/?accessToken=${req?.user?.token!}`);
   },
 );
 
