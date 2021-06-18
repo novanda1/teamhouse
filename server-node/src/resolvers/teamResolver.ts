@@ -13,7 +13,7 @@ import {
   UpdateTeamInputDTO,
 } from '../lib/dto/TeamInputDTO';
 import { Context } from '../lib/types';
-import { isAuth } from '../middleware/isAuth';
+import { JWT } from '../middleware/jwt';
 import { Team, TeamRef } from '../schema/teamSchema';
 import { TeamRefService, TeamService } from '../services/teamService';
 
@@ -24,13 +24,13 @@ export class TeamResolver {
     private readonly teamRef = new TeamRefResolver(),
   ) {}
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => Team, { name: 'createTeam' })
   async create(
     @Arg('options') options: CreateTeamInputsDTO,
     @Ctx() { req }: Context,
   ): Promise<Team | null> {
-    const userId = req.session.passport.user.userId;
+    const userId = req.user.userId;
     const team = await this.teamService.create(options);
     if (team)
       this.teamRef.create({
@@ -41,25 +41,25 @@ export class TeamResolver {
     return team;
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Query(() => Team, { name: 'team' })
   async team(@Arg('id') id: string): Promise<Team | null> {
     return await this.teamService.find(id);
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Query(() => [Team], { name: 'teams' })
   async teams(@Arg('limit', () => Int) limit: number): Promise<Team[]> {
     return await this.teamService.finds(limit);
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => Boolean)
   async deleteTeam(@Arg('id') id: string): Promise<boolean> {
     return await this.teamService.delete(id);
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => Team)
   async updateTeam(
     @Arg('id') id: string,
@@ -73,13 +73,13 @@ export class TeamResolver {
 export class TeamRefResolver {
   constructor(private service: TeamRefService = new TeamRefService()) {}
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => TeamRef, { name: 'createTeamRef' })
   async create(@Arg('options') options: CreateTeamRefInputsDTO) {
     this.service.addRef(options);
   }
 
-  // @UseMiddleware(isAuth)
+  // @UseMiddleware(JWT)
   // @Mutation(() => TeamRef, { name: 'updateTeamRef' })
   // async update(@Arg('options') options: UpdateTeamRefInputsDTO) {
   //   this.service.addRef(options);

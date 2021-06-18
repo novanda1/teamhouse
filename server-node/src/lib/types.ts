@@ -1,13 +1,10 @@
 import { Request, Response } from 'express';
-import session from 'express-session';
 import { Redis } from 'ioredis';
 
 export type Context = {
   req: Request & {
-    session: session.Session & {
-      passport: {
-        user: { [key: string]: any };
-      };
+    user: {
+      userId: string;
     };
   };
   res: Response;

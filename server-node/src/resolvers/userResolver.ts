@@ -13,7 +13,7 @@ import { CreateUserDTO } from '../lib/dto/userDTO';
 import { Context } from '../lib/types';
 import { User } from '../schema/userSchema';
 import { UserService } from '../services/userService';
-import { isAuth } from '../middleware/isAuth';
+import { JWT } from '../middleware/jwt';
 
 @ObjectType()
 class FieldError {
@@ -36,14 +36,15 @@ export class UserResponse {
 export class UserResolver {
   constructor(private userService: UserService = new UserService()) {}
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Query(() => User)
   async me(@Ctx() { req }: Context): Promise<User | null> {
-    const user = await this.userService.find(req?.session.passport.user.userId);
+    const user = await this.userService.find(req?.user.userId);
+    console.log(`user`, user);
     return user;
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => UserResponse, { name: 'createUser' })
   async register(
     @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
@@ -52,7 +53,7 @@ export class UserResolver {
     return await this.userService.create(options);
   }
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(JWT)
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: Context) {
     return new Promise((resolve) =>

@@ -6,18 +6,6 @@ import { Context } from '../lib/types';
 
 config();
 
-export const isAuth: MiddlewareFn<Context> = ({ context }, next) => {
-  if (
-    !context.req.session ||
-    !context.req.session.passport ||
-    !context.req.session.passport.user.userId
-  ) {
-    throw new Error('not authenticated');
-  }
-
-  return next();
-};
-
 export const JWT: MiddlewareFn<Context> = ({ context }, next) => {
   const authHeader = context.req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
