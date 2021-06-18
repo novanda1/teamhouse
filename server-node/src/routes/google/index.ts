@@ -17,7 +17,7 @@ googleAuthRoute.get(
   '/google/redirect',
   passport.authenticate('google'),
   (_, res) => {
-    res.redirect(process.env.FE_URL);
+    res.redirect(`${process.env.FE_URL}`);
   },
 );
 

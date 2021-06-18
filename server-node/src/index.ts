@@ -15,7 +15,7 @@ import { HelloResolver } from './resolvers/hello';
 import { TeamRefResolver, TeamResolver } from './resolvers/teamResolver';
 import { UserResolver } from './resolvers/userResolver';
 import router from './routes';
-import './services/auth/passport';
+import './services/auth/google';
 
 dotenv.config();
 

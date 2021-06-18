@@ -7,11 +7,13 @@ import {
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from 'type-graphql';
 import { CreateUserDTO } from '../lib/dto/userDTO';
 import { Context } from '../lib/types';
 import { User } from '../schema/userSchema';
 import { UserService } from '../services/userService';
+import { isAuth } from '../middleware/isAuth';
 
 @ObjectType()
 class FieldError {
@@ -34,12 +36,14 @@ export class UserResponse {
 export class UserResolver {
   constructor(private userService: UserService = new UserService()) {}
 
+  @UseMiddleware(isAuth)
   @Query(() => User)
   async me(@Ctx() { req }: Context): Promise<User | null> {
     const user = await this.userService.find(req?.session.passport.user.userId);
     return user;
   }
 
+  @UseMiddleware(isAuth)
   @Mutation(() => UserResponse, { name: 'createUser' })
   async register(
     @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
@@ -47,6 +51,8 @@ export class UserResolver {
     console.log(`options`, options);
     return await this.userService.create(options);
   }
+
+  @UseMiddleware(isAuth)
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: Context) {
     return new Promise((resolve) =>
@@ -56,7 +62,7 @@ export class UserResolver {
         if (err) {
           console.log(err);
           resolve(false);
-          return; 
+          return;
         }
 
         resolve(true);
