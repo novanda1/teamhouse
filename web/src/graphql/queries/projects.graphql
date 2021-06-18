@@ -1,5 +1,0 @@
-query Projects($limit: Float!) {
-  projects(limit: $limit) {
-    title
-  }
-}

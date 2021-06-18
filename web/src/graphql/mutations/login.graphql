@@ -1,5 +1,0 @@
-mutation Login($input: LoginUserInput!) {
-  login(input: $input) {
-    ...UserResponseFragment
-  }
-}

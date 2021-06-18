@@ -2,6 +2,4 @@ fragment TeamFragment on Team {
   _id
   name
   description
-  leaders
-  members
 }

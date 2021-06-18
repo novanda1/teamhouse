@@ -1,5 +1,0 @@
-mutation UpdateUser($options: UpdateUserInput!) {
-  updateUser(options: $options) {
-    ...UserFragment
-  }
-}
