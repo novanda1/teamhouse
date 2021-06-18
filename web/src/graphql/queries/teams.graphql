@@ -1,9 +1,0 @@
-query Teams {
-  teams {
-    _id
-    name
-    description
-    leaders
-    members
-  }
-}

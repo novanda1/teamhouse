@@ -1,9 +1,0 @@
-query User($username: String!) {
-  user(username: $username) {
-    status
-    data {
-      _id
-      username
-    }
-  }
-}

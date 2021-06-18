@@ -1,5 +1,0 @@
-mutation createTeam($options: CreateTeamInputsDTO!) {
-  createTeam(options: $options) {
-    ...TeamFragment
-  }
-}

@@ -2,16 +2,6 @@ fragment UserResponseFragment on UserResponse {
   errors {
     ...ErrorsFragment
   }
-  tokens {
-    accessToken {
-      token
-      expires
-    }
-    refreshToken {
-      token
-      expires
-    }
-  }
   user {
     ...UserFragment
   }

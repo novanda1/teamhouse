@@ -1,5 +1,0 @@
-query SearchUsers($query: String!) {
-  searchUser(query: $query) {
-    ...UserFragment
-  }
-}

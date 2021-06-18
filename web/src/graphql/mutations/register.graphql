@@ -1,5 +1,0 @@
-mutation Register($options: CreateUserInput!) {
-  register(options: $options) {
-    ...UserResponseFragment
-  }
-}
