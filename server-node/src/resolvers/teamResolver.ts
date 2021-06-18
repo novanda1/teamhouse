@@ -1,7 +1,16 @@
-import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Resolver,
+  UseMiddleware,
+  Query,
+  Int,
+} from 'type-graphql';
 import {
   CreateTeamInputsDTO,
   CreateTeamRefInputsDTO,
+  UpdateTeamInputDTO,
 } from '../lib/dto/TeamInputDTO';
 import { Context } from '../lib/types';
 import { isAuth } from '../middleware/isAuth';
@@ -30,6 +39,33 @@ export class TeamResolver {
       });
 
     return team;
+  }
+
+  @UseMiddleware(isAuth)
+  @Query(() => Team, { name: 'team' })
+  async team(@Arg('id') id: string): Promise<Team | null> {
+    return await this.teamService.find(id);
+  }
+
+  @UseMiddleware(isAuth)
+  @Query(() => [Team], { name: 'teams' })
+  async teams(@Arg('limit', () => Int) limit: number): Promise<Team[]> {
+    return await this.teamService.finds(limit);
+  }
+
+  @UseMiddleware(isAuth)
+  @Mutation(() => Boolean)
+  async deleteTeam(@Arg('id') id: string): Promise<boolean> {
+    return await this.teamService.delete(id);
+  }
+
+  @UseMiddleware(isAuth)
+  @Mutation(() => Team)
+  async updateTeam(
+    @Arg('id') id: string,
+    @Arg('options', () => UpdateTeamInputDTO) options: UpdateTeamInputDTO,
+  ): Promise<Team | null> {
+    return await this.teamService.update(id, options);
   }
 }
 

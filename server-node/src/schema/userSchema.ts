@@ -7,6 +7,7 @@ import { SchemaFactory } from '../lib/factories/schemaFactory';
 @ObjectType()
 @Schema()
 export class User {
+  @Field(() => String)
   _id!: string;
 
   @Prop({ unique: true })
