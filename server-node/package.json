@@ -7,9 +7,9 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "preserve": "yarn run build",
-    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
+    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/src/index.js\"",
     "prestart": "yarn run build",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
