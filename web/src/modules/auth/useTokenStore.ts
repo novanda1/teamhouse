@@ -1,16 +1,16 @@
 import create from "zustand";
-import {combine} from 'zustand/middleware'
-import cookieCutter from 'cookie-cutter'
+import { combine } from "zustand/middleware";
+import cookieCutter from "cookie-cutter";
 import { isServer } from "../../utils/isServer";
 import produce from "immer";
 
-const accessTokenKey = 'ctx'
-const refreshTokenKey = 'rtx'
+export const accessTokenKey = "@auth/token";
+// const refreshTokenKey = 'rtx'
 
 export interface ITokenStore {
-  isLoggedIn: "loading" | "loggedIn" | "notLoggedIn", 
-  accessToken: string, 
-  refreshToken: string
+  isLoggedIn: "loading" | "loggedIn" | "notLoggedIn";
+  accessToken: string;
+  // refreshToken: string;
 }
 
 const getAccessToken = (): ITokenStore => {
@@ -18,32 +18,32 @@ const getAccessToken = (): ITokenStore => {
     try {
       return {
         isLoggedIn: "notLoggedIn",
-        accessToken: cookieCutter.get(accessTokenKey) || "",
-        refreshToken: cookieCutter.get(refreshTokenKey) || ""
-      }
+        accessToken: localStorage.getItem(accessTokenKey) || "",
+        // refreshToken: cookieCutter.get(refreshTokenKey) || ""
+      };
     } catch {}
   }
 
   return {
     isLoggedIn: "notLoggedIn",
     accessToken: "",
-    refreshToken: ""
+    // refreshToken: "",
   };
 };
 
 export const useTokenStore = create(
-    combine(
-        getAccessToken(),
-        (set) => ({
-            set: (fn:any) => set(produce<ITokenStore>(fn)),
-            setTokens: (x: { accessToken: string, refreshToken: string }) => {
-                try {
-                    cookieCutter.set(accessTokenKey, x.accessToken)
-                    cookieCutter.set(refreshTokenKey, x.refreshToken)
-                } catch {}
+  combine(getAccessToken(), (set) => ({
+    set: (fn: any) => set(produce<ITokenStore>(fn)),
+    setTokens: (x: {
+      accessToken: string;
+      // refreshToken: string
+    }) => {
+      try {
+        cookieCutter.set(accessTokenKey, x.accessToken);
+        // cookieCutter.set(refreshTokenKey, x.refreshToken);
+      } catch {}
 
-                set(x)
-            }
-        })
-    )
-)
+      set(x);
+    },
+  }))
+);

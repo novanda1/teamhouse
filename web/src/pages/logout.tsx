@@ -1,7 +1,11 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useLogoutMutation } from "../generated/graphql";
-import { useTokenStore, ITokenStore } from "../modules/auth/useTokenStore";
+import {
+  useTokenStore,
+  ITokenStore,
+  accessTokenKey,
+} from "../modules/auth/useTokenStore";
 import { withApollo } from "../utils/withApollo";
 
 const Logout = () => {
@@ -12,9 +16,10 @@ const Logout = () => {
   const handleLogout = async () => {
     const loggedOut = await logout();
     if (loggedOut) {
+      localStorage.setItem(accessTokenKey, "");
       token.set((s: ITokenStore) => {
         s.accessToken = "";
-        s.refreshToken = "";
+        s.isLoggedIn = "notLoggedIn";
       });
       push("/");
     }

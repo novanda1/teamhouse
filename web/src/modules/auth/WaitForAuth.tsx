@@ -6,7 +6,7 @@ interface WaitForWsAndAuthProps {}
 
 export const WaitForAuth: React.FC<WaitForWsAndAuthProps> = ({ children }) => {
   useVerifyLoggedIn();
-  const hasTokens = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
+  const hasTokens = useTokenStore((s) => !!(s.accessToken));
   const tokens = useTokenStore();
 
   useEffect(() => {
