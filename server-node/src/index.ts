@@ -51,7 +51,6 @@ const main = async () => {
 
   /** apollo */
   const apolloServer = new ApolloServer({
-    playground: true,
     schema: await buildSchema({
       resolvers: [HelloResolver, UserResolver, TeamRefResolver, TeamResolver],
       validate: false,
