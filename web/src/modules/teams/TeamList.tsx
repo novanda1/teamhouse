@@ -7,6 +7,9 @@ export const TeamList: React.FC = memo(() => {
   const teamStore = useTeamStore();
   const teams = useTeamsQuery({
     notifyOnNetworkStatusChange: true,
+    variables: {
+      limit: 10,
+    },
   });
 
   const openAddTeamModal = useCallback(() => {
