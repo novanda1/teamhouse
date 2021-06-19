@@ -8,7 +8,7 @@ export const useVerifyLoggedIn = () => {
 
   useEffect(() => {
     if (!hasTokens) {
-      push(`?/next=${asPath}`);
+      push(`/?next=${asPath}`);
     }
   }, [hasTokens, asPath, replace, push]);
 
