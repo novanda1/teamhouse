@@ -1,20 +1,13 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { NextPageContext } from "next";
-import { useEffect, useState } from "react";
 import { useGetTokenFromUrl } from "../hooks/useGetTokenFromUrl";
-import { useTokenStore } from "../modules/auth/useTokenStore";
+import { ITokenStore, useTokenStore } from "../modules/auth/useTokenStore";
 import { createWithApollo } from "./createWithApollo";
 import { isServer } from "./isServer";
 
 const createClient = (ctx: NextPageContext) => {
-  const store = useTokenStore();
-  const [token, setToken] = useState(useGetTokenFromUrl());
-
-  useEffect(() => {
-    if (!token) {
-      setToken(store.accessToken);
-    }
-  }, [setToken]);
+  const token =
+    useGetTokenFromUrl() || useTokenStore((s: ITokenStore) => s.accessToken);
 
   return new ApolloClient({
     ssrMode: isServer,

@@ -6,6 +6,7 @@ import {
   useTokenStore,
 } from "../modules/auth/useTokenStore";
 import { useGetTokenFromUrl } from "./useGetTokenFromUrl";
+import * as cookieCutter from "cookie-cutter";
 
 export const useLoginFromUrl = () => {
   const { asPath, push } = useRouter();
@@ -15,6 +16,8 @@ export const useLoginFromUrl = () => {
   useEffect(() => {
     if (asPath.includes("accessToken")) {
       localStorage.setItem(accessTokenKey, token);
+
+      cookieCutter.set(accessTokenKey, token);
       tokenStore.set((s: ITokenStore) => {
         s.accessToken = token;
         s.isLoggedIn = "loggedIn";

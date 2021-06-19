@@ -5,12 +5,10 @@ import { isServer } from "../../utils/isServer";
 import produce from "immer";
 
 export const accessTokenKey = "@auth/token";
-// const refreshTokenKey = 'rtx'
 
 export interface ITokenStore {
   isLoggedIn: "loading" | "loggedIn" | "notLoggedIn";
   accessToken: string;
-  // refreshToken: string;
 }
 
 const getAccessToken = (): ITokenStore => {
@@ -19,16 +17,9 @@ const getAccessToken = (): ITokenStore => {
       return {
         isLoggedIn: "notLoggedIn",
         accessToken: localStorage.getItem(accessTokenKey) || "",
-        // refreshToken: cookieCutter.get(refreshTokenKey) || ""
       };
     } catch {}
   }
-
-  return {
-    isLoggedIn: "notLoggedIn",
-    accessToken: "",
-    // refreshToken: "",
-  };
 };
 
 export const useTokenStore = create(
