@@ -6,29 +6,27 @@ import { Context } from '../lib/types';
 
 config();
 
-export const JWT: MiddlewareFn<Context> = ({ context }, next) => {
+export const JWT: MiddlewareFn<Context> = async ({ context }, next) => {
   const authHeader = context.req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token == null) throw new Error('not authenticated');
 
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      __prod__ ? process.env.JWT_SECRET : 'secretlah',
-      (err: any, user: any) => {
-        console.log(err);
+  const verify = jwt.verify(
+    token,
+    __prod__ ? process.env.JWT_SECRET : 'secretlah',
+    (err: any, user: any) => {
+      console.log(err);
 
-        if (err) {
-          reject(false);
-          return context.res.sendStatus(403);
-        }
+      if (err) {
+        return context.res.sendStatus(403);
+      }
 
-        context.req.user = user;
+      context.req.user = user;
 
-        resolve(true);
-        return next();
-      },
-    );
-  });
+      return next();
+    },
+  );
+
+  return await verify;
 };
