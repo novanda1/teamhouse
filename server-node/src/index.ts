@@ -9,8 +9,8 @@ import { connect, connection } from 'mongoose';
 import passport from 'passport';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { redis } from './lib/config/redis';
 import sessionOpt from './lib/config/session';
+import { __prod__ } from './lib/constants';
 import { HelloResolver } from './resolvers/hello';
 import { TeamResolver } from './resolvers/teamResolver';
 import { UserResolver } from './resolvers/userResolver';
@@ -35,13 +35,6 @@ const main = async () => {
   const db = connection;
   db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-  redis.on('error', (err) => {
-    console.log('Could not establish a connection with redis. ' + err);
-  });
-  redis.on('connect', () => {
-    console.log('Connected to redis successfully');
-  });
-
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
@@ -58,7 +51,6 @@ const main = async () => {
     context: ({ req, res }) => ({
       req,
       res,
-      redis,
     }),
   });
 
@@ -67,7 +59,7 @@ const main = async () => {
   app.set('trust proxy', 1);
   app.use(express.json());
   app.use(cookieParser());
-  app.use(session(sessionOpt));
+  if (!__prod__) app.use(session(sessionOpt));
   app.use(passport.initialize());
   app.use(passport.session());
 
