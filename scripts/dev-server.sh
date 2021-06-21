@@ -1,1 +1,1 @@
-cd server && yarn start:dev
+cd server-node && yarn serve
