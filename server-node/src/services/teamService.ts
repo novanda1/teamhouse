@@ -61,4 +61,22 @@ export class TeamRefService {
     team instanceof Team;
     return team;
   }
+
+  /**
+   *
+   * @param id team id
+   * @returns Teamref
+   */
+  async find(id: string): Promise<TeamRef | null> {
+    return await this.model.findOne({ team_id: id });
+  }
+
+  async delete(id: string) {
+    const deleting = await this.model.findOneAndDelete({ team_id: id });
+    try {
+      return deleting !== null;
+    } catch {
+      return false;
+    }
+  }
 }

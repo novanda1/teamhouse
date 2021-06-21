@@ -1,27 +1,26 @@
 import {
   Arg,
   Ctx,
+  Int,
   Mutation,
+  Query,
   Resolver,
   UseMiddleware,
-  Query,
-  Int,
 } from 'type-graphql';
 import {
   CreateTeamInputsDTO,
-  CreateTeamRefInputsDTO,
   UpdateTeamInputDTO,
 } from '../lib/dto/TeamInputDTO';
 import { Context } from '../lib/types';
 import { JWT } from '../middleware/jwt';
-import { Team, TeamRef } from '../schema/teamSchema';
+import { Team } from '../schema/teamSchema';
 import { TeamRefService, TeamService } from '../services/teamService';
 
 @Resolver()
 export class TeamResolver {
   constructor(
     private teamService: TeamService = new TeamService(),
-    private readonly teamRef = new TeamRefResolver(),
+    private teamRefService: TeamRefService = new TeamRefService(),
   ) {}
 
   @UseMiddleware(JWT)
@@ -33,7 +32,7 @@ export class TeamResolver {
     const userId = req.user.userId;
     const team = await this.teamService.create(options);
     if (team)
-      this.teamRef.create({
+      this.teamRefService.addRef({
         team_id: team._id,
         admin: [userId],
       });
@@ -56,7 +55,9 @@ export class TeamResolver {
   @UseMiddleware(JWT)
   @Mutation(() => Boolean)
   async deleteTeam(@Arg('id') id: string): Promise<boolean> {
-    return await this.teamService.delete(id);
+    const teamDeleting = await this.teamService.delete(id);
+    if (teamDeleting) await this.teamRefService.delete(id);
+    return teamDeleting !== null;
   }
 
   @UseMiddleware(JWT)
@@ -67,21 +68,4 @@ export class TeamResolver {
   ): Promise<Team | null> {
     return await this.teamService.update(id, options);
   }
-}
-
-@Resolver()
-export class TeamRefResolver {
-  constructor(private service: TeamRefService = new TeamRefService()) {}
-
-  @UseMiddleware(JWT)
-  @Mutation(() => TeamRef, { name: 'createTeamRef' })
-  async create(@Arg('options') options: CreateTeamRefInputsDTO) {
-    this.service.addRef(options);
-  }
-
-  // @UseMiddleware(JWT)
-  // @Mutation(() => TeamRef, { name: 'updateTeamRef' })
-  // async update(@Arg('options') options: UpdateTeamRefInputsDTO) {
-  //   this.service.addRef(options);
-  // }
 }
