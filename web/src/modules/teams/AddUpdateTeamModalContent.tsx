@@ -34,11 +34,19 @@ export const AddUpdateTeamModalContent: React.FC = () => {
   const [updateTeam] = useUpdateTeamMutation();
   const [createTeam] = useCreateTeamMutation({
     update: (cache, { data: { createTeam } }) => {
-      let { teams } = cache.readQuery({ query: TeamsDocument });
+      let { teams } = cache.readQuery({
+        query: TeamsDocument,
+        variables: {
+          limit: 10,
+        },
+      });
       teams = [...teams, createTeam];
       cache.writeQuery({
         query: TeamsDocument,
         data: { teams },
+        variables: {
+          limit: 10,
+        },
       });
     },
   });
@@ -88,7 +96,6 @@ export const AddUpdateTeamModalContent: React.FC = () => {
       </ModalHeader>
       <ModalCloseButton _focus={{ outlineColor: "transparent" }} />
       <ModalBody>
-        {}
         <Formik
           initialValues={
             teamStore.modalType === "add"

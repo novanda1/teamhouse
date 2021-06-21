@@ -22,21 +22,10 @@ interface Props {}
 
 export const TeamDetail: React.FC<Props> = () => {
   const { query, push } = useRouter();
-  const { data, loading } = useTeamsQuery({});
-  const [deleteTeam] = useDeleteTeamMutation({
-    // update: (cache) => {
-    //   // cache.evict({ fieldName: "teams" });
-    //   cache.modify({
-    //     fields: {
-    //       teams(existingTaskRefs, { readField }) {
-    //         return existingTaskRefs.filter(
-    //           (taskRef) => _id !== readField("_id", taskRef)
-    //         );
-    //       },
-    //     },
-    //   });
-    // },
+  const { data, loading } = useTeamsQuery({
+    variables: { limit: 10 },
   });
+  const [deleteTeam] = useDeleteTeamMutation();
   const team = data?.teams.find((t) => t._id === query.id);
 
   const [people, setPeople] = useState([]);

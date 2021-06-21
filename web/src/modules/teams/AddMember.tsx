@@ -7,7 +7,7 @@ import { ITeamStore, useTeamStore } from "./useTeamStore";
 export const AddMember: React.FC = memo(() => {
   const id = useGetId();
   const teamStore = useTeamStore();
-  const { data, loading } = useTeamsQuery({});
+  const { data, loading } = useTeamsQuery({ variables: { limit: 10 } });
   const team = data?.teams.find((t) => t._id === id);
 
   const openModal = useCallback(() => {

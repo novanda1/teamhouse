@@ -8,11 +8,9 @@ interface Props {}
 
 const TeamModalContent: React.FC = memo(() => {
   const teamStore = useTeamStore();
-  if (teamStore.modalType !== "") {
-    if (teamStore.modalType === "addMember") return <AddMemberModalContent />;
-    if (teamStore.modalType === "add" || teamStore.modalType === "update")
-      return <AddUpdateTeamModalContent />;
-  }
+  if (teamStore.modalType === "addMember") return <AddMemberModalContent />;
+  else if (teamStore.modalType === "add" || teamStore.modalType === "update")
+    return <AddUpdateTeamModalContent />;
   return <></>;
 });
 
