@@ -21,7 +21,7 @@ export const AddMember: React.FC = memo(() => {
       s.modalType = "addMember";
       s.modalIsOpen = true;
     });
-    console.log(`teamstore`, teamStore);
+    // console.log(`teamstore`, teamStore);
   }, [teamStore.set]);
 
   return (

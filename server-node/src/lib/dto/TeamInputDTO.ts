@@ -1,5 +1,6 @@
 import { Length, MinLength } from 'class-validator';
-import { InputType, Field } from 'type-graphql';
+import { Field, InputType, Int } from 'type-graphql';
+import { TeamRefUsers } from '../../schema/teamSchema';
 
 @InputType()
 export class CreateTeamInputsDTO {
@@ -20,12 +21,17 @@ export class CreateTeamRefInputsDTO {
   @Field(() => String)
   team_id!: string;
 
-  @Field(() => [String])
-  admin!: string[];
-
-  @Field(() => [String], { nullable: true })
-  member?: string[];
+  @Field(() => [TeamRefUsers])
+  users!: TeamRefUsers[];
 }
 
 @InputType()
 export class UpdateTeamRefInputsDTO extends CreateTeamRefInputsDTO {}
+
+@InputType()
+export class TeamRefUsersInput {
+  @Field(() => Int)
+  role!: number;
+  @Field(() => String)
+  id!: string;
+}

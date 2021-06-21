@@ -14,7 +14,8 @@ import {
 import { Context } from '../lib/types';
 import { JWT } from '../middleware/jwt';
 import { Team } from '../schema/teamSchema';
-import { TeamRefService, TeamService } from '../services/teamService';
+import { TeamRefService } from '../services/teamRefService';
+import { TeamService } from '../services/teamService';
 
 @Resolver()
 export class TeamResolver {
@@ -34,7 +35,12 @@ export class TeamResolver {
     if (team)
       this.teamRefService.addRef({
         team_id: team._id,
-        admin: [userId],
+        users: [
+          {
+            id: userId,
+            role: 0,
+          },
+        ],
       });
 
     return team;

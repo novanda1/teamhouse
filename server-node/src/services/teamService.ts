@@ -2,17 +2,9 @@ import { validate } from 'class-validator';
 import { Model } from 'mongoose';
 import {
   CreateTeamInputsDTO,
-  CreateTeamRefInputsDTO,
   UpdateTeamInputDTO,
 } from '../lib/dto/TeamInputDTO';
-import {
-  Team,
-  TeamDocument,
-  TeamModel,
-  TeamRef,
-  TeamRefDocument,
-  TeamRefModel,
-} from '../schema/teamSchema';
+import { Team, TeamDocument, TeamModel } from '../schema/teamSchema';
 
 export class TeamService {
   constructor(private model: Model<TeamDocument> = TeamModel) {}
@@ -50,33 +42,5 @@ export class TeamService {
   async update(id: string, options: UpdateTeamInputDTO): Promise<Team | null> {
     await this.model.findByIdAndUpdate(id, options);
     return await this.find(id);
-  }
-}
-
-export class TeamRefService {
-  constructor(private readonly model: Model<TeamRefDocument> = TeamRefModel) {}
-
-  async addRef(options: CreateTeamRefInputsDTO): Promise<TeamRef> {
-    const team = await this.model.create(options);
-    team instanceof Team;
-    return team;
-  }
-
-  /**
-   *
-   * @param id team id
-   * @returns Teamref
-   */
-  async find(id: string): Promise<TeamRef | null> {
-    return await this.model.findOne({ team_id: id });
-  }
-
-  async delete(id: string) {
-    const deleting = await this.model.findOneAndDelete({ team_id: id });
-    try {
-      return deleting !== null;
-    } catch {
-      return false;
-    }
   }
 }

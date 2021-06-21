@@ -1,8 +1,16 @@
 import { Document, Model, model } from 'mongoose';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, Int, ObjectType } from 'type-graphql';
 import { Prop } from '../lib/decorators/propDecorator';
 import { Schema } from '../lib/decorators/schemaDecorator';
 import { SchemaFactory } from '../lib/factories/schemaFactory';
+
+@ObjectType()
+export class TeamRefUsers {
+  @Field(() => Int)
+  role!: number;
+  @Field(() => String)
+  id!: string;
+}
 
 @ObjectType()
 @Schema()
@@ -10,7 +18,7 @@ export class Team {
   @Field(() => String)
   _id!: string;
 
-  @Prop({ unique: true })
+  @Prop()
   @Field(() => String)
   name!: string;
 
@@ -30,12 +38,8 @@ export class TeamRef {
   team_id!: string;
 
   @Prop()
-  @Field(() => [String])
-  admin!: string[];
-
-  @Prop()
-  @Field(() => [String])
-  member!: string[];
+  @Field(() => [TeamRefUsers])
+  users!: TeamRefUsers[];
 }
 
 export type TeamDocument = Team & Document;

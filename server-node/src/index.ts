@@ -12,6 +12,7 @@ import { buildSchema } from 'type-graphql';
 import sessionOpt from './lib/config/session';
 import { __prod__ } from './lib/constants';
 import { HelloResolver } from './resolvers/hello';
+import { TeamRefResolver } from './resolvers/teamRefResolver';
 import { TeamResolver } from './resolvers/teamResolver';
 import { UserResolver } from './resolvers/userResolver';
 import router from './routes';
@@ -45,7 +46,7 @@ const main = async () => {
   /** apollo */
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, TeamResolver],
+      resolvers: [HelloResolver, UserResolver, TeamResolver, TeamRefResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
