@@ -7,6 +7,7 @@ import {
   Input,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalHeader,
   Text,
   Textarea,
@@ -86,115 +87,117 @@ export const AddUpdateTeamModalContent: React.FC = () => {
 
   return (
     <>
-      <ModalHeader pb="1">
-        {teamStore.modalType == "add" ? "New Team" : "Edit Team"}
-        <Text fontSize="initial" fontWeight="normal" mt="1">
-          {isAddModal
-            ? "Fill following field to make new team"
-            : "Edit your team"}
-        </Text>
-      </ModalHeader>
-      <ModalCloseButton _focus={{ outlineColor: "transparent" }} />
-      <ModalBody>
-        <Formik
-          initialValues={
-            teamStore.modalType === "add"
-              ? teamStore.form.initialData
-              : teamStore.modalData
-          }
-          validationSchema={newTeamValidation}
-          onSubmit={async (values) => {
-            if (!teamStore.modalIsOpen) return;
-            const response = await onSubmit(
-              teamStore,
-              values,
-              teamStore.modalType
-            );
-
-            const id = response.data?.createTeam?._id;
-
-            if (teamStore.modalType == "add") {
-              if (id) {
-                toast({
-                  title: "Team added.",
-                  description: "We've created team for you.",
-                  status: "success",
-                  duration: 3000,
-                  isClosable: true,
-                });
-                push(`/team/${id}`);
-              }
+      <ModalContent py="6" px="3">
+        <ModalHeader pb="1">
+          {teamStore.modalType == "add" ? "New Team" : "Edit Team"}
+          <Text fontSize="initial" fontWeight="normal" mt="1">
+            {isAddModal
+              ? "Fill following field to make new team"
+              : "Edit your team"}
+          </Text>
+        </ModalHeader>
+        <ModalCloseButton _focus={{ outlineColor: "transparent" }} />
+        <ModalBody>
+          <Formik
+            initialValues={
+              teamStore.modalType === "add"
+                ? teamStore.form.initialData
+                : teamStore.modalData
             }
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Box mt={4}>
-                <Field name="name" placeholder="Team name" label="Name">
-                  {({ field, form }) => (
-                    <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
-                    >
-                      <Input
-                        {...field}
-                        id={`name-${teamStore.modalType}`}
-                        placeholder="Team name"
-                        variant="filled"
-                      />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-              </Box>
-              <Box mt={4}>
-                <Field
-                  name="description"
-                  placeholder="Team description"
-                  label="Description"
-                  id={`description-${teamStore.modalType}`}
-                >
-                  {({ field, form }) => (
-                    <FormControl
-                      isInvalid={
-                        form.errors.description && form.touched.description
-                      }
-                    >
-                      <Textarea
-                        {...field}
-                        id="description"
-                        placeholder="Team description"
-                        variant="filled"
-                      />
-                      <FormErrorMessage>
-                        {form.errors.description}
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-              </Box>
-              <Flex mt="10" alignItems="center">
-                <Button
-                  type="submit"
-                  isLoading={isSubmitting}
-                  colorScheme="purple"
-                >
-                  {isAddModal ? "Create" : "Save"}
-                </Button>
-                <Button
-                  type="button"
-                  ml="3"
-                  variant="unstyled"
-                  mr="auto"
-                  onClick={handleClose}
-                  _focus={{ boxShadow: "none" }}
-                >
-                  Cancel
-                </Button>
-              </Flex>
-            </Form>
-          )}
-        </Formik>
-      </ModalBody>
+            validationSchema={newTeamValidation}
+            onSubmit={async (values) => {
+              if (!teamStore.modalIsOpen) return;
+              const response = await onSubmit(
+                teamStore,
+                values,
+                teamStore.modalType
+              );
+
+              const id = response.data?.createTeam?._id;
+
+              if (teamStore.modalType == "add") {
+                if (id) {
+                  toast({
+                    title: "Team added.",
+                    description: "We've created team for you.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                  push(`/team/${id}`);
+                }
+              }
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Box mt={4}>
+                  <Field name="name" placeholder="Team name" label="Name">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={form.errors.name && form.touched.name}
+                      >
+                        <Input
+                          {...field}
+                          id={`name-${teamStore.modalType}`}
+                          placeholder="Team name"
+                          variant="filled"
+                        />
+                        <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                </Box>
+                <Box mt={4}>
+                  <Field
+                    name="description"
+                    placeholder="Team description"
+                    label="Description"
+                    id={`description-${teamStore.modalType}`}
+                  >
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.description && form.touched.description
+                        }
+                      >
+                        <Textarea
+                          {...field}
+                          id="description"
+                          placeholder="Team description"
+                          variant="filled"
+                        />
+                        <FormErrorMessage>
+                          {form.errors.description}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                </Box>
+                <Flex mt="10" alignItems="center">
+                  <Button
+                    type="submit"
+                    isLoading={isSubmitting}
+                    colorScheme="purple"
+                  >
+                    {isAddModal ? "Create" : "Save"}
+                  </Button>
+                  <Button
+                    type="button"
+                    ml="3"
+                    variant="unstyled"
+                    mr="auto"
+                    onClick={handleClose}
+                    _focus={{ boxShadow: "none" }}
+                  >
+                    Cancel
+                  </Button>
+                </Flex>
+              </Form>
+            )}
+          </Formik>
+        </ModalBody>
+      </ModalContent>
     </>
   );
 };

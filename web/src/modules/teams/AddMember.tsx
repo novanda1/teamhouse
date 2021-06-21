@@ -1,7 +1,17 @@
-import { Button } from "@chakra-ui/react";
-import React, { memo, useCallback } from "react";
-import { useTeamsQuery } from "../../generated/graphql";
+import {
+  Box,
+  Button,
+  Heading,
+  Input,
+  Link,
+  ListItem,
+  ModalContent,
+  UnorderedList,
+} from "@chakra-ui/react";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { User, useTeamsQuery, useUsersQuery } from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
+import { sleep } from "../../utils/sleep";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
 
 export const AddMember: React.FC = memo(() => {
@@ -33,6 +43,61 @@ export const AddMember: React.FC = memo(() => {
   );
 });
 
-export const AddMemberModalContent: React.FC = () => {
-  return <>yeah</>;
-};
+export const AddMemberModalContent: React.FC = memo(() => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [text, setText] = useState("");
+  const result = useUsersQuery({
+    skip: text === "",
+    variables: { text },
+  });
+
+  const findUsers = useCallback(
+    async (
+      event: React.KeyboardEvent<HTMLInputElement> & {
+        target: HTMLInputElement;
+      }
+    ) => {
+      await sleep(1000);
+      if (event.target.value !== text) setText(event.target.value);
+    },
+    []
+  );
+
+  useEffect(() => {
+    console.log(`result`, result);
+  }, [users, text]);
+
+  return (
+    <ModalContent py="6" px="5" maxW="xs">
+      <Box position="relative">
+        <Heading mb="6" textAlign="center" size="sm">
+          Add Member
+        </Heading>
+        <Box zIndex="1">
+          <Input size="sm" onKeyUp={findUsers} />
+          <Box position="absolute" left="0" w="full" zIndex="1">
+            {result?.data && (
+              <UnorderedList
+                ml="0"
+                listStyleType="none"
+                bg="gray.600"
+                rounded="lg"
+              >
+                {result.data?.users.map((u) => (
+                  <ListItem>
+                    <Link py="3" px="3" w="100%" display="block">
+                      {u.firstname}
+                    </Link>
+                  </ListItem>
+                ))}
+              </UnorderedList>
+            )}
+          </Box>
+        </Box>
+        <Button size="sm" w="full" mt="2" disabled={!result?.data}>
+          {result?.data ? `add` : "select a member above"}
+        </Button>
+      </Box>
+    </ModalContent>
+  );
+});

@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
+import { Modal, ModalOverlay } from "@chakra-ui/react";
 import React, { memo } from "react";
 import { AddMemberModalContent } from "./AddMember";
 import { AddUpdateTeamModalContent } from "./AddUpdateTeamModalContent";
@@ -31,9 +31,7 @@ export const TeamModal: React.FC<Props> = ({}) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent py="6" px="3">
-        <TeamModalContent />
-      </ModalContent>
+      <TeamModalContent />
     </Modal>
   );
 };
