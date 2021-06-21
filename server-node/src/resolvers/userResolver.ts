@@ -37,6 +37,15 @@ export class UserResolver {
   constructor(private userService: UserService = new UserService()) {}
 
   @UseMiddleware(JWT)
+  @Query(() => [User])
+  async users(
+    @Arg('text') text: string,
+    @Arg('limit', { defaultValue: 5 }) limit: number,
+  ): Promise<User[] | null> {
+    return await this.userService.finds({ text, limit });
+  }
+
+  @UseMiddleware(JWT)
   @Query(() => User)
   async me(@Ctx() { req }: Context): Promise<User | null> {
     const user = await this.userService.find(req?.user.userId);

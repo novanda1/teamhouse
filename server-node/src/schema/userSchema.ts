@@ -33,4 +33,10 @@ export class User {
 
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index({
+  _id: 'text',
+  email: 'text',
+  firstname: 'text',
+  lastname: 'text',
+});
 export const UserModel: Model<UserDocument> = model(User.name, UserSchema);

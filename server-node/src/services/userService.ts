@@ -37,4 +37,21 @@ export class UserService {
     if (id) return await this.userModel.findById(id);
     return null;
   }
+
+  async finds({
+    text,
+    limit = 5,
+  }: {
+    text: string;
+    limit: number;
+  }): Promise<User[] | null> {
+    return await this.userModel
+      .find({
+        $text: {
+          $search: text,
+        },
+      })
+      .limit(limit)
+      .exec();
+  }
 }
