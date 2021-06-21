@@ -3,6 +3,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -40,7 +41,7 @@ export class UserResolver {
   @Query(() => [User])
   async users(
     @Arg('text') text: string,
-    @Arg('limit', { defaultValue: 5 }) limit: number,
+    @Arg('limit', () => Int, { defaultValue: 5 }) limit: number,
   ): Promise<User[] | null> {
     return await this.userService.finds({ text, limit });
   }
@@ -58,7 +59,6 @@ export class UserResolver {
   async register(
     @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
   ): Promise<UserResponse> {
-    console.log(`options`, options);
     return await this.userService.create(options);
   }
 
