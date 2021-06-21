@@ -49,6 +49,20 @@ export class TeamRefResolver {
     @Arg('user')
     user: TeamRefUsersInput,
   ) {
+    const admin =
+      (await this.teamRefService.getUsers(USER_ROLE.ADMIN, team_id)) || [];
+    const member =
+      (await this.teamRefService.getUsers(USER_ROLE.MEMBER, team_id)) || [];
+
+    const users = [...admin, ...member];
+    const isAlready = users?.filter((u) => u.id === user.id) || [];
+
+    if (users && isAlready?.length >= 1)
+      throw new Error(
+        'users already exist as ' +
+          // @ts-ignore
+          Object.keys(USER_ROLE).find((key) => USER_ROLE[key] === user.role),
+      );
     return await this.teamRefService.addMember(team_id, user);
   }
 }
