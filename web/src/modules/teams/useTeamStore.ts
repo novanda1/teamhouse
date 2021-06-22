@@ -39,8 +39,11 @@ export const useTeamStore = create(
     set: (fn) => set(produce<ITeamStore>(fn)),
     onClose: (s: ITeamStore) =>
       set(
-        produce<ITeamStore>(s, (draft) => {
-          draft.modalIsOpen = false;
+        produce<ITeamStore>((s) => {
+          s.modalIsOpen = false;
+          s.modalIsOpen = false;
+          s.modalData = null;
+          s.modalType = "";
         })
       ),
   }))
