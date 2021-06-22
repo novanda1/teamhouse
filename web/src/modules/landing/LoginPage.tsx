@@ -25,6 +25,7 @@ export const LoginPage: React.FC<Props> = () => {
       push("/home");
     }
   }, [data]);
+
   return (
     <>
       <Flex w="100vw" h="100vh" alignItems="center" justifyContent="center">
@@ -48,7 +49,8 @@ export const LoginPage: React.FC<Props> = () => {
             <Flex flexDirection="column" mt="7">
               <Button
                 bg="gray.200"
-                isLoading={tokenParam !== null}
+                isLoading={tokenParam !== ""}
+                disabled={tokenParam !== ""}
                 onClick={handleGoogleLogin}
               >
                 <IoLogoGoogle />
