@@ -13,8 +13,8 @@ import {
 } from '../lib/dto/TeamInputDTO';
 import { Context } from '../lib/types';
 import { JWT } from '../middleware/jwt';
-import { Team } from '../schema/teamSchema';
-import { TeamRefService } from '../services/teamRefService';
+import { Team, TeamRefUsers } from '../schema/teamSchema';
+import { TeamRefService, USER_ROLE } from '../services/teamRefService';
 import { TeamService } from '../services/teamService';
 
 @Resolver()
@@ -60,7 +60,17 @@ export class TeamResolver {
 
   @UseMiddleware(JWT)
   @Mutation(() => Boolean)
-  async deleteTeam(@Arg('id') id: string): Promise<boolean> {
+  async deleteTeam(
+    @Arg('id') id: string,
+    @Ctx() { req }: Context,
+  ): Promise<boolean> {
+    const admin: TeamRefUsers[] | undefined =
+      await this.teamRefService.getUsers(USER_ROLE.ADMIN, id);
+
+    const isAdmin = admin?.find((u) => u.id === req.user.userId);
+
+    if (!isAdmin) throw new Error('Only admin can delete team');
+
     const teamDeleting = await this.teamService.delete(id);
     if (teamDeleting) await this.teamRefService.delete(id);
     return teamDeleting !== null;
@@ -71,7 +81,17 @@ export class TeamResolver {
   async updateTeam(
     @Arg('id') id: string,
     @Arg('options', () => UpdateTeamInputDTO) options: UpdateTeamInputDTO,
+    @Ctx() { req }: Context,
   ): Promise<Team | null> {
+    const admin: TeamRefUsers[] | undefined =
+      await this.teamRefService.getUsers(USER_ROLE.ADMIN, id);
+
+    const isAdmin = admin?.find((u) => u.id === req.user.userId);
+
+    console.log(`admin`, admin);
+    console.log(`isAdmin`, isAdmin);
+
+    if (!isAdmin) throw new Error('Only admin can update team');
     return await this.teamService.update(id, options);
   }
 }
