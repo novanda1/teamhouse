@@ -115,7 +115,7 @@ export const AddMemberModalContent: React.FC = memo(() => {
     <ModalContent py="6" px="5" maxW="sm">
       <Box position="relative">
         <Heading mb="6" textAlign="center" size="sm">
-          Add Member
+          Add Member to {teamStore.modalData.name}
         </Heading>
         <Box zIndex="1">
           {user ? (

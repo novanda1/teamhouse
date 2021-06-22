@@ -13,7 +13,13 @@ import {
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { useDeleteTeamMutation, useTeamsQuery } from "../../generated/graphql";
+import {
+  useDeleteTeamMutation,
+  useGetTeamAdminQuery,
+  useGetTeamMemberQuery,
+  useTeamsQuery,
+} from "../../generated/graphql";
+import { useGetId } from "../../hooks/useGetId";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { AddMember } from "./AddMember";
 import { ITeamStore, useTeamStore } from "./useTeamStore";
@@ -21,11 +27,19 @@ import { ITeamStore, useTeamStore } from "./useTeamStore";
 interface Props {}
 
 export const TeamDetail: React.FC<Props> = () => {
+  const teamId = useGetId();
   const { query, push } = useRouter();
   const { data, loading } = useTeamsQuery({
     variables: { limit: 10 },
   });
   const [deleteTeam] = useDeleteTeamMutation();
+  const admin = useGetTeamAdminQuery({
+    variables: { teamId },
+  });
+  const member = useGetTeamMemberQuery({
+    variables: { teamId },
+  });
+
   const team = data?.teams.find((t) => t._id === query.id);
 
   const [people, setPeople] = useState([]);
@@ -136,7 +150,7 @@ export const TeamDetail: React.FC<Props> = () => {
                   </Text>
 
                   <Text as="span" fontWeight="bold">
-                    {/* {leaders ? leaders[0].username : ""} */}
+                    {admin?.data && admin?.data.getTeamAdmin[0].firstname}
                   </Text>
                 </Text>
                 <Text mt="2" size="sm" color="whiteAlpha.800">
@@ -153,9 +167,15 @@ export const TeamDetail: React.FC<Props> = () => {
                     </Heading>
                     <AddMember />
                   </Flex>
-                  {people?.map((l) => (
-                    <Avatar key={l._id} size="md" name={l.username} />
-                  ))}
+                  {member?.data &&
+                    member.data?.getTeamMember?.map((l) => (
+                      <Avatar
+                        key={l._id}
+                        size="md"
+                        name={l.firstname}
+                        src={l.picture}
+                      />
+                    ))}
                 </Box>
               </Flex>
             </>
