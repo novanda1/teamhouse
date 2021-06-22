@@ -10,11 +10,11 @@ import { useTokenStore } from "../auth/useTokenStore";
 interface Props {}
 
 export const LoginPage: React.FC<Props> = () => {
-  const { push } = useRouter();
+  const { push, asPath } = useRouter();
   const token = useTokenStore();
   const { data } = useMeQuery();
 
-  useLoginFromUrl();
+  const tokenParam = useLoginFromUrl();
 
   const handleGoogleLogin = useCallback(() => {
     push("http://localhost:4000/google");
@@ -46,7 +46,11 @@ export const LoginPage: React.FC<Props> = () => {
               and <Link color="purple.300">Terms of Service</Link>.
             </Text>
             <Flex flexDirection="column" mt="7">
-              <Button bg="gray.200" onClick={handleGoogleLogin}>
+              <Button
+                bg="gray.200"
+                isLoading={tokenParam !== null}
+                onClick={handleGoogleLogin}
+              >
                 <IoLogoGoogle />
                 <Text ml="3">Continue with Google</Text>
               </Button>

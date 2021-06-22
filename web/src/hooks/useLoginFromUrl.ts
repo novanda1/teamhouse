@@ -28,4 +28,6 @@ export const useLoginFromUrl = () => {
       }
     }
   }, [asPath, tokenStore.isLoggedIn]);
+
+  return token;
 };
