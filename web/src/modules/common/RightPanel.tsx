@@ -1,8 +1,10 @@
 import {
   Avatar,
+  Box,
   ButtonProps,
   Flex,
   IconButton,
+  Input,
   ListItem,
   Popover,
   PopoverContent,
@@ -11,10 +13,11 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { ReactElement, useCallback } from "react";
-import { IoMdPerson, IoIosSettings } from "react-icons/io";
+import React, { ReactElement, useCallback, useRef } from "react";
+import { IoIosSettings, IoMdPerson } from "react-icons/io";
 import { useMeQuery } from "../../generated/graphql";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
+import { WebSocketProvider } from "../ws/WebSocketProvider";
 
 const SingleMenu: React.FC<{
   title: string;
@@ -51,6 +54,7 @@ const SingleMenu: React.FC<{
 
 export const RightPanel: React.FC = () => {
   const me = useMeQuery();
+  const input = useRef();
   return (
     <>
       <Flex py="10" flexDirection="column">
@@ -96,7 +100,33 @@ export const RightPanel: React.FC = () => {
             </PopoverContent>
           </Popover>
         </Flex>
-        <Flex bgColor="whiteAlpha.50" h="full" rounded="lg"></Flex>
+        <Flex
+          flexDirection="column"
+          bgColor="whiteAlpha.50"
+          h="full"
+          rounded="lg"
+          p="4"
+        >
+          <WebSocketProvider shouldConnect={true}>
+            <Box mt="auto">asd</Box>
+            <Flex mt="7">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  console.log(`e`, input.current);
+                }}
+              >
+                <Input
+                  type="text"
+                  placeholder="Type a message"
+                  rounded="full"
+                  variant="filled"
+                  ref={input}
+                />
+              </form>
+            </Flex>
+          </WebSocketProvider>
+        </Flex>
       </Flex>
     </>
   );

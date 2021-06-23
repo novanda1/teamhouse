@@ -168,7 +168,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'User' }
-    & Pick<User, 'email' | 'firstname' | 'lastname' | 'bio' | 'picture'>
+    & Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'bio' | 'picture'>
   ) }
 );
 
@@ -386,6 +386,7 @@ export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, L
 export const MeDocument = gql`
     query Me {
   me {
+    _id
     email
     firstname
     lastname
