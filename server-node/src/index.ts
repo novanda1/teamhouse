@@ -3,14 +3,12 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express } from 'express';
-import session from 'express-session';
 import helmet from 'helmet';
 import { connect, connection } from 'mongoose';
 import passport from 'passport';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import sessionOpt from './lib/config/session';
-import { __prod__ } from './lib/constants';
+import { chatFeature } from './features/chat/chat';
 import { HelloResolver } from './resolvers/hello';
 import { TeamRefResolver } from './resolvers/teamRefResolver';
 import { TeamResolver } from './resolvers/teamResolver';
@@ -23,7 +21,9 @@ dotenv.config();
 const PORT = process.env.PORT || 80;
 
 const main = async () => {
+  const http = require('http');
   const app: Express = express();
+  const server = http.createServer(app);
 
   /** db */
   await connect(process.env.DATABASE_URL, {
@@ -60,9 +60,9 @@ const main = async () => {
   app.set('trust proxy', 1);
   app.use(express.json());
   app.use(cookieParser());
-  if (!__prod__) app.use(session(sessionOpt));
+  // if (!__prod__) app.use(session(sessionOpt));
   app.use(passport.initialize());
-  app.use(passport.session());
+  // app.use(passport.session());
 
   app.use(router);
   apolloServer.applyMiddleware({
@@ -70,7 +70,9 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(PORT, () => console.log(`Running on ${PORT} ⚡`));
+  chatFeature(server);
+
+  server.listen(PORT, () => console.log(`Running on ${PORT} ⚡`));
 };
 
 main();

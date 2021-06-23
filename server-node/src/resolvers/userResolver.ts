@@ -50,7 +50,6 @@ export class UserResolver {
   @Query(() => User)
   async me(@Ctx() { req }: Context): Promise<User | null> {
     const user = await this.userService.find(req?.user.userId);
-    console.log(`user`, user);
     return user;
   }
 
