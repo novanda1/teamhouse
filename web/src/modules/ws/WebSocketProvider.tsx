@@ -1,8 +1,13 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import React, { memo, useContext, useEffect, useMemo, useState } from "react";
+import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 import { useMeQuery, User } from "../../generated/graphql";
-import { useTokenStore } from "../auth/useTokenStore";
+import { useGetId } from "../../hooks/useGetId";
+import {
+  IChatTeamStore,
+  ITeamChat,
+  useChatTeamStore,
+} from "../chat/team/useChatTeamStore";
 
 interface WebSocketProviderProps {
   shouldConnect: boolean;
@@ -12,44 +17,69 @@ type V = Socket<DefaultEventsMap, DefaultEventsMap> | null;
 
 export const WebSocketContext = React.createContext<{
   conn: V;
-  setUser: (u: User) => void;
-  setConn: (u: V) => void;
+  options: Partial<ManagerOptions & SocketOptions>;
 }>({
   conn: null,
-  setUser: () => {},
-  setConn: () => {},
+  options: { path: "/team/", reconnectionDelayMax: 10000 },
 });
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   shouldConnect,
   children,
 }) => {
+  const context = useContext(WebSocketContext);
   const me = useMeQuery();
+  const teamId = useGetId();
 
-  const [conn, setConn] = useState<V>(null);
-  const [user, setUser] = useState<User>();
-  const [options, setOptions] = useState<{ [key: string]: any }>({
-    path: "/team/",
-    reconnectionDelayMax: 10000,
-    auth: {
-      user,
-    },
-  });
+  const [count, setCount] = useState(0);
 
-  const client = shouldConnect ? io("http://localhost:4000", options) : null;
+  const [options, setOptions] = useState<
+    Partial<ManagerOptions & SocketOptions>
+  >(context.options);
 
   useEffect(() => {
     if (me?.data) {
-      setUser(me.data.me);
       setOptions((s) => ({
         ...s,
         auth: {
-          ...s.auth,
           user: (({ __typename, ...o }) => o)(me.data?.me),
+        },
+        query: {
+          teamId: teamId?.toString(),
         },
       }));
     }
   }, [me?.data]);
+
+  useEffect(() => {
+    context.options = options;
+    if (
+      context?.options.query?.teamId !== null &&
+      context?.options.auth !== null
+    ) {
+      context.conn = io("http://localhost:4000", context.options);
+    }
+
+    context.conn.on("connect", () => {
+      context.conn.emit("room", teamId);
+    });
+
+    context.conn.on("message", (data) => {
+      console.log(data);
+    });
+
+    context.conn.on("output", (data: ITeamChat) => {
+      console.log(`data`, data);
+      // setCount(0);
+      // if (count === 0)
+      //   useChatTeamStore.getState().set((s: IChatTeamStore) => {
+      //     s.chat = [...s.chat, data];
+      //   });
+      // setCount(1);
+    });
+  }, [options, context?.options.auth]);
+
+  useEffect(() => {}, []);
 
   return (
     <>
