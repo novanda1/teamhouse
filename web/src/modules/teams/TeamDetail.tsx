@@ -150,7 +150,7 @@ export const TeamDetail: React.FC<Props> = () => {
                   </Text>
 
                   <Text as="span" fontWeight="bold">
-                    {admin?.data && admin?.data.getTeamAdmin[0].firstname}
+                    {admin?.data && admin?.data.getTeamAdmin[0]?.firstname}
                   </Text>
                 </Text>
                 <Text mt="2" size="sm" color="whiteAlpha.800">
@@ -170,10 +170,10 @@ export const TeamDetail: React.FC<Props> = () => {
                   {member?.data &&
                     member.data?.getTeamMember?.map((l) => (
                       <Avatar
-                        key={l._id}
+                        key={l?._id}
                         size="md"
-                        name={l.firstname}
-                        src={l.picture}
+                        name={l?.firstname}
+                        src={l?.picture}
                       />
                     ))}
                 </Box>
