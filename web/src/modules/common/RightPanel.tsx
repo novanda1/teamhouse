@@ -146,17 +146,26 @@ export const RightPanel: React.FC = memo(() => {
                     </Box>
                   ))}
                 </Box>
-                <Flex mt="7">
+                <Flex mt="7" position="relative">
+                  <Box
+                    position="absolute"
+                    backgroundColor="gray.600"
+                    shadow="md"
+                    w="full"
+                    p="2"
+                    rounded="lg"
+                    sx={{ bottom: "calc(100% + 10px)" }}
+                  >tes</Box>
                   <Input
                     type="text"
                     placeholder="Type a message"
-                    rounded="full"
+                    rounded="lg"
                     variant="filled"
                     ref={input}
                   />
                   <IconButton
                     aria-label="send comment"
-                    rounded="full"
+                    rounded="lg"
                     ml="2"
                     onClick={handleSend}
                   />
