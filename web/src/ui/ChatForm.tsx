@@ -12,6 +12,7 @@ import { useEmojiPickerStore } from "../modules/chat/useEmojiPickerStore";
 import { WebSocketContext } from "../modules/ws/WebSocketProvider";
 import { EmojiPicker } from "./EmojiPicker";
 import { dolma } from "dolma";
+import { useMeQuery } from "../generated/graphql";
 
 export const ChatForm: React.FC = () => {
   const {
@@ -26,14 +27,15 @@ export const ChatForm: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { conn, sendMessage } = useContext(WebSocketContext);
+  const me = useMeQuery();
   const handleSend = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputRef.current.value.length !== 0) {
       const tokens = dolma.encode(inputRef.current.value);
       const message: TeamChatMessage = {
         color: "",
         tokens,
-        userId: "budiandok",
-        username: "budi",
+        userId: me.data?.me._id,
+        username: me.data?.me.firstname,
       };
       await sendMessage(message);
       console.log(`messages`, messages);
