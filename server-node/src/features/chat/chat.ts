@@ -17,8 +17,7 @@ export const chatFeature = (server: any) => {
     });
 
     socket.on('input', (text: Socket) => {
-      console.log(`socket`, socket.handshake.query.teamId);
-      io.to('60d05016c4a5c83e83a981c6').emit('output', text);
+      io.to(socket.handshake.query.teamId as string).emit('output', text);
     });
   });
 
