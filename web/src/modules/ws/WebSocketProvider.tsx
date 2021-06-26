@@ -3,9 +3,9 @@ import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 import { useMeQuery } from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
+import { Fn } from "../../types";
 import {
-  IChatTeamStore,
-  ITeamChat,
+  TeamChatMessage,
   useChatTeamStore,
 } from "../chat/team/useChatTeamStore";
 
@@ -18,9 +18,11 @@ type V = Socket<DefaultEventsMap, DefaultEventsMap> | null;
 export const WebSocketContext = React.createContext<{
   conn: V;
   options: Partial<ManagerOptions & SocketOptions>;
+  sendMessage: (message: TeamChatMessage) => void;
 }>({
   conn: null,
   options: { path: "/team/", reconnectionDelayMax: 10000 },
+  sendMessage: () => {},
 });
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = memo(
@@ -29,13 +31,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = memo(
     const me = useMeQuery();
     const teamId = useGetId();
 
-    const [count, setCount] = useState(0);
-
     const [options, setOptions] = useState<
       Partial<ManagerOptions & SocketOptions>
     >(context.options);
 
+    const sendMessage = (message: TeamChatMessage) => {
+      context.conn.emit("input", message);
+    };
+
     useEffect(() => {
+      context.sendMessage = sendMessage;
+
       if (me?.data) {
         setOptions((s) => ({
           ...s,
@@ -66,14 +72,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = memo(
         console.log(data);
       });
 
-      context.conn.on("output", (data: ITeamChat) => {
-        console.log(`data`, data);
-        setCount(0);
-        if (count === 0)
-          useChatTeamStore.getState().set((s: IChatTeamStore) => {
-            s.chat = [...s.chat, data];
-          });
-        setCount(1);
+      context.conn.on("output", (data: TeamChatMessage) => {
+        console.log(data.userId);
+
+        useChatTeamStore.getState().addMessage(data);
       });
     }, [options, context?.options.auth]);
 
@@ -86,6 +88,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = memo(
             () => ({
               conn: context.conn,
               options: context.options,
+              sendMessage,
             }),
             [context]
           )}
