@@ -1,16 +1,14 @@
 import {
   Avatar,
-  Box,
   ButtonProps,
   Flex,
   IconButton,
-  Input,
   ListItem,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Text,
-  UnorderedList,
+  UnorderedList
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, {
@@ -18,18 +16,16 @@ import React, {
   ReactElement,
   useCallback,
   useContext,
-  useRef,
+  useRef
 } from "react";
 import { IoIosSettings, IoMdPerson } from "react-icons/io";
 import { useMeQuery } from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
-import {
-  IChatTeamStore,
-  ITeamChat,
-  useChatTeamStore,
-} from "../chat/team/useChatTeamStore";
-import { WebSocketContext, WebSocketProvider } from "../ws/WebSocketProvider";
+import { ChatForm } from "../../ui/ChatForm";
+import { ChatList } from "../../ui/ChatList";
+import { useChatTeamStore } from "../chat/team/useChatTeamStore";
+import { WebSocketContext } from "../ws/WebSocketProvider";
 import { usePanelStore } from "./usePanelStore";
 
 const SingleMenu: React.FC<{
@@ -71,18 +67,6 @@ export const RightPanel: React.FC = memo(() => {
   const input = useRef<HTMLInputElement>();
   const context = useContext(WebSocketContext);
   const teamId = useGetId();
-  const chatStore = useChatTeamStore();
-
-  const handleSend = useCallback(
-    async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      context.conn.emit("input", input.current.value);
-      input.current.value = "";
-    },
-    [chatStore.set]
-  );
 
   if (panelStore.mainPanel === "team")
     return (
@@ -137,41 +121,10 @@ export const RightPanel: React.FC = memo(() => {
             rounded="lg"
             p="4"
           >
-            <WebSocketProvider shouldConnect={true}>
-              <>
-                <Box mt="auto">
-                  {chatStore.chat.map((c, i) => (
-                    <Box key={i}>
-                      {c.user.firstname} - {c.text}
-                    </Box>
-                  ))}
-                </Box>
-                <Flex mt="7" position="relative">
-                  <Box
-                    position="absolute"
-                    backgroundColor="gray.600"
-                    shadow="md"
-                    w="full"
-                    p="2"
-                    rounded="lg"
-                    sx={{ bottom: "calc(100% + 10px)" }}
-                  >tes</Box>
-                  <Input
-                    type="text"
-                    placeholder="Type a message"
-                    rounded="lg"
-                    variant="filled"
-                    ref={input}
-                  />
-                  <IconButton
-                    aria-label="send comment"
-                    rounded="lg"
-                    ml="2"
-                    onClick={handleSend}
-                  />
-                </Flex>
-              </>
-            </WebSocketProvider>
+            <>
+              <ChatList chat={useChatTeamStore.getState().messages} />
+              <ChatForm />
+            </>
           </Flex>
         </Flex>
       </>
