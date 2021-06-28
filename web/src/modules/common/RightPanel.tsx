@@ -8,24 +8,17 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  UnorderedList
+  UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, {
-  memo,
-  ReactElement,
-  useCallback,
-  useContext,
-  useRef
-} from "react";
+import React, { memo, ReactElement, useCallback } from "react";
 import { IoIosSettings, IoMdPerson } from "react-icons/io";
-import { useMeQuery } from "../../generated/graphql";
+import { useGetChatTeamQuery, useMeQuery } from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { ChatForm } from "../../ui/ChatForm";
 import { ChatList } from "../../ui/ChatList";
 import { useChatTeamStore } from "../chat/team/useChatTeamStore";
-import { WebSocketContext } from "../ws/WebSocketProvider";
 import { usePanelStore } from "./usePanelStore";
 
 const SingleMenu: React.FC<{
@@ -64,9 +57,14 @@ const SingleMenu: React.FC<{
 export const RightPanel: React.FC = memo(() => {
   const panelStore = usePanelStore();
   const me = useMeQuery();
-  const input = useRef<HTMLInputElement>();
-  const context = useContext(WebSocketContext);
   const teamId = useGetId();
+
+  const messages = useGetChatTeamQuery({
+    skip: !teamId,
+    variables: {
+      teamId,
+    },
+  });
 
   if (panelStore.mainPanel === "team")
     return (
@@ -122,7 +120,7 @@ export const RightPanel: React.FC = memo(() => {
             p="4"
           >
             <>
-              <ChatList chat={useChatTeamStore.getState().messages} />
+              {messages.data?.getChatTeam.messages?.map((c) => c.color)}
               <ChatForm />
             </>
           </Flex>

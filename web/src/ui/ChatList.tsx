@@ -1,26 +1,33 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { dolma } from "dolma";
-import React from "react";
-import { Emote } from "../modules/chat/Emote";
-import { customEmojis, EmoteKeys } from "../modules/chat/EmoteData";
-import { useChatTeamStore } from "../modules/chat/team/useChatTeamStore";
-import { ParseTextToTwemoji } from "./Twemoji";
 import normalizeUrl from "normalize-url";
+import React, { memo, useEffect, useState } from "react";
+import { useGetUserQuery } from "../generated/graphql";
+import { Emote } from "../modules/chat/Emote";
+import { EmoteKeys } from "../modules/chat/EmoteData";
+import {
+  TeamChatMessage,
+  useChatTeamStore,
+} from "../modules/chat/team/useChatTeamStore";
+import { ParseTextToTwemoji } from "./Twemoji";
 
-export const ChatList: React.FC = () => {
-  const { messages } = useChatTeamStore();
+export const ChatList: React.FC<{ messages: TeamChatMessage[] }> = ({
+  messages,
+}) => {
+  const getUser = (userId: string) =>
+    useGetUserQuery({
+      skip: !userId,
+      variables: { userId },
+    });
 
   return (
     <Box mt="auto">
       {messages.map((c, i) => {
         const text = c.tokens;
 
-        console.log(`dolma.decode(text)`, JSON.stringify(dolma.decode(text)));
-
         return (
           <Flex key={i}>
             <Box display="inline" pr="2" color={c.color}>
-              {c.username}
+              {getUser(c.userId)}
             </Box>
             {c.tokens.map(({ t, v }, i) => {
               switch (t) {

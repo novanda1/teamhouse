@@ -1,6 +1,9 @@
 import { Socket } from 'socket.io';
+import { Message } from '../../schema/chatTeamSchema';
+import { ChatTeamService } from '../../services/chat/chatTeamService';
 
 const socketio = require('socket.io');
+const service = new ChatTeamService();
 
 export const chatFeature = (server: any) => {
   const io: Socket = socketio(server, {
@@ -11,26 +14,21 @@ export const chatFeature = (server: any) => {
   });
 
   io.on('connection', (socket: Socket) => {
-    socket.on('room', (room) => {
-      console.log(`room`, room);
-      socket.join(room);
+    const teamId = socket.handshake.query.teamId as string;
+
+    socket.on('team', async (team) => {
+      socket.join(team);
+      console.log('join to:', team);
+
+      const messages = await service.find(teamId);
+      socket.emit('change-team', messages?.messages);
     });
 
-    socket.on('input', (text: Socket) => {
-      io.to(socket.handshake.query.teamId as string).emit('output', text);
+    socket.on('input', async (message: Message) => {
+      await service.addMessage(teamId, message);
+      io.to(teamId).emit('output', message);
     });
   });
-
-  // setInterval(() => {
-  //   io.to('60d05016c4a5c83e83a981c6').emit(
-  //     'message',
-  //     'what is going on, party people?',
-  //   );
-  // }, 3000);
-
-  // setInterval(() => {
-  //   io.to('room2').emit('message', 'anyone in this room yet?');
-  // }, 3000);
 
   return io;
 };

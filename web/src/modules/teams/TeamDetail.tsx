@@ -34,9 +34,11 @@ export const TeamDetail: React.FC<Props> = () => {
   });
   const [deleteTeam] = useDeleteTeamMutation();
   const admin = useGetTeamAdminQuery({
+    skip: !teamId,
     variables: { teamId },
   });
   const member = useGetTeamMemberQuery({
+    skip: !teamId,
     variables: { teamId },
   });
 

@@ -12,6 +12,16 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
+};
+
+export type ChatTeam = {
+  __typename?: 'ChatTeam';
+  _id: Scalars['String'];
+  teamId: Scalars['String'];
+  bannedUserIdMap?: Maybe<Array<Scalars['String']>>;
+  messages?: Maybe<Array<Message>>;
 };
 
 export type CreateTeamInputsDto = {
@@ -27,10 +37,27 @@ export type CreateUserDto = {
   picture: Scalars['String'];
 };
 
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type Message = {
+  __typename?: 'Message';
+  _id: Scalars['String'];
+  userId: Scalars['String'];
+  color: Scalars['String'];
+  tokens: Array<MessageToken>;
+  deleted?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+};
+
+export type MessageToken = {
+  __typename?: 'MessageToken';
+  t: Scalars['String'];
+  v: Scalars['String'];
 };
 
 export type Mutation = {
@@ -72,13 +99,20 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getChatTeam: ChatTeam;
   hello: Scalars['String'];
   getTeamAdmin: Array<User>;
   getTeamMember: Array<User>;
   team: Team;
   teams: Array<Team>;
+  user: User;
   users: Array<User>;
   me: User;
+};
+
+
+export type QueryGetChatTeamArgs = {
+  teamId: Scalars['String'];
 };
 
 
@@ -99,6 +133,11 @@ export type QueryTeamArgs = {
 
 export type QueryTeamsArgs = {
   limit: Scalars['Int'];
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -169,6 +208,27 @@ export type MeQuery = (
   & { me: (
     { __typename?: 'User' }
     & Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'bio' | 'picture'>
+  ) }
+);
+
+export type GetChatTeamQueryVariables = Exact<{
+  teamId: Scalars['String'];
+}>;
+
+
+export type GetChatTeamQuery = (
+  { __typename?: 'Query' }
+  & { getChatTeam: (
+    { __typename?: 'ChatTeam' }
+    & Pick<ChatTeam, '_id' | 'teamId' | 'bannedUserIdMap'>
+    & { messages?: Maybe<Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, '_id' | 'userId' | 'color' | 'deleted' | 'createdAt'>
+      & { tokens: Array<(
+        { __typename?: 'MessageToken' }
+        & Pick<MessageToken, 't' | 'v'>
+      )> }
+    )>> }
   ) }
 );
 
@@ -305,6 +365,19 @@ export type UpdateTeamMutation = (
   ) }
 );
 
+export type GetUserQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type GetUserQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'bio' | 'picture'>
+  ) }
+);
+
 export type UsersQueryVariables = Exact<{
   limit?: Maybe<Scalars['Int']>;
   text: Scalars['String'];
@@ -422,6 +495,54 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const GetChatTeamDocument = gql`
+    query GetChatTeam($teamId: String!) {
+  getChatTeam(teamId: $teamId) {
+    _id
+    teamId
+    bannedUserIdMap
+    messages {
+      _id
+      userId
+      color
+      tokens {
+        t
+        v
+      }
+      deleted
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetChatTeamQuery__
+ *
+ * To run a query within a React component, call `useGetChatTeamQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChatTeamQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChatTeamQuery({
+ *   variables: {
+ *      teamId: // value for 'teamId'
+ *   },
+ * });
+ */
+export function useGetChatTeamQuery(baseOptions: Apollo.QueryHookOptions<GetChatTeamQuery, GetChatTeamQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChatTeamQuery, GetChatTeamQueryVariables>(GetChatTeamDocument, options);
+      }
+export function useGetChatTeamLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChatTeamQuery, GetChatTeamQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChatTeamQuery, GetChatTeamQueryVariables>(GetChatTeamDocument, options);
+        }
+export type GetChatTeamQueryHookResult = ReturnType<typeof useGetChatTeamQuery>;
+export type GetChatTeamLazyQueryHookResult = ReturnType<typeof useGetChatTeamLazyQuery>;
+export type GetChatTeamQueryResult = Apollo.QueryResult<GetChatTeamQuery, GetChatTeamQueryVariables>;
 export const AddTeamMemberDocument = gql`
     mutation AddTeamMember($teamId: String!, $user: TeamRefUsersInput!) {
   addTeamMember(teamId: $teamId, user: $user) {
@@ -713,6 +834,46 @@ export function useUpdateTeamMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateTeamMutationHookResult = ReturnType<typeof useUpdateTeamMutation>;
 export type UpdateTeamMutationResult = Apollo.MutationResult<UpdateTeamMutation>;
 export type UpdateTeamMutationOptions = Apollo.BaseMutationOptions<UpdateTeamMutation, UpdateTeamMutationVariables>;
+export const GetUserDocument = gql`
+    query GetUser($userId: String!) {
+  user(id: $userId) {
+    _id
+    email
+    firstname
+    lastname
+    bio
+    picture
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const UsersDocument = gql`
     query Users($limit: Int, $text: String!) {
   users(text: $text, limit: $limit) {

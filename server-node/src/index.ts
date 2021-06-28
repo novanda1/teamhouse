@@ -9,6 +9,7 @@ import passport from 'passport';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { chatFeature } from './features/chat/chat';
+import { ChatTeamResolver } from './resolvers/chatTeamResolver';
 import { HelloResolver } from './resolvers/hello';
 import { TeamRefResolver } from './resolvers/teamRefResolver';
 import { TeamResolver } from './resolvers/teamResolver';
@@ -45,8 +46,17 @@ const main = async () => {
 
   /** apollo */
   const apolloServer = new ApolloServer({
+    subscriptions: {
+      path: '/chatTeam',
+    },
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, TeamResolver, TeamRefResolver],
+      resolvers: [
+        HelloResolver,
+        UserResolver,
+        TeamResolver,
+        TeamRefResolver,
+        ChatTeamResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({

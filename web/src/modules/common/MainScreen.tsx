@@ -11,7 +11,7 @@ export const MainScreen: React.FC = () => {
   return (
     <>
       <WaitForAuth>
-        <WebSocketProvider shouldConnect={true}>
+        <WebSocketProvider>
           <Wrapper>
             <Dashboard />
             <MainPanel />
