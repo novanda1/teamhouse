@@ -6,6 +6,7 @@ import {
   Int,
   Mutation,
   ObjectType,
+  PubSub,
   Query,
   Resolver,
   UseMiddleware,
@@ -15,6 +16,7 @@ import { Context } from '../lib/types';
 import { User } from '../schema/userSchema';
 import { UserService } from '../services/userService';
 import { JWT } from '../middleware/jwt';
+import { PubSubEngine } from 'apollo-server-express';
 
 @ObjectType()
 class FieldError {
@@ -54,7 +56,11 @@ export class UserResolver {
 
   @UseMiddleware(JWT)
   @Query(() => User)
-  async me(@Ctx() { req }: Context): Promise<User | null> {
+  async me(
+    @Ctx() { req }: Context,
+    @PubSub() pubSub: PubSubEngine,
+  ): Promise<User | null> {
+    pubSub.publish('NOTIFICATIONS', 'hiyaa');
     const user = await this.userService.find(req?.user.userId);
     return user;
   }

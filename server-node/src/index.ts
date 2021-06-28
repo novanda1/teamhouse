@@ -11,6 +11,7 @@ import { buildSchema } from 'type-graphql';
 import { chatFeature } from './features/chat/chat';
 import { ChatTeamResolver } from './resolvers/chatTeamResolver';
 import { HelloResolver } from './resolvers/hello';
+import { SubscriptionResolver } from './resolvers/SubscriptionResolver';
 import { TeamRefResolver } from './resolvers/teamRefResolver';
 import { TeamResolver } from './resolvers/teamResolver';
 import { UserResolver } from './resolvers/userResolver';
@@ -46,9 +47,9 @@ const main = async () => {
 
   /** apollo */
   const apolloServer = new ApolloServer({
-    subscriptions: {
-      path: '/chatTeam',
-    },
+    // subscriptions: {
+    //   path: '/chatTeam',
+    // },
     schema: await buildSchema({
       resolvers: [
         HelloResolver,
@@ -56,6 +57,7 @@ const main = async () => {
         TeamResolver,
         TeamRefResolver,
         ChatTeamResolver,
+        SubscriptionResolver,
       ],
       validate: false,
     }),
