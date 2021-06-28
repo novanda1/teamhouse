@@ -1,28 +1,18 @@
 import { Box, Flex, IconButton, Input } from "@chakra-ui/react";
-import React, { useRef } from "react";
-import { useContext } from "react";
+import { dolma } from "dolma";
+import React, { useContext, useRef } from "react";
 import { FaRegSmile } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
+import { useMeQuery } from "../generated/graphql";
 import { customEmojis } from "../modules/chat/EmoteData";
 import { navigateThroughQueriedEmojis } from "../modules/chat/navigateThroughQueriedEmojis";
-import {
-  TeamChatMessage,
-  useChatTeamStore,
-} from "../modules/chat/team/useChatTeamStore";
+import { useChatTeamStore } from "../modules/chat/team/useChatTeamStore";
 import { useEmojiPickerStore } from "../modules/chat/useEmojiPickerStore";
 import { WebSocketContext } from "../modules/ws/WebSocketProvider";
 import { EmojiPicker } from "./EmojiPicker";
-import { dolma } from "dolma";
-import { useMeQuery } from "../generated/graphql";
 
 export const ChatForm: React.FC = () => {
-  const {
-    open,
-    setOpen,
-    queryMatches,
-    setQueryMatches,
-    keyboardHoveredEmoji,
-    setKeyboardHoveredEmoji,
-  } = useEmojiPickerStore();
+  const { open, setOpen, queryMatches } = useEmojiPickerStore();
   const { message, setMessage, messages } = useChatTeamStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,14 +21,12 @@ export const ChatForm: React.FC = () => {
   const handleSend = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputRef.current.value.length !== 0) {
       const tokens = dolma.encode(inputRef.current.value);
-      const message: TeamChatMessage = {
-        color: "",
+      const message = {
+        _id: uuidv4(),
         tokens,
-        userId: me.data?.me._id,
-        username: me.data?.me.firstname,
+        userId: me.data?.me?._id,
       };
       await sendMessage(message);
-      console.log(`messages`, messages);
 
       setMessage("");
     }
@@ -97,7 +85,6 @@ export const ChatForm: React.FC = () => {
         value={message}
         ref={inputRef}
       />
-      {/* <IconButton aria-label="send comment" rounded="lg" ml="2" /> */}
     </Flex>
   );
 };

@@ -59,11 +59,11 @@ export interface TeamChatMessage {
   userId: string;
   // avatarUrl: string;
   color: string;
-  username: string;
   // displayName: string;
   tokens: any[];
   // deleted?: boolean;
-  // deleterId?: string;
+  deleterId?: boolean;
+  createdAt: Date;
   // sentAt: string;
   // isWhisper?: boolean;
 }

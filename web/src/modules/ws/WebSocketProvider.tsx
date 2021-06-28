@@ -1,101 +1,56 @@
-import React, { memo, useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext } from "react";
 import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
-import { useMeQuery } from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
-import { Fn } from "../../types";
 import {
   TeamChatMessage,
   useChatTeamStore,
 } from "../chat/team/useChatTeamStore";
 
-interface WebSocketProviderProps {
-  shouldConnect: boolean;
-}
+interface WebSocketProviderProps {}
 
 type V = Socket<DefaultEventsMap, DefaultEventsMap> | null;
 
 export const WebSocketContext = React.createContext<{
   conn: V;
   options: Partial<ManagerOptions & SocketOptions>;
-  sendMessage: (message: TeamChatMessage) => void;
+  sendMessage: (message) => void;
 }>({
   conn: null,
   options: { path: "/team/", reconnectionDelayMax: 10000 },
   sendMessage: () => {},
 });
 
-export const WebSocketProvider: React.FC<WebSocketProviderProps> = memo(
-  ({ shouldConnect, children }) => {
-    const context = useContext(WebSocketContext);
-    const me = useMeQuery();
-    const teamId = useGetId();
+export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
+  children,
+}) => {
+  const teamId = useGetId();
+  const context = useContext(WebSocketContext);
 
-    const [options, setOptions] = useState<
-      Partial<ManagerOptions & SocketOptions>
-    >(context.options);
+  context.conn = io("ws://localhost:4000", {
+    ...context.options,
+    query: { teamId },
+  });
 
-    const sendMessage = (message: TeamChatMessage) => {
-      context.conn.emit("input", message);
-    };
+  context.sendMessage = (message) => context.conn.emit("input", message);
 
-    useEffect(() => {
-      context.sendMessage = sendMessage;
+  if (teamId)
+    context.conn?.on("connect", () => {
+      console.log("connect");
+      context.conn?.emit("team", teamId);
+    });
 
-      if (me?.data) {
-        setOptions((s) => ({
-          ...s,
-          auth: {
-            user: (({ __typename, ...o }) => o)(me.data?.me),
-          },
-          query: {
-            teamId: teamId?.toString(),
-          },
-        }));
-      }
-    }, [me?.data]);
+  context.conn?.on("output", (data: TeamChatMessage) => {
+    useChatTeamStore.getState().addMessage(data);
+  });
 
-    useEffect(() => {
-      context.options = options;
-      if (
-        context?.options.query?.teamId !== null &&
-        context?.options.auth !== null
-      ) {
-        context.conn = io("http://localhost:4000", context.options);
-      }
-
-      context.conn.on("connect", () => {
-        context.conn.emit("room", teamId);
-      });
-
-      context.conn.on("message", (data) => {
-        console.log(data);
-      });
-
-      context.conn.on("output", (data: TeamChatMessage) => {
-        console.log(data.userId);
-
-        useChatTeamStore.getState().addMessage(data);
-      });
-    }, [options, context?.options.auth]);
-
-    useEffect(() => {}, []);
-
-    return (
-      <>
-        <WebSocketContext.Provider
-          value={useMemo(
-            () => ({
-              conn: context.conn,
-              options: context.options,
-              sendMessage,
-            }),
-            [context]
-          )}
-        >
-          {children}
-        </WebSocketContext.Provider>
-      </>
+  context.conn?.on("change-team", (data: TeamChatMessage[]) => {
+    useChatTeamStore.getState().setMessages(data);
+    console.log(
+      `useChatTeamStore.getState().messages`,
+      useChatTeamStore.getState().messages
     );
-  }
-);
+  });
+
+  return <>{children}</>;
+};

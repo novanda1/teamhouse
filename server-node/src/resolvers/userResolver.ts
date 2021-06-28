@@ -38,6 +38,12 @@ export class UserResolver {
   constructor(private userService: UserService = new UserService()) {}
 
   @UseMiddleware(JWT)
+  @Query(() => User)
+  async user(@Arg('id') id: string): Promise<User | null> {
+    return await this.userService.find(id);
+  }
+
+  @UseMiddleware(JWT)
   @Query(() => [User])
   async users(
     @Arg('text') text: string,
