@@ -24,9 +24,7 @@ const createClient = (ctx: NextPageContext) => {
         options: {
           reconnect: true,
           connectionParams: {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            authToken: token,
           },
         },
       })
