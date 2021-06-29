@@ -6,27 +6,41 @@ import { Context } from '../lib/types';
 
 config();
 
+export const verifyJWT = async (
+  token: string,
+  callback?: jwt.VerifyCallback<jwt.JwtPayload> | undefined,
+) => {
+  const verify = await jwt.verify(
+    token,
+    __prod__ ? process.env.JWT_SECRET : 'secretlah',
+    callback
+      ? callback
+      : (err: any) => {
+          if (err) return false;
+          return true;
+        },
+  );
+
+  return verify;
+};
+
 export const JWT: MiddlewareFn<Context> = async ({ context }, next) => {
   const authHeader = context.req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token == null) throw new Error('not authenticated');
 
-  const verify = jwt.verify(
-    token,
-    __prod__ ? process.env.JWT_SECRET : 'secretlah',
-    (err: any, user: any) => {
-      console.log(err);
+  const verify = verifyJWT(token, (err: any, user: any) => {
+    console.log(err);
 
-      if (err) {
-        return context.res.sendStatus(403);
-      }
+    if (err) {
+      return context.res.sendStatus(403);
+    }
 
-      context.req.user = user;
+    context.req.user = user;
 
-      return next();
-    },
-  );
+    return next();
+  });
 
   return await verify;
 };

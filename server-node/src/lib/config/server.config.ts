@@ -12,6 +12,8 @@ import googleStrategy from '../../services/auth/google';
 import { config } from 'dotenv';
 import http from 'http';
 import chalk from 'chalk';
+import { ConnectionParams } from 'subscriptions-transport-ws';
+import { verifyJWT } from '../../middleware/jwt';
 
 config();
 export default class ServerConfig {
@@ -79,7 +81,16 @@ export default class ServerConfig {
         schema,
         context: (context: any) => context,
         subscriptions: {
-          onConnect() {},
+          onConnect(connectionParams: ConnectionParams) {
+            if (connectionParams.authToken) {
+              const verified = verifyJWT(connectionParams.authToken);
+
+              if (verified) return verified;
+              else throw new Error('WS token not verified');
+            }
+
+            throw new Error('WS token not provided');
+          },
           onDisconnect() {},
         },
       });
@@ -93,7 +104,11 @@ export default class ServerConfig {
       /**
        * @todo make it better
        */
-      console.log('sleeping and waiting installSubscriptionHandlers done :)');
+      console.log(
+        chalk.yellow(
+          'sleeping and waiting installSubscriptionHandlers done :)',
+        ),
+      );
 
       sleep(10000).then(() => {
         httpServer.listen(Number(PORT), () => {
