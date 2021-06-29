@@ -1,0 +1,3 @@
+mutation PushNotif($message: String!) {
+  pubSubMutation(message: $message)
+}

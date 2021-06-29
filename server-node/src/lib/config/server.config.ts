@@ -1,15 +1,17 @@
 import express from 'express';
-import { PubSub } from 'apollo-server-express';
+import { ApolloServer, PubSub } from 'apollo-server-express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import router from '../routes';
+import router from '../../routes';
 import helmet from 'helmet';
 import { buildSchemaSync } from 'type-graphql';
-import { resolvers } from '../resolvers';
+import { resolvers } from '../../resolvers';
 import { connect, connection } from 'mongoose';
 import cors from 'cors';
-import googleStrategy from '../services/auth/google';
+import googleStrategy from '../../services/auth/google';
 import { config } from 'dotenv';
+import http from 'http';
+import chalk from 'chalk';
 
 config();
 export default class ServerConfig {
@@ -68,5 +70,41 @@ export default class ServerConfig {
       });
     });
     return { appExpress, schema };
+  }
+
+  static async startApolloServer() {
+    const PORT = process.env.PORT || 80;
+    this.getExpress().then(async ({ appExpress, schema }) => {
+      const apolloServer = new ApolloServer({
+        schema,
+        context: (context: any) => context,
+        subscriptions: {
+          onConnect() {},
+          onDisconnect() {},
+        },
+      });
+      apolloServer.applyMiddleware({ app: appExpress });
+      const httpServer = http.createServer(appExpress);
+      apolloServer.installSubscriptionHandlers(httpServer);
+
+      const sleep = (n: number) =>
+        new Promise((resolve) => setTimeout(resolve, n));
+
+      /**
+       * @todo make it better
+       */
+      console.log('sleeping and waiting installSubscriptionHandlers done :)');
+
+      sleep(10000).then(() => {
+        httpServer.listen(Number(PORT), () => {
+          console.log(chalk.green(`Server started on port ${PORT}`));
+          console.log(
+            chalk.greenBright(
+              `🚀 Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`,
+            ),
+          );
+        });
+      });
+    });
   }
 }
