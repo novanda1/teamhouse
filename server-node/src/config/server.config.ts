@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import { buildSchemaSync } from 'type-graphql';
 import { resolvers } from '../resolvers';
 import { connect, connection } from 'mongoose';
+import cors from 'cors';
 
 export default class ServerConfig {
   static async connectDB() {
@@ -32,17 +33,23 @@ export default class ServerConfig {
 
     appExpress.use(express.json());
     appExpress.use(express.urlencoded({ extended: true }));
+    appExpress.set('trust proxy', 1);
+    appExpress.use(cookieParser());
+    appExpress.use(passport.initialize());
+    appExpress.use(router);
+    appExpress.use(
+      cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+      }),
+    );
     appExpress.use(
       helmet({
         contentSecurityPolicy:
           process.env.NODE_ENV === 'production' ? undefined : false,
       }),
     );
-    appExpress.set('trust proxy', 1);
-    appExpress.use(cookieParser());
-    appExpress.use(passport.initialize());
 
-    appExpress.use(router);
     appExpress.use((req: any, _: any, next: any) => {
       req.pubsub = pubsub;
       next();
