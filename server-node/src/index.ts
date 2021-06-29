@@ -5,9 +5,8 @@ import 'reflect-metadata';
 import http from 'http';
 import ServerConfig from './config/server.config';
 
-const PORT = process.env.PORT || 80;
-
 dotenv.config();
+const PORT = process.env.PORT || 80;
 
 const main = async () => {
   await ServerConfig.connectDB();
