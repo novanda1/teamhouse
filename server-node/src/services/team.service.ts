@@ -3,8 +3,8 @@ import { Model } from 'mongoose';
 import {
   CreateTeamInputsDTO,
   UpdateTeamInputDTO,
-} from '../lib/dto/TeamInputDTO';
-import { Team, TeamDocument, TeamModel } from '../schema/teamSchema';
+} from '../lib/dto/TeamInput.dto';
+import { Team, TeamDocument, TeamModel } from '../schema/team.schema';
 
 export class TeamService {
   constructor(private model: Model<TeamDocument> = TeamModel) {}

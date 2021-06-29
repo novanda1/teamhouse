@@ -10,12 +10,12 @@ import {
 import {
   CreateTeamInputsDTO,
   UpdateTeamInputDTO,
-} from '../lib/dto/TeamInputDTO';
+} from '../lib/dto/TeamInput.dto';
 import { Context } from '../lib/types';
 import { JWT } from '../middleware/jwt';
-import { Team, TeamRefUsers } from '../schema/teamSchema';
-import { TeamRefService, USER_ROLE } from '../services/teamRefService';
-import { TeamService } from '../services/teamService';
+import { Team, TeamRefUsers } from '../schema/team.schema';
+import { TeamRefService, USER_ROLE } from '../services/teamRef.service';
+import { TeamService } from '../services/team.service';
 
 @Resolver()
 export class TeamResolver {

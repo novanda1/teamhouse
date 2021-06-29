@@ -11,10 +11,10 @@ import {
   Resolver,
   UseMiddleware,
 } from 'type-graphql';
-import { CreateUserDTO } from '../lib/dto/userDTO';
+import { CreateUserDTO } from '../lib/dto/user.dto';
 import { Context } from '../lib/types';
-import { User } from '../schema/userSchema';
-import { UserService } from '../services/userService';
+import { User } from '../schema/user.schema';
+import { UserService } from '../services/user.service';
 import { JWT } from '../middleware/jwt';
 import { PubSubEngine } from 'apollo-server-express';
 

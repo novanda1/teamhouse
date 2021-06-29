@@ -1,13 +1,13 @@
 import { Model } from 'mongoose';
-import { CreateTeamRefInputsDTO } from '../lib/dto/TeamInputDTO';
+import { CreateTeamRefInputsDTO } from '../lib/dto/TeamInput.dto';
 import {
   TeamRefDocument,
   TeamRefModel,
   TeamRef,
   Team,
   TeamRefUsers,
-} from '../schema/teamSchema';
-import { UserService } from './userService';
+} from '../schema/team.schema';
+import { UserService } from './user.service';
 
 export const USER_ROLE = {
   ADMIN: 0,

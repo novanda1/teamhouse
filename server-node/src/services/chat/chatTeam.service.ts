@@ -1,5 +1,5 @@
-import { CreateChatTeamInputsDTO } from '../../lib/dto/chatTeamInputDTO';
-import { ChatTeam, ChatTeamModel, Message } from '../../schema/chatTeamSchema';
+import { CreateChatTeamInputsDTO } from '../../lib/dto/chatTeamInput.dto';
+import { ChatTeam, ChatTeamModel, Message } from '../../schema/chatTeam.schema';
 
 export class ChatTeamService {
   private readonly colors = [
