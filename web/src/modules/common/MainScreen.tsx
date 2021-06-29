@@ -11,14 +11,14 @@ export const MainScreen: React.FC = () => {
   return (
     <>
       <WaitForAuth>
-        <WebSocketProvider>
-          <Wrapper>
-            <Dashboard />
-            <MainPanel />
-            <RightPanel />
-          </Wrapper>
-          <TeamModal />
-        </WebSocketProvider>
+        {/* <WebSocketProvider> */}
+        <Wrapper>
+          <Dashboard />
+          <MainPanel />
+          <RightPanel />
+        </Wrapper>
+        <TeamModal />
+        {/* </WebSocketProvider> */}
       </WaitForAuth>
     </>
   );

@@ -62,12 +62,24 @@ export type MessageToken = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  pubSubMutation: Scalars['Boolean'];
+  publisherMutation: Scalars['Boolean'];
   addTeamMember: TeamRef;
   createTeam: Team;
   deleteTeam: Scalars['Boolean'];
   updateTeam: Team;
   createUser: UserResponse;
   logout: Scalars['Boolean'];
+};
+
+
+export type MutationPubSubMutationArgs = {
+  message?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationPublisherMutationArgs = {
+  message?: Maybe<Scalars['String']>;
 };
 
 
@@ -95,6 +107,13 @@ export type MutationUpdateTeamArgs = {
 
 export type MutationCreateUserArgs = {
   options: CreateUserDto;
+};
+
+export type Notification = {
+  __typename?: 'Notification';
+  id?: Maybe<Scalars['ID']>;
+  message?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['DateTime']>;
 };
 
 export type Query = {
@@ -144,6 +163,17 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   limit?: Maybe<Scalars['Int']>;
   text: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  chatTeam: Scalars['String'];
+  normalSubscription: Notification;
+};
+
+
+export type SubscriptionChatTeamArgs = {
+  message: Scalars['String'];
 };
 
 export type Team = {
