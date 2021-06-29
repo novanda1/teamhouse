@@ -9,7 +9,9 @@ import { resolvers } from '../resolvers';
 import { connect, connection } from 'mongoose';
 import cors from 'cors';
 import googleStrategy from '../services/auth/google';
+import { config } from 'dotenv';
 
+config();
 export default class ServerConfig {
   static async connectDB() {
     await connect(process.env.DATABASE_URL, {
@@ -32,6 +34,13 @@ export default class ServerConfig {
       pubSub: pubsub,
     });
 
+    appExpress.use(
+      cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+      }),
+    );
+
     googleStrategy;
 
     appExpress.use(express.json());
@@ -40,12 +49,7 @@ export default class ServerConfig {
     appExpress.use(cookieParser());
     appExpress.use(passport.initialize());
     appExpress.use(router);
-    appExpress.use(
-      cors({
-        origin: process.env.CORS_ORIGIN,
-        credentials: true,
-      }),
-    );
+
     appExpress.use(
       helmet({
         contentSecurityPolicy:
