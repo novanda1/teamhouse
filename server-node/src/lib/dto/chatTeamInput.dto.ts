@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { Message } from '../../schema/chatTeamSchema';
+import { Message } from '../../schema/chatTeam.schema';
 
 @InputType()
 export class CreateChatTeamInputsDTO {

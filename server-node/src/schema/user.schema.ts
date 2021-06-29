@@ -1,7 +1,7 @@
 import { Document, Model, model } from 'mongoose';
 import { Field, ObjectType } from 'type-graphql';
-import { Prop } from '../lib/decorators/propDecorator';
-import { Schema } from '../lib/decorators/schemaDecorator';
+import { Prop } from '../lib/decorators/prop.decorator';
+import { Schema } from '../lib/decorators/schema.decorator';
 import { SchemaFactory } from '../lib/factories/schemaFactory';
 
 @ObjectType()

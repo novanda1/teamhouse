@@ -1,7 +1,7 @@
 import { Arg, Query, UseMiddleware } from 'type-graphql';
 import { JWT } from '../middleware/jwt';
-import { ChatTeam } from '../schema/chatTeamSchema';
-import { ChatTeamService } from '../services/chat/chatTeamService';
+import { ChatTeam } from '../schema/chatTeam.schema';
+import { ChatTeamService } from '../services/chat/chatTeam.service';
 
 export class ChatTeamResolver {
   constructor(private readonly chatTeamService = new ChatTeamService()) {}

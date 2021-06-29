@@ -1,6 +1,6 @@
 import { Length, MinLength } from 'class-validator';
 import { Field, InputType, Int } from 'type-graphql';
-import { TeamRefUsers } from '../../schema/teamSchema';
+import { TeamRefUsers } from '../../schema/team.schema';
 
 @InputType()
 export class CreateTeamInputsDTO {

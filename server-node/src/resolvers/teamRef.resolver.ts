@@ -1,10 +1,10 @@
 import { Arg, Mutation, Query, UseMiddleware } from 'type-graphql';
-import { TeamRefUsersInput } from '../lib/dto/TeamInputDTO';
+import { TeamRefUsersInput } from '../lib/dto/TeamInput.dto';
 import { JWT } from '../middleware/jwt';
-import { TeamRef } from '../schema/teamSchema';
-import { User } from '../schema/userSchema';
-import { TeamRefService, USER_ROLE } from '../services/teamRefService';
-import { UserService } from '../services/userService';
+import { TeamRef } from '../schema/team.schema';
+import { User } from '../schema/user.schema';
+import { TeamRefService, USER_ROLE } from '../services/teamRef.service';
+import { UserService } from '../services/user.service';
 
 export class TeamRefResolver {
   constructor(

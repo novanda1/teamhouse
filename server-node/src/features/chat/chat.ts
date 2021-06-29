@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
-import { Message } from '../../schema/chatTeamSchema';
-import { ChatTeamService } from '../../services/chat/chatTeamService';
+import { Message } from '../../schema/chatTeam.schema';
+import { ChatTeamService } from '../../services/chat/chatTeam.service';
 
 const socketio = require('socket.io');
 const service = new ChatTeamService();

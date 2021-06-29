@@ -1,8 +1,8 @@
 import { validate } from 'class-validator';
 import { Model } from 'mongoose';
-import { CreateUserDTO } from '../lib/dto/userDTO';
-import { UserResponse } from '../resolvers/userResolver';
-import { User, UserDocument, UserModel } from '../schema/userSchema';
+import { CreateUserDTO } from '../lib/dto/user.dto';
+import { UserResponse } from '../resolvers/user.resolver';
+import { User, UserDocument, UserModel } from '../schema/user.schema';
 
 export class UserService {
   constructor(private userModel: Model<UserDocument> = UserModel) {}
