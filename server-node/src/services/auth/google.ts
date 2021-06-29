@@ -5,8 +5,9 @@ import { generateAccessToken } from '../../lib/utils/jwt';
 import { User, UserModel } from '../../schema/userSchema';
 
 dotenv.config();
+const googleStrategy = passport;
 
-passport.use(
+googleStrategy.use(
   new Strategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -38,10 +39,12 @@ passport.use(
   ),
 );
 
-passport.serializeUser((user, done) => {
+googleStrategy.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user: User, done) => {
+googleStrategy.deserializeUser((user: User, done) => {
   done(null, user);
 });
+
+export default googleStrategy;
