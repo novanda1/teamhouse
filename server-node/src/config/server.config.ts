@@ -8,6 +8,7 @@ import { buildSchemaSync } from 'type-graphql';
 import { resolvers } from '../resolvers';
 import { connect, connection } from 'mongoose';
 import cors from 'cors';
+import googleStrategy from '../services/auth/google';
 
 export default class ServerConfig {
   static async connectDB() {
@@ -30,6 +31,8 @@ export default class ServerConfig {
       validate: false,
       pubSub: pubsub,
     });
+
+    googleStrategy;
 
     appExpress.use(express.json());
     appExpress.use(express.urlencoded({ extended: true }));
