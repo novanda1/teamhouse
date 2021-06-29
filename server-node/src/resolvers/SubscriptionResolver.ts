@@ -7,6 +7,7 @@ import {
   ObjectType,
   Publisher,
   PubSub,
+  Root,
   Subscription,
 } from 'type-graphql';
 // import { ChatTeam } from '../schema/chatTeamSchema';
@@ -16,18 +17,18 @@ export const pubsub = new poop();
 
 @ObjectType()
 export class Notification {
-  @Field(() => ID)
-  id!: number;
+  @Field(() => ID, { nullable: true })
+  id?: number;
 
   @Field({ nullable: true })
   message?: string;
 
-  @Field(() => Date)
-  date!: Date;
+  @Field(() => Date, { nullable: true })
+  date?: Date;
 }
 
 export interface NotificationPayload {
-  id: number;
+  id?: number;
   message?: string;
 }
 
@@ -67,7 +68,7 @@ export class SubscriptionResolver {
   }
 
   @Subscription({ topics: 'NOTIFICATIONS' })
-  normalSubscription(): Notification {
-    return { id: 123, message: '123', date: new Date() };
+  normalSubscription(@Root() payload: NotificationPayload): Notification {
+    return { ...payload, date: new Date() };
   }
 }
