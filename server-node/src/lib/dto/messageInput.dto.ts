@@ -25,6 +25,6 @@ export class AddMessageInputsDTO {
   @Field(() => Boolean, { defaultValue: false })
   deleted?: boolean;
 
-  @Field(() => Date)
-  createdAt!: Date;
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date;
 }

@@ -35,8 +35,8 @@ export class Message {
   deleted?: boolean;
 
   @Prop()
-  @Field(() => Date)
-  createdAt!: Date;
+  @Field(() => Date, {nullable: true})
+  createdAt?: Date;
 }
 
 export type MessageDocument = Message & Document;
