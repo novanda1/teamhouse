@@ -16,6 +16,16 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddMessageInputsDto = {
+  _id: Scalars['String'];
+  user?: Maybe<CreateUserDto>;
+  userId: Scalars['String'];
+  color: Scalars['String'];
+  tokens: Array<MessageTokenInputDto>;
+  deleted?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+};
+
 export type ChatTeam = {
   __typename?: 'ChatTeam';
   _id: Scalars['String'];
@@ -30,6 +40,7 @@ export type CreateTeamInputsDto = {
 };
 
 export type CreateUserDto = {
+  _id: Scalars['String'];
   email: Scalars['String'];
   firstname: Scalars['String'];
   lastname: Scalars['String'];
@@ -48,10 +59,11 @@ export type Message = {
   __typename?: 'Message';
   _id: Scalars['String'];
   userId: Scalars['String'];
+  user?: Maybe<User>;
   color: Scalars['String'];
   tokens: Array<MessageToken>;
   deleted?: Maybe<Scalars['Boolean']>;
-  createdAt: Scalars['DateTime'];
+  createdAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type MessageToken = {
@@ -60,8 +72,14 @@ export type MessageToken = {
   v: Scalars['String'];
 };
 
+export type MessageTokenInputDto = {
+  t: Scalars['String'];
+  v: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  addChat: Array<Message>;
   pubSubMutation: Scalars['Boolean'];
   publisherMutation: Scalars['Boolean'];
   addTeamMember: TeamRef;
@@ -70,6 +88,12 @@ export type Mutation = {
   updateTeam: Team;
   createUser: UserResponse;
   logout: Scalars['Boolean'];
+};
+
+
+export type MutationAddChatArgs = {
+  message: AddMessageInputsDto;
+  teamId: Scalars['String'];
 };
 
 
@@ -167,6 +191,7 @@ export type QueryUsersArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  teamChatSubscription: Message;
   chatTeam: Scalars['String'];
   normalSubscription: Notification;
 };
@@ -241,6 +266,20 @@ export type MeQuery = (
   ) }
 );
 
+export type AddChatMutationVariables = Exact<{
+  teamId: Scalars['String'];
+  message: AddMessageInputsDto;
+}>;
+
+
+export type AddChatMutation = (
+  { __typename?: 'Mutation' }
+  & { addChat: Array<(
+    { __typename?: 'Message' }
+    & MessageFragmentFragment
+  )> }
+);
+
 export type GetChatTeamQueryVariables = Exact<{
   teamId: Scalars['String'];
 }>;
@@ -254,7 +293,10 @@ export type GetChatTeamQuery = (
     & { messages?: Maybe<Array<(
       { __typename?: 'Message' }
       & Pick<Message, '_id' | 'userId' | 'color' | 'deleted' | 'createdAt'>
-      & { tokens: Array<(
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & UserFragmentFragment
+      )>, tokens: Array<(
         { __typename?: 'MessageToken' }
         & Pick<MessageToken, 't' | 'v'>
       )> }
@@ -262,9 +304,32 @@ export type GetChatTeamQuery = (
   ) }
 );
 
+export type TeamChatSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TeamChatSubscriptionSubscription = (
+  { __typename?: 'Subscription' }
+  & { teamChatSubscription: (
+    { __typename?: 'Message' }
+    & MessageFragmentFragment
+  ) }
+);
+
 export type ErrorsFragmentFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
+);
+
+export type MessageFragmentFragment = (
+  { __typename?: 'Message' }
+  & Pick<Message, '_id' | 'userId' | 'color' | 'deleted' | 'createdAt'>
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & UserFragmentFragment
+  )>, tokens: Array<(
+    { __typename?: 'MessageToken' }
+    & Pick<MessageToken, 't' | 'v'>
+  )> }
 );
 
 export type TeamFragmentFragment = (
@@ -443,6 +508,32 @@ export type UsersQuery = (
   )> }
 );
 
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  _id
+  email
+  firstname
+  lastname
+  bio
+  picture
+}
+    `;
+export const MessageFragmentFragmentDoc = gql`
+    fragment MessageFragment on Message {
+  _id
+  userId
+  user {
+    ...UserFragment
+  }
+  color
+  tokens {
+    t
+    v
+  }
+  deleted
+  createdAt
+}
+    ${UserFragmentFragmentDoc}`;
 export const TeamFragmentFragmentDoc = gql`
     fragment TeamFragment on Team {
   _id
@@ -454,16 +545,6 @@ export const ErrorsFragmentFragmentDoc = gql`
     fragment ErrorsFragment on FieldError {
   field
   message
-}
-    `;
-export const UserFragmentFragmentDoc = gql`
-    fragment UserFragment on User {
-  _id
-  email
-  firstname
-  lastname
-  bio
-  picture
 }
     `;
 export const UserResponseFragmentFragmentDoc = gql`
@@ -546,6 +627,40 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const AddChatDocument = gql`
+    mutation AddChat($teamId: String!, $message: AddMessageInputsDTO!) {
+  addChat(teamId: $teamId, message: $message) {
+    ...MessageFragment
+  }
+}
+    ${MessageFragmentFragmentDoc}`;
+export type AddChatMutationFn = Apollo.MutationFunction<AddChatMutation, AddChatMutationVariables>;
+
+/**
+ * __useAddChatMutation__
+ *
+ * To run a mutation, you first call `useAddChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addChatMutation, { data, loading, error }] = useAddChatMutation({
+ *   variables: {
+ *      teamId: // value for 'teamId'
+ *      message: // value for 'message'
+ *   },
+ * });
+ */
+export function useAddChatMutation(baseOptions?: Apollo.MutationHookOptions<AddChatMutation, AddChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddChatMutation, AddChatMutationVariables>(AddChatDocument, options);
+      }
+export type AddChatMutationHookResult = ReturnType<typeof useAddChatMutation>;
+export type AddChatMutationResult = Apollo.MutationResult<AddChatMutation>;
+export type AddChatMutationOptions = Apollo.BaseMutationOptions<AddChatMutation, AddChatMutationVariables>;
 export const GetChatTeamDocument = gql`
     query GetChatTeam($teamId: String!) {
   getChatTeam(teamId: $teamId) {
@@ -554,6 +669,9 @@ export const GetChatTeamDocument = gql`
     bannedUserIdMap
     messages {
       _id
+      user {
+        ...UserFragment
+      }
       userId
       color
       tokens {
@@ -565,7 +683,7 @@ export const GetChatTeamDocument = gql`
     }
   }
 }
-    `;
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useGetChatTeamQuery__
@@ -594,6 +712,35 @@ export function useGetChatTeamLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetChatTeamQueryHookResult = ReturnType<typeof useGetChatTeamQuery>;
 export type GetChatTeamLazyQueryHookResult = ReturnType<typeof useGetChatTeamLazyQuery>;
 export type GetChatTeamQueryResult = Apollo.QueryResult<GetChatTeamQuery, GetChatTeamQueryVariables>;
+export const TeamChatSubscriptionDocument = gql`
+    subscription TeamChatSubscription {
+  teamChatSubscription {
+    ...MessageFragment
+  }
+}
+    ${MessageFragmentFragmentDoc}`;
+
+/**
+ * __useTeamChatSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useTeamChatSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useTeamChatSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTeamChatSubscriptionSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTeamChatSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<TeamChatSubscriptionSubscription, TeamChatSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<TeamChatSubscriptionSubscription, TeamChatSubscriptionSubscriptionVariables>(TeamChatSubscriptionDocument, options);
+      }
+export type TeamChatSubscriptionSubscriptionHookResult = ReturnType<typeof useTeamChatSubscriptionSubscription>;
+export type TeamChatSubscriptionSubscriptionResult = Apollo.SubscriptionResult<TeamChatSubscriptionSubscription>;
 export const AddTeamMemberDocument = gql`
     mutation AddTeamMember($teamId: String!, $user: TeamRefUsersInput!) {
   addTeamMember(teamId: $teamId, user: $user) {

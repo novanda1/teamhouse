@@ -1,0 +1,14 @@
+fragment MessageFragment on Message {
+  _id
+  userId
+  user {
+    ...UserFragment
+  }
+  color
+  tokens {
+    t
+    v
+  }
+  deleted
+  createdAt
+}

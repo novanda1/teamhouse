@@ -1,6 +1,11 @@
 import { CreateChatTeamInputsDTO } from '../../lib/dto/chatTeamInput.dto';
 import { ChatTeam, ChatTeamModel, Message } from '../../schema/chatTeam.schema';
+import { UserService } from '../user.service';
 
+/**
+ * @todo make this better
+ * @body hard to read
+ */
 export class ChatTeamService {
   private readonly colors = [
     '#ff2366',
@@ -15,7 +20,10 @@ export class ChatTeamService {
     '#FFFF66',
   ];
 
-  constructor(private readonly model = ChatTeamModel) {}
+  constructor(
+    private readonly model = ChatTeamModel,
+    private readonly userService = new UserService(),
+  ) {}
 
   private generateColorFromString(str: string) {
     let sum = 0;
@@ -28,15 +36,16 @@ export class ChatTeamService {
     const message: Message = {
       ...m,
       color: this.generateColorFromString(m.userId),
+      user: (await this.userService.find(m.userId)) || undefined,
       createdAt,
     };
 
-    const messageCollection = await this.model.findOne({ teamId });
+    let queryChatTeam = (await this.model.findOne({ teamId })) as ChatTeam;
 
     const add = async () =>
       await this.model.updateOne({ teamId }, { $push: { messages: message } });
 
-    if (!messageCollection)
+    if (!queryChatTeam)
       this.create({ teamId }).then(async () => {
         await add();
       });
@@ -44,7 +53,18 @@ export class ChatTeamService {
       await add();
     }
 
-    return messageCollection;
+    const messages: Message[] = [
+      ...(queryChatTeam.messages?.map(async (m: Message) => {
+        return await this.userService.find(m.userId).then((user) => {
+          return { user, ...m };
+        });
+      }) as Message[] & any),
+    ];
+
+    return await Promise.all(messages).then((m) => {
+      queryChatTeam.messages = m;
+      return queryChatTeam;
+    });
   }
 
   async create(options: CreateChatTeamInputsDTO): Promise<ChatTeam> {
@@ -54,7 +74,21 @@ export class ChatTeamService {
     return chatTeam;
   }
 
-  async find(teamId: string): Promise<ChatTeam | null> {
-    return await this.model.findOne({ teamId });
+  async find(teamId: string): Promise<ChatTeam> {
+    let queryChatTeam = (await this.model.findOne({ teamId })) as ChatTeam;
+
+    const messages: any = [
+      ...(queryChatTeam.messages?.map(async (m: Message) => {
+        return await this.userService.find(m.userId).then((user) => {
+          return { user, ...m };
+        });
+      }) as Message[] & any),
+    ];
+
+    return await Promise.all(messages).then(() => {
+      queryChatTeam.messages = messages;
+      const result: any = queryChatTeam;
+      return result;
+    });
   }
 }

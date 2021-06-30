@@ -3,12 +3,14 @@ import { dolma } from "dolma";
 import React, { useContext, useRef } from "react";
 import { FaRegSmile } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
-import { useMeQuery } from "../generated/graphql";
+import { useAddChatMutation, useMeQuery } from "../generated/graphql";
+import { useGetId } from "../hooks/useGetId";
 import { customEmojis } from "../modules/chat/EmoteData";
 import { navigateThroughQueriedEmojis } from "../modules/chat/navigateThroughQueriedEmojis";
 import { useChatTeamStore } from "../modules/chat/team/useChatTeamStore";
 import { useEmojiPickerStore } from "../modules/chat/useEmojiPickerStore";
 import { WebSocketContext } from "../modules/ws/WebSocketProvider";
+import { generateColorFromString } from "../utils/generateColorFromString";
 import { EmojiPicker } from "./EmojiPicker";
 
 export const ChatForm: React.FC = () => {
@@ -16,17 +18,32 @@ export const ChatForm: React.FC = () => {
   const { message, setMessage, messages } = useChatTeamStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const teamId = useGetId();
+
   const { conn, sendMessage } = useContext(WebSocketContext);
   const me = useMeQuery();
+
+  const [addMessage] = useAddChatMutation();
+
   const handleSend = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputRef.current.value.length !== 0) {
       const tokens = dolma.encode(inputRef.current.value);
+      const { __typename, ...user } = me?.data.me;
       const message = {
         _id: uuidv4(),
+        color: generateColorFromString(me?.data.me._id),
         tokens,
         userId: me.data?.me?._id,
+        user,
       };
-      await sendMessage(message);
+      // await sendMessage(message);
+
+      addMessage({
+        variables: {
+          teamId,
+          message,
+        },
+      });
 
       setMessage("");
     }

@@ -5,6 +5,9 @@ query GetChatTeam($teamId: String!) {
     bannedUserIdMap
     messages {
       _id
+      user {
+        ...UserFragment
+      }
       userId
       color
       tokens {
