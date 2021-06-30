@@ -94,6 +94,7 @@ export default class ServerConfig {
           onDisconnect() {},
         },
       });
+      await apolloServer.start();
       apolloServer.applyMiddleware({ app: appExpress });
       const httpServer = http.createServer(appExpress);
       apolloServer.installSubscriptionHandlers(httpServer);
