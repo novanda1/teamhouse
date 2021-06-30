@@ -3,6 +3,7 @@ import { Field, ObjectType } from 'type-graphql';
 import { Prop } from '../lib/decorators/prop.decorator';
 import { Schema } from '../lib/decorators/schema.decorator';
 import { SchemaFactory } from '../lib/factories/schemaFactory';
+import { User } from './user.schema';
 
 @ObjectType()
 export class MessageToken {
@@ -22,6 +23,9 @@ export class Message {
   @Field()
   userId!: string;
 
+  @Field(() => User, { nullable: true })
+  user?: User;
+
   @Prop()
   @Field()
   color!: string;
@@ -35,7 +39,7 @@ export class Message {
   deleted?: boolean;
 
   @Prop()
-  @Field(() => Date, {nullable: true})
+  @Field(() => Date, { nullable: true })
   createdAt?: Date;
 }
 

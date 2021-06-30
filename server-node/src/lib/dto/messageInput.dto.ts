@@ -1,4 +1,6 @@
 import { Field, InputType } from 'type-graphql';
+import { User } from '../../schema/user.schema';
+import { CreateUserDTO } from './user.dto';
 
 @InputType()
 export class MessageTokenInputDTO {
@@ -12,6 +14,9 @@ export class MessageTokenInputDTO {
 export class AddMessageInputsDTO {
   @Field()
   _id!: string;
+
+  @Field(() => CreateUserDTO, { nullable: true })
+  user?: User;
 
   @Field()
   userId!: string;

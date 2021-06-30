@@ -11,14 +11,24 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { memo, ReactElement, useCallback } from "react";
+import React, {
+  memo,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { IoIosSettings, IoMdPerson } from "react-icons/io";
-import { useGetChatTeamQuery, useMeQuery } from "../../generated/graphql";
+import {
+  Message,
+  useGetChatTeamQuery,
+  useMeQuery,
+  useTeamChatSubscriptionSubscription,
+} from "../../generated/graphql";
 import { useGetId } from "../../hooks/useGetId";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { ChatForm } from "../../ui/ChatForm";
 import { ChatList } from "../../ui/ChatList";
-import { useChatTeamStore } from "../chat/team/useChatTeamStore";
 import { usePanelStore } from "./usePanelStore";
 
 const SingleMenu: React.FC<{
@@ -59,12 +69,28 @@ export const RightPanel: React.FC = memo(() => {
   const me = useMeQuery();
   const teamId = useGetId();
 
-  const messages = useGetChatTeamQuery({
+  const existingMessages = useGetChatTeamQuery({
     skip: !teamId,
     variables: {
       teamId,
     },
   });
+  const subscribeMessages = useTeamChatSubscriptionSubscription();
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    existingMessages?.data &&
+      setMessages([...existingMessages?.data.getChatTeam.messages]);
+  }, [existingMessages?.data]);
+
+  useEffect(() => {
+    subscribeMessages?.data &&
+      setMessages((currentMessage: Message[]) => [
+        ...currentMessage,
+        subscribeMessages?.data.teamChatSubscription,
+      ]);
+
+  }, [subscribeMessages?.data]);
 
   if (panelStore.mainPanel === "team")
     return (
@@ -120,7 +146,7 @@ export const RightPanel: React.FC = memo(() => {
             p="4"
           >
             <>
-              {messages.data?.getChatTeam.messages?.map((c) => c.color)}
+              <ChatList messages={messages} />
               <ChatForm />
             </>
           </Flex>
