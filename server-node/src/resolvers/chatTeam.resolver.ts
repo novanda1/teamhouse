@@ -31,7 +31,6 @@ export class ChatTeamResolver {
   ) {
     pubSub.publish('CHAT_TEAM', message);
 
-    console.log(`message.`, message.user);
     const result = await this.chatTeamService.addMessage(teamId, message);
     return result?.messages;
   }

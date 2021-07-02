@@ -11,21 +11,9 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, {
-  memo,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { memo, ReactElement, useCallback } from "react";
 import { IoIosSettings, IoMdPerson } from "react-icons/io";
-import {
-  Message,
-  useGetChatTeamQuery,
-  useMeQuery,
-  useTeamChatSubscriptionSubscription,
-} from "../../generated/graphql";
-import { useGetId } from "../../hooks/useGetId";
+import { useMeQuery } from "../../generated/graphql";
 import { ButtonNoOutline } from "../../ui/ButtonNoOutline";
 import { ChatForm } from "../../ui/ChatForm";
 import { ChatList } from "../../ui/ChatList";
@@ -67,30 +55,6 @@ const SingleMenu: React.FC<{
 export const RightPanel: React.FC = memo(() => {
   const panelStore = usePanelStore();
   const me = useMeQuery();
-  const teamId = useGetId();
-
-  const existingMessages = useGetChatTeamQuery({
-    skip: !teamId,
-    variables: {
-      teamId,
-    },
-  });
-  const subscribeMessages = useTeamChatSubscriptionSubscription();
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  useEffect(() => {
-    existingMessages?.data &&
-      setMessages([...existingMessages?.data.getChatTeam.messages]);
-  }, [existingMessages?.data]);
-
-  useEffect(() => {
-    subscribeMessages?.data &&
-      setMessages((currentMessage: Message[]) => [
-        ...currentMessage,
-        subscribeMessages?.data.teamChatSubscription,
-      ]);
-
-  }, [subscribeMessages?.data]);
 
   if (panelStore.mainPanel === "team")
     return (
@@ -146,7 +110,7 @@ export const RightPanel: React.FC = memo(() => {
             p="4"
           >
             <>
-              <ChatList messages={messages} />
+              <ChatList />
               <ChatForm />
             </>
           </Flex>

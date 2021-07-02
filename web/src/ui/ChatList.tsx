@@ -1,14 +1,40 @@
 import { Box, Flex } from "@chakra-ui/react";
 import normalizeUrl from "normalize-url";
 import React, { useEffect, useState } from "react";
-import { Message, useGetUserQuery, User } from "../generated/graphql";
+import {
+  Message,
+  useGetChatTeamQuery,
+  useTeamChatSubscriptionSubscription,
+} from "../generated/graphql";
 import { useGetId } from "../hooks/useGetId";
 import { Emote } from "../modules/chat/Emote";
 import { EmoteKeys } from "../modules/chat/EmoteData";
 import { ParseTextToTwemoji } from "./Twemoji";
 
-export const ChatList: React.FC<{ messages: Message[] }> = ({ messages }) => {
+export const ChatList: React.FC<{}> = ({}) => {
   const teamId = useGetId();
+
+  const existingMessages = useGetChatTeamQuery({
+    skip: !teamId,
+    variables: {
+      teamId,
+    },
+  });
+  const subscribeMessages = useTeamChatSubscriptionSubscription();
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    existingMessages?.data &&
+      setMessages([...existingMessages?.data.getChatTeam?.messages]);
+  }, [existingMessages?.data]);
+
+  useEffect(() => {
+    subscribeMessages?.data &&
+      setMessages((currentMessage: Message[]) => [
+        ...currentMessage,
+        subscribeMessages?.data.teamChatSubscription,
+      ]);
+  }, [subscribeMessages?.data]);
 
   const [localMessages, setLocalMessages] = useState(messages);
 

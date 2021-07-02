@@ -74,21 +74,25 @@ export class ChatTeamService {
     return chatTeam;
   }
 
-  async find(teamId: string): Promise<ChatTeam> {
+  async find(teamId: string): Promise<ChatTeam | null> {
     let queryChatTeam = (await this.model.findOne({ teamId })) as ChatTeam;
 
-    const messages: any = [
-      ...(queryChatTeam.messages?.map(async (m: Message) => {
-        return await this.userService.find(m.userId).then((user) => {
-          return { user, ...m };
-        });
-      }) as Message[] & any),
-    ];
+    if (queryChatTeam) {
+      const messages: any = [
+        ...(queryChatTeam.messages?.map(async (m: Message) => {
+          return await this.userService.find(m.userId).then((user) => {
+            return { user, ...m };
+          });
+        }) as Message[] & any),
+      ];
 
-    return await Promise.all(messages).then(() => {
-      queryChatTeam.messages = messages;
-      const result: any = queryChatTeam;
-      return result;
-    });
+      return await Promise.all(messages).then(() => {
+        queryChatTeam.messages = messages;
+        const result: any = queryChatTeam;
+        return result;
+      });
+    } else this.create({ teamId });
+
+    return queryChatTeam;
   }
 }
