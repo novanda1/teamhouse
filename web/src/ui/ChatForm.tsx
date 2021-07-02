@@ -1,6 +1,6 @@
 import { Box, Flex, IconButton, Input } from "@chakra-ui/react";
 import { dolma } from "dolma";
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { FaRegSmile } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 import { useAddChatMutation, useMeQuery } from "../generated/graphql";
@@ -9,21 +9,24 @@ import { customEmojis } from "../modules/chat/EmoteData";
 import { navigateThroughQueriedEmojis } from "../modules/chat/navigateThroughQueriedEmojis";
 import { useChatTeamStore } from "../modules/chat/team/useChatTeamStore";
 import { useEmojiPickerStore } from "../modules/chat/useEmojiPickerStore";
-import { WebSocketContext } from "../modules/ws/WebSocketProvider";
 import { generateColorFromString } from "../utils/generateColorFromString";
 import { EmojiPicker } from "./EmojiPicker";
 
 export const ChatForm: React.FC = () => {
   const { open, setOpen, queryMatches } = useEmojiPickerStore();
-  const { message, setMessage, messages } = useChatTeamStore();
+  const { message, setMessage } = useChatTeamStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const teamId = useGetId();
 
-  const { conn, sendMessage } = useContext(WebSocketContext);
   const me = useMeQuery();
 
-  const [addMessage] = useAddChatMutation();
+  const [addMessage] = useAddChatMutation({
+    update: (cache) => {
+      cache.evict({ fieldName: "getChatTeam", args: { teamId } });
+      cache.gc();
+    },
+  });
 
   const handleSend = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputRef.current.value.length !== 0) {
@@ -36,7 +39,6 @@ export const ChatForm: React.FC = () => {
         userId: me.data?.me?._id,
         user,
       };
-      // await sendMessage(message);
 
       addMessage({
         variables: {
