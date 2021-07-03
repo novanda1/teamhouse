@@ -30,16 +30,24 @@ export const ChatList: React.FC<{}> = ({}) => {
   }, [subscribeMessages.data]);
 
   useEffect(() => {
+    console.log(`existingMessages`, existingMessages);
     store.setMessages(existingMessages.data?.getChatTeam?.messages);
-  }, [teamId]);
+  }, [teamId, existingMessages]);
+
+  if (existingMessages.loading)
+    return (
+      <>
+        <Box mt="auto">loading...</Box>
+      </>
+    );
 
   return (
-    <Box mt="auto">
+    <Box mt="auto" maxH="60vh" overflowY="auto" overflowX="hidden">
       {store.messages &&
         store.messages.map((c, i) => {
           return (
             <Flex key={i}>
-              <Box display="inline" pr="2" color={c.color}>
+              <Box display="inline"  pr="2" color={c.color}>
                 {c.user?.firstname}
               </Box>
               {c.tokens.map(({ t, v }, i) => {
