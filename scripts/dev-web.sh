@@ -1,1 +1,1 @@
-cd web && yarn dev
+cd web-new && yarn dev
