@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from '../lib/constants';
+import { PubSubEngine } from 'apollo-server-express';
 import {
   Arg,
   Ctx,
@@ -9,14 +9,13 @@ import {
   PubSub,
   Query,
   Resolver,
-  UseMiddleware,
+  UseMiddleware
 } from 'type-graphql';
-import { CreateUserDTO } from '../lib/dto/user.dto';
+import { COOKIE_NAME } from '../lib/constants';
 import { Context } from '../lib/types';
+import { JWT } from '../middleware/jwt';
 import { User } from '../schema/user.schema';
 import { UserService } from '../services/user.service';
-import { JWT } from '../middleware/jwt';
-import { PubSubEngine } from 'apollo-server-express';
 
 @ObjectType()
 class FieldError {
@@ -65,13 +64,13 @@ export class UserResolver {
     return user;
   }
 
-  @UseMiddleware(JWT)
-  @Mutation(() => UserResponse, { name: 'createUser' })
-  async register(
-    @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
-  ): Promise<UserResponse> {
-    return await this.userService.create(options);
-  }
+  // @UseMiddleware(JWT)
+  // @Mutation(() => UserResponse, { name: 'createUser' })
+  // async register(
+  //   @Arg('options', () => CreateUserDTO) options: CreateUserDTO,
+  // ): Promise<UserResponse> {
+  //   return await this.userService.create(options);
+  // }
 
   @UseMiddleware(JWT)
   @Mutation(() => Boolean)

@@ -12,6 +12,10 @@ export class User {
 
   @Prop({ unique: true })
   @Field(() => String)
+  username!: String;
+
+  @Prop({ unique: true })
+  @Field(() => String)
   email!: String;
 
   @Prop()
@@ -35,6 +39,7 @@ export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.index({
   _id: 'text',
+  username: 'text',
   email: 'text',
   firstname: 'text',
   lastname: 'text',
