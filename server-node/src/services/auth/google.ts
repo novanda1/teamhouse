@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
 import { generateAccessToken } from '../../lib/utils/jwt';
+import { uniqueUsername } from '../../lib/utils/uniqueUsername';
 import { User, UserModel } from '../../schema/user.schema';
 
 dotenv.config();
@@ -22,6 +23,9 @@ googleStrategy.use(
       const user: User = existing
         ? existing
         : await UserModel.create({
+            username: await uniqueUsername(
+              profile.name?.givenName + ' ' + profile.name?.familyName,
+            ),
             email: profile.emails && profile.emails[0]?.value,
             firstname: profile.name?.givenName,
             lastname: profile.name?.familyName,

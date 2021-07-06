@@ -7,6 +7,10 @@ export class CreateUserDTO {
   _id!: string;
 
   @Field(() => String)
+  @IsString()
+  username!: string;
+
+  @Field(() => String)
   @IsEmail()
   email!: string;
 
