@@ -5,7 +5,7 @@ import { Wrapper } from "../layout/Wrapper";
 import { Tbutton } from "./Tbutton";
 
 export const Login: React.FC = () => {
-  const { handleLogin } = useAuthLogin();
+  const { onLoginButtonClick } = useAuthLogin();
 
   return (
     <>
@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
             </Text>
           </Box>
 
-          <Tbutton variant="primary" onClick={handleLogin}>
+          <Tbutton variant="primary" onClick={onLoginButtonClick}>
             Continue with Google
           </Tbutton>
         </Flex>

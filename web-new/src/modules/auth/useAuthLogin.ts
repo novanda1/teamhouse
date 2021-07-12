@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 export const useAuthLogin = () => {
   const router = useRouter();
 
-  const handleLogin = () => {
+  const onLoginButtonClick = () => {
     router.push("http://localhost:4000/google");
   };
 
   return {
-    handleLogin,
+    onLoginButtonClick,
   };
 };
