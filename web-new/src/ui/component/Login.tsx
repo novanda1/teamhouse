@@ -1,10 +1,12 @@
-import { Box, Button, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import React from "react";
+import { useAuthLogin } from "../../modules/auth/useAuthLogin";
 import { Wrapper } from "../layout/Wrapper";
 import { Tbutton } from "./Tbutton";
 
 export const Login: React.FC = () => {
+  const { handleLogin } = useAuthLogin();
+
   return (
     <>
       <Wrapper
@@ -27,12 +29,14 @@ export const Login: React.FC = () => {
           <Box mb="6">
             <Heading size="lg">Welcome!</Heading>
             <Text color="text.paragraph" size="sm" mt="1">
-              By registering, you agree to Teemee's <Link>Term of Service</Link>{" "}
-              and <Link>Privacy Policy</Link>
+              By registering, you agree to {`Teemee's`}{" "}
+              <Link>Term of Service</Link> and <Link>Privacy Policy</Link>
             </Text>
           </Box>
 
-          <Tbutton variant="primary">Continue with Google</Tbutton>
+          <Tbutton variant="primary" onClick={handleLogin}>
+            Continue with Google
+          </Tbutton>
         </Flex>
       </Wrapper>
     </>
