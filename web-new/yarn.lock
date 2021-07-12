@@ -2355,6 +2355,11 @@ image-size@1.0.0:
   dependencies:
     queue "6.0.2"
 
+immer@^9.0.5:
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.5.tgz#a7154f34fe7064f15f00554cc94c66cc0bf453ec"
+  integrity sha512-2WuIehr2y4lmYz9gaQzetPR2ECniCifk4ORaQbU3g5EalLt+0IVTosEPJ5BoYl/75ky2mivzdRzV8wWgQGOSYQ==
+
 import-fresh@^3.0.0, import-fresh@^3.1.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -4191,3 +4196,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zustand@^3.5.6:
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.6.tgz#c28cfbdfdd999d26d1a94ea105a6fd1da56ed38a"
+  integrity sha512-8XrpRO5scF8MSxeAlu7vFupmLG+5MTWhT+6+3QNsihs0QZfOjaArFyvenUgrk30WdZVGVHLHXBhbqC2/QzLeMA==
