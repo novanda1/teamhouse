@@ -20,6 +20,10 @@ googleStrategy.use(
         email: profile.emails ? profile.emails[0]?.value : '',
       });
 
+      const uname = await uniqueUsername(
+        profile.name?.givenName + ' ' + profile.name?.familyName,
+      );
+
       const user: User = existing
         ? existing
         : await UserModel.create({
