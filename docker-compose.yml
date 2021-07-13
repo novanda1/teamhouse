@@ -8,6 +8,6 @@ services:
     volumes:
       - ./db:/data/db
     environment:
-      - MONGO_INITDB_DATABASE= Pokemon
+      - MONGO_INITDB_DATABASE= teamhousedb
     ports:
       - 27017:27017
