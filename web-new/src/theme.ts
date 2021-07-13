@@ -17,6 +17,9 @@ const colors = {
   text: {
     paragraph: "#787e8a",
   },
+  thbg: {
+    secondary: "#F6F7F8",
+  },
 };
 
 export const theme = extendTheme<Theme>({ config, styles, colors });
