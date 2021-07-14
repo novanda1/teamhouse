@@ -16,9 +16,13 @@ const styles: import("@chakra-ui/theme-tools").Styles = {
 const colors = {
   text: {
     paragraph: "#787e8a",
+    dimmed: "#afb9c9",
   },
   thbg: {
     secondary: "#F6F7F8",
+  },
+  thc: {
+    primaryBlue: "#1725a4",
   },
 };
 
