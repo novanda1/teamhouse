@@ -32,6 +32,19 @@ export const DashboardProjectList: React.FC<DashboardProjectListProps> =
             size="1.2em"
             color="var(--chakra-colors-text-dimmed)"
           />
+          <Text ml="1.5">🏐 The Lounge</Text>
+        </Button>
+        <Button
+          w="full"
+          display="flex"
+          justifyContent="flex-start"
+          backgroundColor="transparent"
+        >
+          <TiArrowSortedDown
+            style={{ transform: "rotate(-90deg)" }}
+            size="1.2em"
+            color="var(--chakra-colors-text-dimmed)"
+          />
           <Text ml="1.5">🤷‍♂️ Meeting Summary</Text>
         </Button>
         <Button
