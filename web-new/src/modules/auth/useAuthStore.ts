@@ -8,7 +8,7 @@ export interface IAuthStore {
 }
 
 const getInitialStore = (): IAuthStore => ({
-  accessToken: isServer ? "" : localStorage.getItem(ACCESS_TOKEN_NAME),
+  accessToken: !isServer ? "" : localStorage.getItem(ACCESS_TOKEN_NAME),
 });
 
 
