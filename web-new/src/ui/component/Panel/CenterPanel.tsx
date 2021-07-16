@@ -73,7 +73,7 @@ const CenterPanel: React.FC = () => {
           }}
         >
           <Board
-            renderCard={({ title }, { removeCard }) => (
+            renderCard={({ title }, { removeCard, dragging }) => (
               <Box
                 w="300px"
                 mx="2"
@@ -81,6 +81,7 @@ const CenterPanel: React.FC = () => {
                 p="2"
                 rounded="md"
                 shadow="sm"
+                opacity={dragging ? "0.6" : "1"}
               >
                 <Heading size="sm">{title}</Heading>
                 <button type="button" onClick={removeCard}>
