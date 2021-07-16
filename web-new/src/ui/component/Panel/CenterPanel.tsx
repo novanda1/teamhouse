@@ -68,7 +68,7 @@ const CenterPanel: React.FC = () => {
           paddingBottom="2"
           sx={{
             ".react-kanban-board": {
-              "padding-bottom": "10px",
+              paddingBottom: "10px",
             },
           }}
         >
