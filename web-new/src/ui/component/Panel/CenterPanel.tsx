@@ -1,51 +1,46 @@
 import { Badge, Box, Flex, Heading, Text } from "@chakra-ui/react";
-import React from "react";
 import dynamic from "next/dynamic";
+import React, { ComponentType } from "react";
+import { useKanbanStore } from "../../../modules/kanban/useKanbanStore";
 
-const Board = dynamic(() => import("@asseinfo/react-kanban"), { ssr: false });
+export type IKanban = ComponentType<
+  {
+    renderCard: (kanban: IKanbanCard, utils: IKanbanUtils) => JSX.Element;
+    renderColumnHeader: (
+      kanban: IKanbanColumn,
+      utils: IKanbanUtils
+    ) => JSX.Element;
+    onCardDragEnd: (board, card, source, destination) => any;
+  } & any
+>;
+
+export interface IKanbanUtils {
+  removeCard: () => void;
+  dragging: () => void;
+}
+
+export interface IKanbanCard {
+  id: string | number;
+  title?: string;
+  description?: string;
+}
+
+export interface IKanbanColumn {
+  id: string | number;
+  title: string;
+  cards: IKanbanCard[];
+}
+
+export interface Kanban {
+  columns: IKanbanColumn[];
+}
+
+const Board: IKanban = dynamic(() => import("@asseinfo/react-kanban"), {
+  ssr: false,
+});
 
 const CenterPanel: React.FC = () => {
-  const board = {
-    columns: [
-      {
-        id: 1,
-        title: "Next Up",
-        cards: [
-          {
-            id: 1,
-            title:
-              "[Sejalur Studio] - Create Prototype Mobile for Get Notification in Principle",
-            description: "Add capability to add a card in a column",
-            content: "the content 1",
-          },
-        ],
-      },
-      {
-        id: 2,
-        title: "In Progress",
-        cards: [
-          {
-            id: 2,
-            title: "Drag-n-drop support",
-            description: "Move a card between the columns",
-            content: "the content 2",
-          },
-        ],
-      },
-      {
-        id: 3,
-        title: "Complete",
-        cards: [
-          {
-            id: 3,
-            title: "Drag-n-drop support",
-            description: "Move a card between the columns",
-            content: "the content 2",
-          },
-        ],
-      },
-    ],
-  };
+  const kanbanStore = useKanbanStore((s) => s.data);
 
   return (
     <>
@@ -67,19 +62,58 @@ const CenterPanel: React.FC = () => {
             Avoid create a card by your self to manage a good collaboration
           </Text>
         </Box>
-        <Box>
+        <Box
+          mt="10"
+          mx="-2"
+          paddingBottom="2"
+          sx={{
+            ".react-kanban-board": {
+              "padding-bottom": "10px",
+            },
+          }}
+        >
           <Board
-            renderCard={({ content, title }, { removeCard, dragging }) => (
-              <Box w="300px">
+            renderCard={({ title }, { removeCard }) => (
+              <Box
+                w="300px"
+                mx="2"
+                backgroundColor="white"
+                p="2"
+                rounded="md"
+                shadow="sm"
+              >
                 <Heading size="sm">{title}</Heading>
-                {/* {content}  */}
                 <button type="button" onClick={removeCard}>
                   Remove Card
                 </button>
               </Box>
             )}
+            renderColumnHeader={({ title }) => (
+              <Flex
+                justifyContent="space-between"
+                backgroundColor="thbg.secondary"
+                p="3"
+                rounded="md"
+                mx="2"
+                boxShadow="xs"
+                marginBottom="5"
+              >
+                <Heading size="sm">{title}</Heading>
+                <Badge
+                  backgroundColor="black"
+                  color="white"
+                  fontWeight="normal"
+                  px="1.5"
+                >
+                  1
+                </Badge>
+              </Flex>
+            )}
+            onCardDragEnd={(board, card, source, destination) => {
+              console.log(`ok`, board, card, source, destination);
+            }}
           >
-            {board}
+            {kanbanStore}
           </Board>
         </Box>
       </Flex>
