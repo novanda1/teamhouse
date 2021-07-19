@@ -19,7 +19,8 @@ export interface IKanbanCard {
 export interface IKanbanColumn {
   id: string | number;
   title: string;
-  cards: IKanbanCard[];
+  cardCount: number;
+  cards?: IKanbanCard[];
 }
 
 export interface Kanban {
@@ -36,6 +37,7 @@ const initialBoard: IKanbanStore = {
       {
         id: 1,
         title: "Next Up",
+        cardCount: 1,
         cards: [
           {
             id: 1,
@@ -48,10 +50,12 @@ const initialBoard: IKanbanStore = {
       {
         id: 2,
         title: "In Progress",
+        cardCount: 1,
         cards: [
           {
             id: 2,
-            title: "Drag-n-drop support",
+            title:
+              "[Lux] - Design Lux Pet Shop Product Page Responsive Website",
             description: "Move a card between the columns",
           },
         ],
@@ -59,10 +63,12 @@ const initialBoard: IKanbanStore = {
       {
         id: 3,
         title: "Complete",
+        cardCount: 1,
         cards: [
           {
             id: 3,
-            title: "Drag-n-drop support",
+            title:
+              "[Metaco] - Create draft design for User Journey earning coins on app",
             description: "Move a card between the columns",
           },
         ],
