@@ -15,7 +15,8 @@ const initialBoard: IKanbanStore = {
             id: 1,
             title:
               "[Sejalur Studio] - Create Prototype Mobile for Get Notification in Principle",
-            description: "Add capability to add a card in a column",
+            description: "",
+            tags: [{ id: 1, title: "Code", color: "green.500" }],
           },
         ],
       },
@@ -28,7 +29,8 @@ const initialBoard: IKanbanStore = {
             id: 2,
             title:
               "[Lux] - Design Lux Pet Shop Product Page Responsive Website",
-            description: "Move a card between the columns",
+            description: "",
+            tags: [{ id: 3, title: "Design", color: "red.500" }],
           },
         ],
       },
@@ -41,7 +43,8 @@ const initialBoard: IKanbanStore = {
             id: 3,
             title:
               "[Metaco] - Create draft design for User Journey earning coins on app",
-            description: "Move a card between the columns",
+            description: "",
+            tags: [{ id: 3, title: "Illustration", color: "blue.500" }],
           },
         ],
       },

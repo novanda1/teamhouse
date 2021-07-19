@@ -56,7 +56,7 @@ const CenterPanel: React.FC = () => {
           }}
         >
           <Board
-            renderCard={({ title, id }, { removeCard, dragging }) => (
+            renderCard={({ title, id, tags }, { removeCard, dragging }) => (
               <Box
                 key={id}
                 w="300px"
@@ -69,13 +69,16 @@ const CenterPanel: React.FC = () => {
                 shadow="sm"
                 opacity={dragging ? "0.6" : "1"}
               >
-                <Flex justifyContent="space-between" alignItems="center" mb="3">
-                  <Text color="blue.500" fontWeight="bold" fontSize="0.7rem">
-                    Design
-                  </Text>
+                <Flex justifyContent="space-between" alignItems="center" mb="1">
+                  {tags.map((t) => (
+                    <Text color={t.color} fontWeight="bold" fontSize="0.7rem">
+                      {t.title}
+                    </Text>
+                  ))}
                   <Button
                     variant="unstyled"
                     w="max-content"
+                    h="max-content"
                     display="flex"
                     justifyContent="flex-end"
                     p="0"
