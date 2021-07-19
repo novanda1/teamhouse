@@ -59,7 +59,7 @@ const CenterPanel: React.FC = () => {
             renderCard={({ title, id, tags }, { removeCard, dragging }) => (
               <Box
                 key={id}
-                w="300px"
+                w="290px"
                 mx="2"
                 mb="2"
                 backgroundColor="white"
@@ -136,7 +136,7 @@ const CenterPanel: React.FC = () => {
                   justifyContent="space-between"
                   backgroundColor="thbg.secondary"
                   p="3"
-                  w="300px"
+                  w="290px"
                   rounded="md"
                   mx="2"
                   boxShadow="xs"
