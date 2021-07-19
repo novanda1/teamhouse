@@ -8,36 +8,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import React, { ComponentType, useState } from "react";
+import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import {
-  IKanbanCard,
-  IKanbanColumn,
-  IKanbanUtils,
-  Kanban,
-  useKanbanStore,
-} from "../../../modules/kanban/useKanbanStore";
 import { HiOutlineClock } from "react-icons/hi";
-import { useCallback } from "react";
-import { useEffect } from "react";
+import { Kanban } from "../../../modules/kanban/kanbanTypes";
+import { useKanbanStore } from "../../../modules/kanban/useKanbanStore";
 
-export type IKanban = ComponentType<{
-  renderCard?: (kanban: IKanbanCard, utils: IKanbanUtils) => JSX.Element;
-  renderColumnHeader?: (
-    kanban: IKanbanColumn,
-    utils: IKanbanUtils
-  ) => JSX.Element;
-  onCardDragEnd?: (
-    _board: Kanban,
-    card: IKanbanCard,
-    source: { fromPosition: number; fromColumnId: number },
-    destination: { toPosition: number; toColumnId: number }
-  ) => void;
-  initialBoard?: Kanban;
-  disableColumnDrag?: boolean;
-}>;
-
-const Board: IKanban = dynamic(() => import("@asseinfo/react-kanban"), {
+const Board = dynamic(() => import("@asseinfo/react-kanban"), {
   ssr: false,
 });
 

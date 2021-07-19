@@ -1,35 +1,7 @@
 import produce from "immer";
-import React from "react";
 import create from "zustand";
 import { combine } from "zustand/middleware";
-
-interface useKanbanStoreProps {}
-
-export interface IKanbanUtils {
-  removeCard: () => void;
-  dragging: () => void;
-}
-
-export interface IKanbanCard {
-  id: string | number;
-  title?: string;
-  description?: string;
-}
-
-export interface IKanbanColumn {
-  id: string | number;
-  title: string;
-  cardCount: number;
-  cards?: IKanbanCard[];
-}
-
-export interface Kanban {
-  columns: IKanbanColumn[];
-}
-
-export interface IKanbanStore {
-  data: Kanban;
-}
+import { IKanbanStore } from "./kanbanTypes";
 
 const initialBoard: IKanbanStore = {
   data: {
