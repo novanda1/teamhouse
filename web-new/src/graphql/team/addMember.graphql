@@ -1,0 +1,10 @@
+mutation AddTeamMember($teamId: String!, $user: TeamRefUsersInput!) {
+  addTeamMember(teamId: $teamId, user: $user) {
+    _id
+    team_id
+    users {
+      role
+      id
+    }
+  }
+}

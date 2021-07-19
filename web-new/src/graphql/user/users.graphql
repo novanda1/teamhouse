@@ -1,0 +1,10 @@
+query Users($limit: Int, $text: String!) {
+  users(text: $text, limit: $limit) {
+    _id
+    email
+    firstname
+    lastname
+    bio
+    picture
+  }
+}

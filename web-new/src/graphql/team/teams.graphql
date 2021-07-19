@@ -1,0 +1,7 @@
+query Teams($limit: Int!) {
+  teams(limit: $limit) {
+    _id
+    name
+    description
+  }
+}

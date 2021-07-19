@@ -1,0 +1,21 @@
+query GetChatTeam($teamId: String!) {
+  getChatTeam(teamId: $teamId) {
+    _id
+    teamId
+    bannedUserIdMap
+    messages {
+      _id
+      user {
+        ...UserFragment
+      }
+      userId
+      color
+      tokens {
+        t
+        v
+      }
+      deleted
+      createdAt
+    }
+  }
+}
