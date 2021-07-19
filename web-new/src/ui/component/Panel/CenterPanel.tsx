@@ -104,7 +104,7 @@ const CenterPanel: React.FC = () => {
                     <HiOutlineClock color="white" />
                     <Text>Mar 26</Text>
                   </Badge>
-                  <AvatarGroup size="sm" max={2}>
+                  <AvatarGroup size="xs" max={2}>
                     <Avatar
                       name="Ryan Florence"
                       src="https://bit.ly/ryan-florence"
