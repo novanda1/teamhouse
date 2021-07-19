@@ -3,10 +3,17 @@ export interface IKanbanUtils {
   dragging: () => void;
 }
 
+export interface IkanbanTag {
+  id: number;
+  title: string;
+  color: string;
+}
+
 export interface IKanbanCard {
   id: string | number;
   title?: string;
   description?: string;
+  tags: IkanbanTag[];
 }
 
 export interface IKanbanColumn {

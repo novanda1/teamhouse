@@ -3,6 +3,7 @@ import {
   AvatarGroup,
   Badge,
   Box,
+  Button,
   Flex,
   Heading,
   Text,
@@ -68,11 +69,19 @@ const CenterPanel: React.FC = () => {
                 shadow="sm"
                 opacity={dragging ? "0.6" : "1"}
               >
-                <Flex justifyContent="space-between" mb="3">
-                  <Badge rounded="full" h="1.6rem" w="1.6rem" p="1">
-                    ✨
-                  </Badge>
-                  <BsThreeDots />
+                <Flex justifyContent="space-between" alignItems="center" mb="3">
+                  <Text color="blue.500" fontWeight="bold" fontSize="0.7rem">
+                    Design
+                  </Text>
+                  <Button
+                    variant="unstyled"
+                    w="max-content"
+                    display="flex"
+                    justifyContent="flex-end"
+                    p="0"
+                  >
+                    <BsThreeDots />
+                  </Button>
                 </Flex>
                 <Heading size="sm" fontWeight="medium" mb="5" noOfLines={2}>
                   {title}
@@ -87,6 +96,7 @@ const CenterPanel: React.FC = () => {
                     sx={{ gap: "4px" }}
                     rounded="md"
                     fontWeight="normal"
+                    textTransform="none"
                   >
                     <HiOutlineClock color="white" />
                     <Text>Mar 26</Text>
