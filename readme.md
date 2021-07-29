@@ -2,6 +2,10 @@
 
 team manager that I still can't understand what actually this app will be. 🙌
 
+## Important
+
+Currently this project is pending.
+
 ## Structure
 
 | Codebase                              |    Description     |
