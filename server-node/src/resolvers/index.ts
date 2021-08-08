@@ -5,6 +5,7 @@ import { SubscriptionResolver } from './subccription.resolver';
 import { TeamRefResolver } from './teamRef.resolver';
 import { TeamResolver } from './team.resolver';
 import { UserResolver } from './user.resolver';
+import { ProjectResolver } from './project.resolver';
 
 export const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   HelloResolver,
@@ -13,4 +14,5 @@ export const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   TeamRefResolver,
   ChatTeamResolver,
   SubscriptionResolver,
+  ProjectResolver,
 ];
