@@ -25,8 +25,6 @@ export const useAuthLogin = () => {
 
     if (hasToken) router.push("/home");
 
-    console.log(`localStorage`, localStorage.getItem(ACCESS_TOKEN_NAME));
-    console.log(`authStore`, authStore)
   }, [router, authStore, hasToken]);
 
   return {
