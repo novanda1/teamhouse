@@ -70,8 +70,13 @@ const CenterPanel: React.FC = () => {
                 opacity={dragging ? "0.6" : "1"}
               >
                 <Flex justifyContent="space-between" alignItems="center" mb="1">
-                  {tags.map((t) => (
-                    <Text color={t.color} fontWeight="bold" fontSize="0.7rem">
+                  {tags.map((t, index) => (
+                    <Text
+                      key={index}
+                      color={t.color}
+                      fontWeight="bold"
+                      fontSize="0.7rem"
+                    >
                       {t.title}
                     </Text>
                   ))}
@@ -171,9 +176,7 @@ const CenterPanel: React.FC = () => {
             }}
             initialBoard={board}
             disableColumnDrag
-          >
-            {board}
-          </Board>
+          ></Board>
         </Box>
       </Flex>
     </>

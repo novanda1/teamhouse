@@ -27,13 +27,13 @@ export const RightPanel: React.FC = ({}) => {
         <Flex w="full" justifyContent="space-between">
           <Heading size="md">
             Member
-            <Text display="inline" fontWeight="normal">
+            <Box display="inline" fontWeight="normal">
               (
               <Text display="inline" color="blue.400">
                 25
               </Text>
               )
-            </Text>
+            </Box>
           </Heading>
           <Link color="text.dimmed">View All</Link>
         </Flex>
@@ -101,7 +101,6 @@ export const RightPanel: React.FC = ({}) => {
                 Selamat Pagi ✨
               </Box>
             </Flex>
-            {/*  */}
             <Flex
               alignItems="flex-end"
               alignSelf="flex-end"
