@@ -1,5 +1,6 @@
 import { model, Model } from 'mongoose';
 import { Field, Int, ObjectType } from 'type-graphql';
+import { Prop } from '../lib/decorators/prop.decorator';
 import { Schema } from '../lib/decorators/schema.decorator';
 import { SchemaFactory } from '../lib/factories/schemaFactory';
 
@@ -52,6 +53,7 @@ export class Kanban {
 @Schema()
 export class IKanbanStore {
   @Field(() => Kanban)
+  @Prop(() => Kanban)
   data!: Kanban;
 }
 
