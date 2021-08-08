@@ -1,0 +1,5 @@
+query Projects($limit:	Int!){
+  projects(limit:$limit) {
+    ...ProjectFragment
+  }
+}
