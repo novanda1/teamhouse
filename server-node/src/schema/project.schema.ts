@@ -24,8 +24,10 @@ export class Project {
 export class ProjectTeamRef {
   @Field(() => String)
   _id!: string;
+  @Prop()
   @Field(() => String)
   team_id!: string;
+  @Prop()
   @Field(() => String)
   project_id!: string;
 }
