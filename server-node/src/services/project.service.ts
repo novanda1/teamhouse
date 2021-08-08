@@ -37,4 +37,8 @@ export class ProjectService {
       },
     );
   }
+
+  async projects(limit: number): Promise<Project[]> {
+    return await this.model.find().limit(limit).sort({ date: -1 }).exec();
+  }
 }
