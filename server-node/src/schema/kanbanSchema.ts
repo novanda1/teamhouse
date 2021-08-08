@@ -1,5 +1,6 @@
 import { model, Model } from 'mongoose';
 import { Field, Int, ObjectType } from 'type-graphql';
+import { Schema } from '../lib/decorators/schema.decorator';
 import { SchemaFactory } from '../lib/factories/schemaFactory';
 
 export interface IKanbanUtils {
@@ -48,6 +49,7 @@ export class Kanban {
 }
 
 @ObjectType()
+@Schema()
 export class IKanbanStore {
   @Field(() => Kanban)
   data!: Kanban;
