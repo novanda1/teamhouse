@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Int, Mutation, Query, Resolver } from 'type-graphql';
 import { ProjectInputDTO } from '../lib/dto/projectInput.dto';
 import { Project } from '../schema/project.schema';
 import { ProjectService } from '../services/project.service';
@@ -16,7 +16,7 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project], { name: 'projects' })
-  async projects(@Arg('limit') limit: number) {
+  async projects(@Arg('limit', () => Int) limit: number) {
     return await this.service.projects(limit);
   }
 }
