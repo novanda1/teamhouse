@@ -12,8 +12,12 @@ import googleStrategy from '../../services/auth/google';
 import { config } from 'dotenv';
 import http from 'http';
 import chalk from 'chalk';
-import { ConnectionParams } from 'subscriptions-transport-ws';
+import {
+  ConnectionParams,
+  SubscriptionServer,
+} from 'subscriptions-transport-ws';
 import { verifyJWT } from '../../middleware/jwt';
+import { execute, subscribe } from 'graphql';
 
 config();
 export default class ServerConfig {
@@ -77,10 +81,20 @@ export default class ServerConfig {
   static async startApolloServer() {
     const PORT = process.env.PORT || 80;
     this.getExpress().then(async ({ appExpress, schema }) => {
+      const httpServer = http.createServer(appExpress);
       const apolloServer = new ApolloServer({
         schema,
         context: (context: any) => context,
-        subscriptions: {
+      });
+
+      await apolloServer.start();
+      apolloServer.applyMiddleware({ app: appExpress });
+
+      const subscriptionServer = SubscriptionServer.create(
+        {
+          schema,
+          execute,
+          subscribe,
           onConnect(connectionParams: ConnectionParams) {
             if (connectionParams.authToken) {
               const verified = verifyJWT(connectionParams.authToken);
@@ -93,33 +107,25 @@ export default class ServerConfig {
           },
           onDisconnect() {},
         },
-      });
-      await apolloServer.start();
-      apolloServer.applyMiddleware({ app: appExpress });
-      const httpServer = http.createServer(appExpress);
-      apolloServer.installSubscriptionHandlers(httpServer);
-
-      const sleep = (n: number) =>
-        new Promise((resolve) => setTimeout(resolve, n));
-
-      /**
-       * @todo make it better
-       */
-      console.log(
-        chalk.yellow(
-          'sleeping and waiting installSubscriptionHandlers done :)',
-        ),
+        {
+          server: httpServer,
+          path: apolloServer.graphqlPath,
+        },
       );
 
-      sleep(10000).then(() => {
-        httpServer.listen(Number(PORT), () => {
-          console.log(chalk.green(`Server started on port ${PORT}`));
-          console.log(
-            chalk.greenBright(
-              `🚀 Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`,
-            ),
-          );
-        });
+      // Shut down in the case of interrupt and termination signals
+      // We expect to handle this more cleanly in the future. See (#5074)[https://github.com/apollographql/apollo-server/issues/5074] for reference.
+      ['SIGINT', 'SIGTERM'].forEach((signal) => {
+        process.on(signal, () => subscriptionServer.close());
+      });
+
+      httpServer.listen(Number(PORT), () => {
+        console.log(chalk.green(`Server started on port ${PORT}`));
+        console.log(
+          chalk.greenBright(
+            `🚀 Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`,
+          ),
+        );
       });
     });
   }
