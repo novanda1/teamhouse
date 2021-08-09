@@ -56,6 +56,30 @@ const CenterPanel: React.FC = () => {
           }}
         >
           <Board
+            allowAddColumn
+            renderColumnAdder={({ addColumn }) => {
+              return (
+                <Box
+                  w="290px"
+                  rounded="md"
+                  h="100px"
+                  mx="2"
+                  borderStyle="dashed"
+                  borderWidth="2px"
+                  borderColor="gray.200"
+                  display="grid"
+                  placeContent="center"
+                  _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                  color="text.dimmed"
+                >
+                  <button
+                  // handle add column
+                  >
+                    Add Column
+                  </button>
+                </Box>
+              );
+            }}
             renderCard={({ title, id, tags }, { removeCard, dragging }) => (
               <Box
                 key={id}
@@ -175,7 +199,7 @@ const CenterPanel: React.FC = () => {
               setboard(_board);
             }}
             initialBoard={board}
-            disableColumnDrag
+            // disableColumnDrag
           ></Board>
         </Box>
       </Flex>
