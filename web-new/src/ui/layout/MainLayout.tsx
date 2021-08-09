@@ -7,7 +7,7 @@ import { RightPanel } from "../component/Panel/RightPanel";
 export const MainLayout: React.FC = () => {
   return (
     <>
-      <Flex maxW="1614px" w="full">
+      <Flex>
         <Dashboard />
         <CenterPanel />
         <RightPanel />

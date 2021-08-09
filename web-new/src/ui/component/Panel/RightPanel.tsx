@@ -19,9 +19,10 @@ export const RightPanel: React.FC = ({}) => {
       flexDirection="column"
       borderLeft="1px solid"
       borderColor="blackAlpha.100"
-      w="full"
       px="6"
       py="7"
+      w="max-content"
+      ml="auto"
     >
       <Box>
         <Flex w="full" justifyContent="space-between">
