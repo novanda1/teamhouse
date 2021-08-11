@@ -4,8 +4,13 @@ import { execute, subscribe } from 'graphql';
 import { GRAPHQL_TRANSPORT_WS_PROTOCOL } from 'graphql-ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import http from 'http';
-import { GRAPHQL_WS, SubscriptionServer } from 'subscriptions-transport-ws';
+import {
+  ConnectionParams,
+  GRAPHQL_WS,
+  SubscriptionServer,
+} from 'subscriptions-transport-ws';
 import ws from 'ws';
+import { verifyJWT } from '../../middleware/jwt';
 import ServerConfig from './server.config';
 
 export class ApolloServerConfig extends ServerConfig {
@@ -14,7 +19,23 @@ export class ApolloServerConfig extends ServerConfig {
     this.getExpress().then(async ({ appExpress, schema }) => {
       // graphql-ws
       const graphqlWs = new ws.Server({ noServer: true });
-      useServer({ schema }, graphqlWs);
+      useServer(
+        {
+          schema,
+          onConnect(connectionParams: ConnectionParams) {
+            if (connectionParams.authToken) {
+              const verified = verifyJWT(connectionParams.authToken);
+
+              if (verified) return verified;
+              else throw new Error('WS token not verified');
+            }
+
+            throw new Error('WS token not provided');
+          },
+          onDisconnect() {},
+        },
+        graphqlWs,
+      );
 
       // subscriptions-transport-ws
       const subTransWs = new ws.Server({ noServer: true });
@@ -23,6 +44,17 @@ export class ApolloServerConfig extends ServerConfig {
           schema,
           execute,
           subscribe,
+          onConnect(connectionParams: ConnectionParams) {
+            if (connectionParams.authToken) {
+              const verified = verifyJWT(connectionParams.authToken);
+
+              if (verified) return verified;
+              else throw new Error('WS token not verified');
+            }
+
+            throw new Error('WS token not provided');
+          },
+          onDisconnect() {},
         },
         subTransWs,
       );
