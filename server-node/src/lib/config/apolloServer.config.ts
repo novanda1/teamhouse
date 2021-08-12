@@ -17,47 +17,25 @@ export class ApolloServerConfig extends ServerConfig {
   static async start() {
     const PORT = process.env.PORT || 80;
     this.getExpress().then(async ({ appExpress, schema }) => {
+      const serverOption = {
+        schema,
+        execute,
+        subscribe,
+        onConnect: async (params: ConnectionParams) => {
+          return await verifyJWT(params.authToken).then((verified) => {
+            if (verified) return verified;
+            else throw new Error('token either not provided or expired');
+          });
+        },
+      };
+
       // graphql-ws
       const graphqlWs = new ws.Server({ noServer: true });
-      useServer(
-        {
-          schema,
-          onConnect(connectionParams: ConnectionParams) {
-            if (connectionParams.authToken) {
-              const verified = verifyJWT(connectionParams.authToken);
-
-              if (verified) return verified;
-              else throw new Error('WS token not verified');
-            }
-
-            throw new Error('WS token not provided');
-          },
-          onDisconnect() {},
-        },
-        graphqlWs,
-      );
+      useServer(serverOption, graphqlWs);
 
       // subscriptions-transport-ws
       const subTransWs = new ws.Server({ noServer: true });
-      SubscriptionServer.create(
-        {
-          schema,
-          execute,
-          subscribe,
-          onConnect(connectionParams: ConnectionParams) {
-            if (connectionParams.authToken) {
-              const verified = verifyJWT(connectionParams.authToken);
-
-              if (verified) return verified;
-              else throw new Error('WS token not verified');
-            }
-
-            throw new Error('WS token not provided');
-          },
-          onDisconnect() {},
-        },
-        subTransWs,
-      );
+      SubscriptionServer.create(serverOption, subTransWs);
 
       const httpServer = http.createServer(appExpress);
       const apolloServer = new ApolloServer({
