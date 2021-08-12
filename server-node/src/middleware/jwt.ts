@@ -21,7 +21,7 @@ export const verifyJWT = async (
         },
   );
 
-  return verify;
+  return verify as unknown as boolean;
 };
 
 export const JWT: MiddlewareFn<Context> = async ({ context }, next) => {
