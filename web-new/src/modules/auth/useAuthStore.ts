@@ -7,13 +7,21 @@ export interface IAuthStore {
   accessToken: string;
 }
 
-const getInitialStore = (): IAuthStore => ({
-  accessToken: !isServer ? "" : localStorage.getItem(ACCESS_TOKEN_NAME),
-});
-
+const getInitialStore = (): IAuthStore => {
+  if (!isServer)
+    try {
+      return {
+        accessToken: localStorage.getItem(ACCESS_TOKEN_NAME) || "",
+      };
+    } catch {}
+};
 
 export const useAuthStore = create(
   combine(getInitialStore(), (set) => ({
     setToken: (token: string) => set({ accessToken: token }),
+    removeToken: () => {
+      localStorage.removeItem(ACCESS_TOKEN_NAME);
+      return set({ accessToken: "" });
+    },
   }))
 );
