@@ -1,5 +1,0 @@
-fragment ProjectFragment on Project {
-  _id
-  name
-  description
-}

@@ -1,7 +1,0 @@
-subscription Notif {
-  normalSubscription {
-    id
-    message
-    date
-  }
-}
