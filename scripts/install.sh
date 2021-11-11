@@ -1,2 +1,2 @@
 cd server-node && yarn &&
-cd ../web && yarn 
+cd ../web-new && yarn 
