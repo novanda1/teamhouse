@@ -4,7 +4,7 @@ team manager that I still can't understand what actually this app will be. 🙌
 
 ## Important
 
-Currently this project is pending.
+Currently, this project status is **pending**.
 
 ## Structure
 
