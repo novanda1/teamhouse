@@ -75,8 +75,6 @@ export type MessageTokenInputDto = {
 export type Mutation = {
   __typename?: 'Mutation';
   addChat: Array<Message>;
-  pubSubMutation: Scalars['Boolean'];
-  publisherMutation: Scalars['Boolean'];
   addTeamMember: TeamRef;
   createTeam: Team;
   deleteTeam: Scalars['Boolean'];
@@ -89,16 +87,6 @@ export type Mutation = {
 export type MutationAddChatArgs = {
   message: AddMessageInputsDto;
   teamId: Scalars['String'];
-};
-
-
-export type MutationPubSubMutationArgs = {
-  message?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationPublisherMutationArgs = {
-  message?: Maybe<Scalars['String']>;
 };
 
 
@@ -127,13 +115,6 @@ export type MutationUpdateTeamArgs = {
 export type MutationCreateProjectArgs = {
   team_id: Scalars['String'];
   options: ProjectInputDto;
-};
-
-export type Notification = {
-  __typename?: 'Notification';
-  id?: Maybe<Scalars['ID']>;
-  message?: Maybe<Scalars['String']>;
-  date?: Maybe<Scalars['DateTime']>;
 };
 
 export type Project = {
@@ -201,18 +182,6 @@ export type QueryUsersArgs = {
 
 export type QueryProjectsArgs = {
   limit: Scalars['Int'];
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  teamChatSubscription: Message;
-  chatTeam: Scalars['String'];
-  normalSubscription: Notification;
-};
-
-
-export type SubscriptionChatTeamArgs = {
-  message: Scalars['String'];
 };
 
 export type Team = {
@@ -310,17 +279,6 @@ export type GetChatTeamQuery = (
         & Pick<MessageToken, 't' | 'v'>
       )> }
     )>> }
-  ) }
-);
-
-export type TeamChatSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TeamChatSubscriptionSubscription = (
-  { __typename?: 'Subscription' }
-  & { teamChatSubscription: (
-    { __typename?: 'Message' }
-    & MessageFragmentFragment
   ) }
 );
 
@@ -483,27 +441,6 @@ export type UpdateTeamMutation = (
     { __typename?: 'Team' }
     & TeamFragmentFragment
   ) }
-);
-
-export type NotifSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type NotifSubscription = (
-  { __typename?: 'Subscription' }
-  & { normalSubscription: (
-    { __typename?: 'Notification' }
-    & Pick<Notification, 'id' | 'message' | 'date'>
-  ) }
-);
-
-export type PushNotifMutationVariables = Exact<{
-  message: Scalars['String'];
-}>;
-
-
-export type PushNotifMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'pubSubMutation'>
 );
 
 export type GetUserQueryVariables = Exact<{
@@ -728,35 +665,6 @@ export function useGetChatTeamLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetChatTeamQueryHookResult = ReturnType<typeof useGetChatTeamQuery>;
 export type GetChatTeamLazyQueryHookResult = ReturnType<typeof useGetChatTeamLazyQuery>;
 export type GetChatTeamQueryResult = Apollo.QueryResult<GetChatTeamQuery, GetChatTeamQueryVariables>;
-export const TeamChatSubscriptionDocument = gql`
-    subscription TeamChatSubscription {
-  teamChatSubscription {
-    ...MessageFragment
-  }
-}
-    ${MessageFragmentFragmentDoc}`;
-
-/**
- * __useTeamChatSubscriptionSubscription__
- *
- * To run a query within a React component, call `useTeamChatSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useTeamChatSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTeamChatSubscriptionSubscription({
- *   variables: {
- *   },
- * });
- */
-export function useTeamChatSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<TeamChatSubscriptionSubscription, TeamChatSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<TeamChatSubscriptionSubscription, TeamChatSubscriptionSubscriptionVariables>(TeamChatSubscriptionDocument, options);
-      }
-export type TeamChatSubscriptionSubscriptionHookResult = ReturnType<typeof useTeamChatSubscriptionSubscription>;
-export type TeamChatSubscriptionSubscriptionResult = Apollo.SubscriptionResult<TeamChatSubscriptionSubscription>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($team_id: String!, $options: ProjectInputDTO!) {
   createProject(team_id: $team_id, options: $options) {
@@ -1117,68 +1025,6 @@ export function useUpdateTeamMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateTeamMutationHookResult = ReturnType<typeof useUpdateTeamMutation>;
 export type UpdateTeamMutationResult = Apollo.MutationResult<UpdateTeamMutation>;
 export type UpdateTeamMutationOptions = Apollo.BaseMutationOptions<UpdateTeamMutation, UpdateTeamMutationVariables>;
-export const NotifDocument = gql`
-    subscription Notif {
-  normalSubscription {
-    id
-    message
-    date
-  }
-}
-    `;
-
-/**
- * __useNotifSubscription__
- *
- * To run a query within a React component, call `useNotifSubscription` and pass it any options that fit your needs.
- * When your component renders, `useNotifSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNotifSubscription({
- *   variables: {
- *   },
- * });
- */
-export function useNotifSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NotifSubscription, NotifSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<NotifSubscription, NotifSubscriptionVariables>(NotifDocument, options);
-      }
-export type NotifSubscriptionHookResult = ReturnType<typeof useNotifSubscription>;
-export type NotifSubscriptionResult = Apollo.SubscriptionResult<NotifSubscription>;
-export const PushNotifDocument = gql`
-    mutation PushNotif($message: String!) {
-  pubSubMutation(message: $message)
-}
-    `;
-export type PushNotifMutationFn = Apollo.MutationFunction<PushNotifMutation, PushNotifMutationVariables>;
-
-/**
- * __usePushNotifMutation__
- *
- * To run a mutation, you first call `usePushNotifMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePushNotifMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [pushNotifMutation, { data, loading, error }] = usePushNotifMutation({
- *   variables: {
- *      message: // value for 'message'
- *   },
- * });
- */
-export function usePushNotifMutation(baseOptions?: Apollo.MutationHookOptions<PushNotifMutation, PushNotifMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PushNotifMutation, PushNotifMutationVariables>(PushNotifDocument, options);
-      }
-export type PushNotifMutationHookResult = ReturnType<typeof usePushNotifMutation>;
-export type PushNotifMutationResult = Apollo.MutationResult<PushNotifMutation>;
-export type PushNotifMutationOptions = Apollo.BaseMutationOptions<PushNotifMutation, PushNotifMutationVariables>;
 export const GetUserDocument = gql`
     query GetUser($userId: String!) {
   user(id: $userId) {
