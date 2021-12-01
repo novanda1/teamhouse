@@ -1,4 +1,4 @@
-import { extendTheme, Theme, ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -26,4 +26,9 @@ const colors = {
   },
 };
 
-export const theme = extendTheme<Theme>({ config, styles, colors });
+const fonts = {
+  heading: "Poppins",
+  body: "Poppins",
+};
+
+export const theme = extendTheme({ config, styles, colors, fonts });
