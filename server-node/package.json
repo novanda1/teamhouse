@@ -57,7 +57,7 @@
     "@types/passport-google-oauth20": "^2.0.8",
     "@types/passport-http-bearer": "^1.0.36",
     "concurrently": "^6.2.0",
-    "nodemon": "^2.0.7",
+    "nodemon": "^2.0.15",
     "prettier": "^2.3.1"
   }
 }
