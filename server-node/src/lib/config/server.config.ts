@@ -36,7 +36,7 @@ export default class ServerConfig {
 
     appExpress.use(
       cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
         credentials: true,
       }),
     );
