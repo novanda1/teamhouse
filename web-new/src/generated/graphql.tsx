@@ -271,7 +271,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'User' }
-    & Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'bio' | 'picture'>
+    & Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'bio' | 'picture' | 'username'>
   ) }
 );
 
@@ -612,6 +612,7 @@ export const MeDocument = gql`
     lastname
     bio
     picture
+    username
   }
 }
     `;

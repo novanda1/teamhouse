@@ -6,5 +6,6 @@ query Me {
     lastname
     bio
     picture
+    username
   }
 }

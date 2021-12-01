@@ -3,6 +3,7 @@ import {
   Button,
   Heading,
   HStack,
+  Input,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -12,61 +13,50 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useCallback } from "react";
-import {
-  TeamsDocument,
-  useDeleteTeamMutation,
-  useTeamQuery,
-} from "../../generated/graphql";
+import useTeam from "../../modules/team/useTeam";
 import { MainLayout } from "../../ui/layout/MainLayout";
 import { withApollo } from "../../utils/withApollo";
 
-const Team = ({ id }) => {
-  const { query, back } = useRouter();
-
-  const { data, loading, error } = useTeamQuery({
-    variables: { id: query.id as string },
-  });
-
-  const [deleteTeam] = useDeleteTeamMutation({
-    refetchQueries: [TeamsDocument, "Teams"],
-  });
-
-  const handleDeleteTeam = useCallback(async () => {
-    await deleteTeam({ variables: { id: query.id as string } });
-    back();
-  }, [deleteTeam, back, query.id]);
+const Team = () => {
+  const { data, loading, error, handleDeleteTeam } = useTeam();
 
   if (loading) return <>loading...</>;
   else if (error) return <>something went wrong</>;
 
   return (
     <MainLayout>
-      <HStack justifyContent="space-between">
-        <Box>
-          <Heading>{data.team.name}</Heading>
-          <Text>{data.team.description}</Text>
+      <VStack minH="100vh" pt="5" justifyContent="space-between">
+        <HStack justifyContent="space-between" w="100%">
+          <Box>
+            <Heading>{data.team.name}</Heading>
+            <Text>{data.team.description}</Text>
+          </Box>
+          <Box>
+            <Popover placement="top-end">
+              <PopoverTrigger>
+                <Button>...</Button>
+              </PopoverTrigger>
+              <PopoverContent maxW="200px">
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <VStack>
+                    <Button w="100%" onClick={handleDeleteTeam}>
+                      Delete
+                    </Button>
+                  </VStack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+        </HStack>
+        <Box pb="5" w="100%">
+          <HStack w="100%">
+            <Input />
+            <Button>Send</Button>
+          </HStack>
         </Box>
-        <Box>
-          <Popover placement="top-end">
-            <PopoverTrigger>
-              <Button>...</Button>
-            </PopoverTrigger>
-            <PopoverContent maxW="200px">
-              <PopoverArrow />
-              <PopoverCloseButton />
-              <PopoverBody>
-                <VStack>
-                  <Button w="100%" onClick={handleDeleteTeam}>
-                    Delete
-                  </Button>
-                </VStack>
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-        </Box>
-      </HStack>
+      </VStack>
     </MainLayout>
   );
 };
