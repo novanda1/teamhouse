@@ -16,7 +16,7 @@ export class TeamService {
     return `This action returns a #${id} team`;
   }
 
-  update(id: number, updateTeamInput: UpdateTeamInput) {
+  update(id: string, updateTeamInput: UpdateTeamInput) {
     return `This action updates a #${id} team`;
   }
 
