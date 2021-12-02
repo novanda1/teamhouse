@@ -6,7 +6,7 @@ import { UpdateTeamInput } from './dto/update-team.input';
 
 @Resolver(() => Team)
 export class TeamResolver {
-  constructor(private readonly teamService: TeamService) {}
+  constructor(private readonly teamService: TeamService) { }
 
   @Mutation(() => Team)
   createTeam(@Args('createTeamInput') createTeamInput: CreateTeamInput) {
@@ -19,7 +19,7 @@ export class TeamResolver {
   }
 
   @Query(() => Team, { name: 'team' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.teamService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class TeamResolver {
   }
 
   @Mutation(() => Team)
-  removeTeam(@Args('id', { type: () => Int }) id: number) {
+  removeTeam(@Args('id', { type: () => String }) id: string) {
     return this.teamService.remove(id);
   }
 }

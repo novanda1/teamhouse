@@ -1,26 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { CreateTeamInput } from './dto/create-team.input';
 import { UpdateTeamInput } from './dto/update-team.input';
+import { Team } from './entities/team.entity';
 
 @Injectable()
 export class TeamService {
-  create(createTeamInput: CreateTeamInput) {
-    return 'This action adds a new team';
+  constructor(@Inject('TEAM_MODEL') private teamModel: Model<Team>) { }
+
+  create(createTeamInput: CreateTeamInput): Promise<Team> {
+    const createdTeam = new this.teamModel(createTeamInput)
+    return createdTeam.save()
   }
 
-  findAll() {
-    return `This action returns all team`;
+  findAll(): Promise<Team[]> {
+    return this.teamModel.find().exec()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} team`;
+  findOne(id: string): Promise<Team> {
+    return this.teamModel.findById(id).exec();
   }
 
-  update(id: string, updateTeamInput: UpdateTeamInput) {
-    return `This action updates a #${id} team`;
+  update(id: string, updateTeamInput: UpdateTeamInput): Promise<Team> {
+    return this.teamModel.findOneAndUpdate({ id }, updateTeamInput).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} team`;
+  remove(id: string): Promise<Team> {
+    return this.teamModel.findOneAndRemove({ id }).exec()
   }
 }
