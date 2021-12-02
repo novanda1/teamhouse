@@ -1,13 +1,4 @@
-import {
-  Arg,
-  Mutation,
-  PubSub,
-  PubSubEngine,
-  Query,
-  Root,
-  Subscription,
-  UseMiddleware,
-} from 'type-graphql';
+import { Arg, Mutation, Query, UseMiddleware } from 'type-graphql';
 import { AddMessageInputsDTO } from '../lib/dto/messageInput.dto';
 import { JWT } from '../middleware/jwt';
 import { ChatTeam, Message } from '../schema/chatTeam.schema';
@@ -27,16 +18,8 @@ export class ChatTeamResolver {
   async addChat(
     @Arg('teamId') teamId: string,
     @Arg('message') message: AddMessageInputsDTO,
-    @PubSub() pubSub: PubSubEngine,
   ) {
-    pubSub.publish('CHAT_TEAM', message);
-
     const result = await this.chatTeamService.addMessage(teamId, message);
     return result?.messages;
-  }
-
-  @Subscription(() => Message, { topics: 'CHAT_TEAM' })
-  async teamChatSubscription(@Root() payload: Message) {
-    return payload;
   }
 }

@@ -15,10 +15,10 @@ config();
 export default class ServerConfig {
   static async connectDB() {
     await connect(process.env.DATABASE_URL, {
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
+      // useNewUrlParser: true,
+      // useFindAndModify: false,
+      // useUnifiedTopology: true,
+      // useCreateIndex: true,
     });
 
     const db = connection;
@@ -36,7 +36,7 @@ export default class ServerConfig {
 
     appExpress.use(
       cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
         credentials: true,
       }),
     );

@@ -1,8 +1,6 @@
-import { Document, model, Model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, model } from 'mongoose';
 import { Field, ObjectType } from 'type-graphql';
-import { Prop } from '../lib/decorators/prop.decorator';
-import { Schema } from '../lib/decorators/schema.decorator';
-import { SchemaFactory } from '../lib/factories/schemaFactory';
 import { User } from './user.schema';
 
 @ObjectType()
@@ -45,7 +43,7 @@ export class Message {
 
 export type MessageDocument = Message & Document;
 export const MessageSchema = SchemaFactory.createForClass(Message);
-export const MessageModel: Model<Message> = model(Message.name, MessageSchema);
+export const MessageModel= model(Message.name, MessageSchema);
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -68,7 +66,7 @@ export class ChatTeam {
 
 export type ChatTeamDocument = ChatTeam & Document;
 export const ChatTeamSchema = SchemaFactory.createForClass(ChatTeam);
-export const ChatTeamModel: Model<ChatTeam> = model(
+export const ChatTeamModel = model(
   ChatTeam.name,
   ChatTeamSchema,
 );
