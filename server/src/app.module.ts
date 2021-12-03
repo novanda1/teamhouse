@@ -5,17 +5,21 @@ import { AppService } from './app.service';
 import { TeamModule } from './modules/team/team.module';
 import { UserModule } from './modules/user/user.module';
 import { DatabaseModule } from './database/database.module';
-import { GoogleModule } from './google/google.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
     TeamModule,
     UserModule,
     DatabaseModule,
-    GoogleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
