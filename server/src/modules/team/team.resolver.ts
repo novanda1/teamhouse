@@ -1,11 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Token } from 'src/auth/auth.decorator';
 import { JwtGuard } from 'src/auth/jwt/jwt-guard.guard';
 import { JwtService } from 'src/auth/jwt/jwt.service';
 import { CreateTeamInput } from './dto/create-team.input';
 import { UpdateTeamInput } from './dto/update-team.input';
-import { Team } from './entities/team.entity';
+import { Team, TeamPagination } from './entities/team.entity';
 import { TeamService } from './team.service';
 
 @Resolver(() => Team)
@@ -13,7 +13,7 @@ export class TeamResolver {
   constructor(
     private readonly teamService: TeamService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
   @UseGuards(JwtGuard)
   @Mutation(() => Team)
   createTeam(
@@ -25,9 +25,9 @@ export class TeamResolver {
   }
 
   @UseGuards(JwtGuard)
-  @Query(() => [Team], { name: 'teams' })
-  findAll() {
-    return this.teamService.findAll();
+  @Query(() => TeamPagination, { name: 'teams' })
+  findAll(@Args("limit", { type: () => Int, nullable: true }) limit?: number) {
+    return this.teamService.findAll(limit);
   }
 
   @UseGuards(JwtGuard)
