@@ -28,7 +28,7 @@ export class UserResolver {
     return this.userService.update(updateUserInput.id, updateUserInput);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Boolean)
   removeUser(@Args('id') id: string) {
     return this.userService.remove(id);
   }
