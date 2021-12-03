@@ -8,10 +8,16 @@ import { DatabaseModule } from './database/database.module';
 import { GoogleModule } from './google/google.module';
 
 @Module({
-  imports: [ GraphQLModule.forRoot({
-    autoSchemaFile: true
-  }), TeamModule, UserModule, DatabaseModule, GoogleModule,],
+  imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+    }),
+    TeamModule,
+    UserModule,
+    DatabaseModule,
+    GoogleModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

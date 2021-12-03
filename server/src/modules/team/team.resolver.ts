@@ -1,12 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { TeamService } from './team.service';
-import { Team } from './entities/team.entity';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTeamInput } from './dto/create-team.input';
 import { UpdateTeamInput } from './dto/update-team.input';
+import { Team } from './entities/team.entity';
+import { TeamService } from './team.service';
 
 @Resolver(() => Team)
 export class TeamResolver {
-  constructor(private readonly teamService: TeamService) { }
+  constructor(private readonly teamService: TeamService) {}
 
   @Mutation(() => Team)
   createTeam(@Args('createTeamInput') createTeamInput: CreateTeamInput) {

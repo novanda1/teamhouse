@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
@@ -16,4 +16,4 @@ export class Team {
   description: string;
 }
 
-export const TeamSchema = SchemaFactory.createForClass(Team)
+export const TeamSchema = SchemaFactory.createForClass(Team);
