@@ -5,30 +5,24 @@ import { ConfigService } from '@nestjs/config';
 
 export type JwtPayload = { sub: number; email: string };
 
+const headerExtractor = (req: Request): string | null => {
+  let token = null;
+
+  if (req && req.headers) {
+    token = req.headers['authentication'];
+  }
+
+  return token ? token : ExtractJwt.fromAuthHeaderAsBearerToken();
+};
+
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService) {
-    const extractJwtFromCookie = (req) => {
-      let token = null;
-      if (req && req.cookies) {
-        token = req.cookies['jwt'];
-      }
-      return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    };
-
     super({
-      jwtFromRequest: extractJwtFromCookie,
+      jwtFromRequest: headerExtractor,
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET'),
     });
-  }
-
-  extractJwtFromCookie(req) {
-    let token = null;
-    if (req && req.cookies) {
-      token = req.cookies['jwt'];
-    }
-    return token;
   }
 
   async validate(payload: JwtPayload) {

@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule as NestJwt } from '@nestjs/jwt';
 import { JwtService } from './jwt.service';
 import { JwtAuthStrategy } from './jwt.strategy';
 
+@Global()
 @Module({
   imports: [
     NestJwt.registerAsync({
