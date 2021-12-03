@@ -1,5 +1,5 @@
 import { Connection } from 'mongoose';
-import { UserSchema } from './entities/user.entity';
+import { UserModel, UserSchema } from './entities/user.entity';
 
 /** @todo
  Avoid magic string 
@@ -7,7 +7,7 @@ import { UserSchema } from './entities/user.entity';
  */
 export const usersProviders = [
   {
-    provide: 'USER_MODEL',
+    provide: UserModel,
     useFactory: (connection: Connection) =>
       connection.model('User', UserSchema),
     inject: ['DATABASE_CONNECTION'],

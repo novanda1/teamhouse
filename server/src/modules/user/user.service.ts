@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { User } from './entities/user.entity';
+import { User, UserModel } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('USER_MODEL') private userModel: Model<User>) {}
+  constructor(@Inject(UserModel) private userModel: Model<User>) {}
 
   create(createUserInput: CreateUserInput): Promise<User> {
     const createdUser = new this.userModel(createUserInput);
@@ -25,7 +25,13 @@ export class UserService {
     return this.userModel.findOneAndUpdate({ id }, updateUserInput).exec();
   }
 
-  remove(id: string): Promise<User> {
-    return this.userModel.remove({ id }).exec();
+  remove(id: string): boolean {
+    try {
+      this.userModel.deleteOne({ id }).exec();
+    } catch {
+      return false;
+    }
+
+    return true;
   }
 }
