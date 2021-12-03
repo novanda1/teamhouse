@@ -13,7 +13,7 @@ export class TeamResolver {
     return this.teamService.create(createTeamInput);
   }
 
-  @Query(() => [Team], { name: 'team' })
+  @Query(() => [Team], { name: 'teams' })
   findAll() {
     return this.teamService.findAll();
   }
