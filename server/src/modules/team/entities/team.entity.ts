@@ -7,11 +7,15 @@ export class Team {
   @Field(() => String)
   id: string;
 
-  @Prop()
+  @Prop({ required: true })
+  @Field(() => String)
+  userid: string;
+
+  @Prop({ required: true })
   @Field(() => String)
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   @Field(() => String)
   description: string;
 }

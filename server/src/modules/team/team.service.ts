@@ -8,8 +8,8 @@ import { Team } from './entities/team.entity';
 export class TeamService {
   constructor(@Inject('TEAM_MODEL') private teamModel: Model<Team>) {}
 
-  create(createTeamInput: CreateTeamInput): Promise<Team> {
-    const createdTeam = new this.teamModel(createTeamInput);
+  create(createTeamInput: CreateTeamInput, userid: string): Promise<Team> {
+    const createdTeam = new this.teamModel({ ...createTeamInput, userid });
     return createdTeam.save();
   }
 
@@ -25,7 +25,13 @@ export class TeamService {
     return this.teamModel.findOneAndUpdate({ id }, updateTeamInput).exec();
   }
 
-  remove(id: string): Promise<Team> {
-    return this.teamModel.findOneAndRemove({ id }).exec();
+  remove(id: string): boolean {
+    try {
+      this.teamModel.deleteOne({ id }).exec();
+    } catch {
+      return false;
+    }
+
+    return true;
   }
 }
