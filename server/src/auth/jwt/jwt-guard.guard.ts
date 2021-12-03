@@ -14,8 +14,8 @@ export class JwtGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const authorization = ctx.getContext().req.headers.authorization;
-    const token = authorization.split(' ')[1];
+    const authorization = ctx.getContext()?.req?.headers?.authorization;
+    const token = authorization?.split(' ')[1];
 
     try {
       this.jwtservice.verify(token);
