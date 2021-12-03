@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-export type JwtPayload = { sub: number; email: string };
+export type JwtPayload = { sub: string; email: string };
 
 const headerExtractor = (req: Request): string | null => {
   let token = null;
