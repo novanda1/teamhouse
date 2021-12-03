@@ -5,6 +5,6 @@ import { GoogleStrategy } from './google.strategy';
 
 @Module({
   controllers: [GoogleController],
-  providers: [GoogleService, GoogleStrategy]
+  providers: [GoogleService, GoogleStrategy],
 })
-export class GoogleModule { }
+export class GoogleModule {}

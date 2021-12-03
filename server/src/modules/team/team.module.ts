@@ -6,6 +6,6 @@ import { teamsProviders } from './team.provider';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [TeamResolver, TeamService, ...teamsProviders]
+  providers: [TeamResolver, TeamService, ...teamsProviders],
 })
-export class TeamModule { }
+export class TeamModule {}

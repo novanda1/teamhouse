@@ -6,15 +6,15 @@ import { Team } from './entities/team.entity';
 
 @Injectable()
 export class TeamService {
-  constructor(@Inject('TEAM_MODEL') private teamModel: Model<Team>) { }
+  constructor(@Inject('TEAM_MODEL') private teamModel: Model<Team>) {}
 
   create(createTeamInput: CreateTeamInput): Promise<Team> {
-    const createdTeam = new this.teamModel(createTeamInput)
-    return createdTeam.save()
+    const createdTeam = new this.teamModel(createTeamInput);
+    return createdTeam.save();
   }
 
   findAll(): Promise<Team[]> {
-    return this.teamModel.find().exec()
+    return this.teamModel.find().exec();
   }
 
   findOne(id: string): Promise<Team> {
@@ -26,6 +26,6 @@ export class TeamService {
   }
 
   remove(id: string): Promise<Team> {
-    return this.teamModel.findOneAndRemove({ id }).exec()
+    return this.teamModel.findOneAndRemove({ id }).exec();
   }
 }
