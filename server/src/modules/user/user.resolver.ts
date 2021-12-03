@@ -34,14 +34,12 @@ export class UserResolver {
 
   @UseGuards(JwtGuard)
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.userService.update(updateUserInput.id, updateUserInput);
-  }
-
-  @UseGuards(JwtGuard)
-  @Mutation(() => Boolean)
-  removeUser(@Args('id') id: string) {
-    return this.userService.remove(id);
+  updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @Token() token: string,
+  ) {
+    const userid = this.jwtService.getUserid(token);
+    return this.userService.update(userid, updateUserInput);
   }
 
   @UseGuards(JwtGuard)
