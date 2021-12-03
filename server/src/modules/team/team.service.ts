@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateTeamInput } from './dto/create-team.input';
 import { UpdateTeamInput } from './dto/update-team.input';
-import { Team } from './entities/team.entity';
+import { Team, TeamModel } from './entities/team.entity';
 
 @Injectable()
 export class TeamService {
-  constructor(@Inject('TEAM_MODEL') private teamModel: Model<Team>) {}
+  constructor(@Inject(TeamModel.name) private teamModel: Model<Team>) {}
 
   create(createTeamInput: CreateTeamInput, userid: string): Promise<Team> {
     const createdTeam = new this.teamModel({ ...createTeamInput, userid });
