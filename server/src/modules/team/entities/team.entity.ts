@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { model } from 'mongoose';
 
 @Schema()
 @ObjectType()
@@ -21,3 +22,4 @@ export class Team {
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
+export const TeamModel = model(Team.name, TeamSchema);
