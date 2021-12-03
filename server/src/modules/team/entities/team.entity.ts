@@ -1,3 +1,4 @@
+import { mongoosePlugin } from "mongo-cursor-pagination"
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { model } from 'mongoose';
@@ -22,4 +23,20 @@ export class Team {
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
+TeamSchema.plugin(mongoosePlugin)
 export const TeamModel = model(Team.name, TeamSchema);
+
+
+@ObjectType()
+export class TeamPagination {
+  @Field(() => [Team])
+  results: Team[]
+  @Field(() => String)
+  previous: string
+  @Field(() => Boolean)
+  hasPrevious: boolean
+  @Field(() => String)
+  next: string
+  @Field(() => Boolean)
+  hasNext: boolean
+}

@@ -34,6 +34,7 @@
     "apollo-server-fastify": "^3.5.0",
     "dotenv": "^10.0.0",
     "graphql": "^15",
+    "mongo-cursor-pagination": "^7.6.1",
     "mongoose": "^6.0.14",
     "passport": "^0.5.0",
     "passport-google-oauth20": "^2.0.0",
