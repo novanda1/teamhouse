@@ -13,8 +13,8 @@ export class TeamService {
     return createdTeam.save();
   }
 
-  async findAll(limit: number = 10): Promise<TeamPagination> {
-    return this.teamModel.paginate({ limit }).then((r: TeamPagination) => {
+  async findAll(limit: number = 10, previous: string = "", next: string = ""): Promise<TeamPagination> {
+    return this.teamModel.paginate({ limit, previous, next }).then((r: TeamPagination) => {
       const teams = [...r.results]
 
       // @ts-ignore
