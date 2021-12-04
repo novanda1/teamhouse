@@ -15,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      installSubscriptionHandlers: true,
     }),
     TeamModule,
     UserModule,
