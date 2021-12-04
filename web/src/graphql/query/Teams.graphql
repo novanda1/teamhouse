@@ -1,0 +1,11 @@
+query Teams($limit: Int, $previous: String, $next: String) {
+  teams(limit: $limit, previous: $previous, next: $next) {
+    hasNext
+    next
+    hasPrevious
+    previous
+    results {
+      ...Team
+    }
+  }
+}

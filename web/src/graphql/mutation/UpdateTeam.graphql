@@ -1,0 +1,5 @@
+mutation UpdateTeam($updateTeamInput: UpdateTeamInput!) {
+  updateTeam(updateTeamInput: $updateTeamInput) {
+    ...Team
+  }
+}

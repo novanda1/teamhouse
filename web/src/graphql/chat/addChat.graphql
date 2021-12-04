@@ -1,5 +1,0 @@
-mutation AddChat($teamId: String!, $message: AddMessageInputsDTO!) {
-  addChat(teamId: $teamId, message: $message) {
-    ...MessageFragment
-  }
-}

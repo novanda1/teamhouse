@@ -1,0 +1,7 @@
+fragment User on User {
+  __typename
+  id
+  username
+  email
+  displayName
+}

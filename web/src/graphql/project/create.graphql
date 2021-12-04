@@ -1,5 +1,0 @@
-mutation CreateProject($team_id: String!, $options: ProjectInputDTO!) {
-  createProject(team_id: $team_id, options: $options) {
-    ...ProjectFragment
-  }
-}

@@ -1,0 +1,7 @@
+fragment Team on Team {
+  __typename
+  id
+  userid
+  title
+  description
+}

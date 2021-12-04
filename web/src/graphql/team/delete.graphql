@@ -1,3 +1,0 @@
-mutation DeleteTeam($id: String!) {
-  deleteTeam(id: $id)
-}
