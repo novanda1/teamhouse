@@ -28,7 +28,7 @@ const Team = () => {
       <VStack minH="100vh" pt="5" justifyContent="space-between">
         <HStack justifyContent="space-between" w="100%">
           <Box>
-            <Heading>{data.team.name}</Heading>
+            <Heading>{data.team.title}</Heading>
             <Text>{data.team.description}</Text>
           </Box>
           <Box>

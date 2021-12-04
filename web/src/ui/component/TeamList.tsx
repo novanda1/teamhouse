@@ -22,13 +22,13 @@ const TeamList: React.FC<Props> = ({ teams }) => {
       <Flex flexDirection="column">
         {teams.map((team) => (
           <Box
-            key={team._id}
+            key={team.id}
             w="100%"
             mb="2"
             cursor="pointer"
-            onClick={() => gotoTeam(team._id)}
+            onClick={() => gotoTeam(team.id)}
           >
-            <Heading size="sm">{team.name}</Heading>
+            <Heading size="sm">{team.title}</Heading>
           </Box>
         ))}
       </Flex>
