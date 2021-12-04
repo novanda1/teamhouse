@@ -48,7 +48,7 @@ export class TeamResolver {
     const userid = this.jwtService.getUserid(token);
 
     const team = await this.teamService.findOne(updateTeamInput.id);
-    const allowed = team.id === userid;
+    const allowed = team.userid === userid;
 
     if (allowed)
       return this.teamService.update(updateTeamInput.id, updateTeamInput);
