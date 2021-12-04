@@ -6,23 +6,28 @@ import { Team, TeamModel, TeamPagination } from './entities/team.entity';
 
 @Injectable()
 export class TeamService {
-  constructor(@Inject(TeamModel.name) private teamModel: Model<Team> & { paginate: any }) { }
+  constructor(
+    @Inject(TeamModel.name) private teamModel: Model<Team> & { paginate: any },
+  ) {}
 
   create(createTeamInput: CreateTeamInput, userid: string): Promise<Team> {
     const createdTeam = new this.teamModel({ ...createTeamInput, userid });
     return createdTeam.save();
   }
 
-  async findAll(limit: number = 10, previous: string = "", next: string = ""): Promise<TeamPagination> {
-    return this.teamModel.paginate({ limit, previous, next }).then((r: TeamPagination) => {
-      const teams = [...r.results]
+  async findAll(limit = 10, previous = '', next = ''): Promise<TeamPagination> {
+    return this.teamModel
+      .paginate({ limit, previous, next })
+      .then((r: TeamPagination) => {
+        const teams = [...r.results];
 
-      // @ts-ignore
-      const realTeam = teams.map(team => ({ ...team, id: team._id }))
-      const result = { ...r, results: realTeam }
+        // eslint-disable-next-line
+        // @ts-ignore
+        const realTeam = teams.map((team) => ({ ...team, id: team._id }));
+        const result = { ...r, results: realTeam };
 
-      return result
-    })
+        return result;
+      });
   }
 
   findOne(id: string): Promise<Team> {
