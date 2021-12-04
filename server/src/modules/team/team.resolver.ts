@@ -26,8 +26,11 @@ export class TeamResolver {
 
   @UseGuards(JwtGuard)
   @Query(() => TeamPagination, { name: 'teams' })
-  findAll(@Args("limit", { type: () => Int, nullable: true }) limit?: number) {
-    return this.teamService.findAll(limit);
+  findAll(
+    @Args("limit", { type: () => Int, nullable: true }) limit?: number,
+    @Args("next", { nullable: true }) next?: string,
+    @Args("previous", { nullable: true }) previous?: string) {
+    return this.teamService.findAll(limit, previous, next);
   }
 
   @UseGuards(JwtGuard)
