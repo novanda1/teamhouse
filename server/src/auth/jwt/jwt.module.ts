@@ -18,7 +18,6 @@ import { JwtAuthStrategy } from './jwt.strategy';
       },
       inject: [ConfigService],
     }),
-    NestJwt,
   ],
   providers: [JwtService, JwtAuthStrategy],
   exports: [NestJwt, JwtService],
