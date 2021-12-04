@@ -22,7 +22,7 @@ interface Props {
 }
 
 const CreateTeamModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setdescription] = useState("");
 
   const [createTeam] = useCreateTeamMutation({
@@ -38,12 +38,10 @@ const CreateTeamModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <ModalCloseButton />
           <ModalBody>
             <Formik
-              initialValues={{ name, description }}
+              initialValues={{ title, description }}
               onSubmit={async (options, actions) => {
                 await createTeam({
-                  variables: {
-                    options: options,
-                  },
+                  variables: { createTeamInput: options },
                 }).then(() => {
                   actions.resetForm();
                   onClose();
@@ -52,18 +50,18 @@ const CreateTeamModal: React.FC<Props> = ({ isOpen, onClose }) => {
             >
               {(props) => (
                 <Form>
-                  <Field name="name">
+                  <Field name="title">
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name && form.touched.name}
+                        isInvalid={form.errors.title && form.touched.title}
                       >
-                        <FormLabel htmlFor="name">Name</FormLabel>
+                        <FormLabel htmlFor="name">Title</FormLabel>
                         <Input
                           {...field}
-                          id="name"
-                          placeholder="Your team name"
+                          id="title"
+                          placeholder="Your team title"
                         />
-                        <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                        <FormErrorMessage>{form.errors.title}</FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
