@@ -1,14 +1,14 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UserService } from 'src/modules/user/user.service';
-import { JwtService } from '../jwt/jwt.service';
+import { JwtAuthService } from '../jwt/jwt.service';
 import { GoogleGuard } from './google.guard';
 
 @Controller('google')
 export class GoogleController {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtAuthService,
   ) {}
   @Get()
   @UseGuards(GoogleGuard)

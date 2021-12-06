@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Token } from 'src/auth/auth.decorator';
 import { JwtGuard } from 'src/auth/jwt/jwt-guard.guard';
-import { JwtService } from 'src/auth/jwt/jwt.service';
+import { JwtAuthService } from 'src/auth/jwt/jwt.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtAuthService,
   ) {}
 
   @Mutation(() => User)

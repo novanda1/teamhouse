@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Token } from 'src/auth/auth.decorator';
 import { JwtGuard } from 'src/auth/jwt/jwt-guard.guard';
-import { JwtService } from 'src/auth/jwt/jwt.service';
+import { JwtAuthService } from 'src/auth/jwt/jwt.service';
 import { CreateTeamInput } from './dto/create-team.input';
 import { UpdateTeamInput } from './dto/update-team.input';
 import { Team, TeamPagination } from './entities/team.entity';
@@ -12,7 +12,7 @@ import { TeamService } from './team.service';
 export class TeamResolver {
   constructor(
     private readonly teamService: TeamService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtAuthService,
   ) {}
   @UseGuards(JwtGuard)
   @Mutation(() => Team)
