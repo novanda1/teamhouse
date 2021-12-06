@@ -28,29 +28,18 @@ const Home = () => {
         <MainLayout>
           <WithMessageSocket>
             <Box mt="3"></Box>
-            {data?.teams.results.length ? (
-              <>
-                <HStack
-                  h="90vh"
-                  w="full"
-                  justifyContent="space-between"
-                  alignItems="flex-start"
-                >
-                  <TeamList teams={data?.teams.results} />
-                  <PlayGround />
-                  <Messages />
-                </HStack>
-              </>
-            ) : !loading ? (
-              <Box w="100%" textAlign="center">
-                <Image src="/cat.png" width="100" height="100" alt="cat" />
-                <Text>
-                  Didnt have team yet! <br /> Why not just create one?
-                </Text>
-              </Box>
-            ) : (
-              <></>
-            )}
+            <>
+              <HStack
+                h="90vh"
+                w="full"
+                justifyContent="space-between"
+                alignItems="flex-start"
+              >
+                <TeamList teams={data?.teams.results} />
+                <PlayGround />
+                <Messages />
+              </HStack>
+            </>
           </WithMessageSocket>
         </MainLayout>
       </WaitForAuth>
