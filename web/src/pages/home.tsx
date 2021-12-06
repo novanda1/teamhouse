@@ -13,10 +13,26 @@ import CreateTeamModal from "../ui/component/CreateTeamModal";
 import TeamList from "../ui/component/TeamList";
 import { MainLayout } from "../ui/layout/MainLayout";
 import { withApollo } from "../utils/withApollo";
+import { useEffect, useState } from "react";
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://localhost:4000";
 
 const Home = () => {
   const { data, loading } = useTeamsQuery({ variables: { limit: 10 } });
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [response, setResponse] = useState("");
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT, {
+      withCredentials: true, query: {
+        userName: "haj"
+      }
+    });
+    socket.on("FromAPI", data => {
+      setResponse(data);
+    });
+  }, []);
+
 
   return (
     <>

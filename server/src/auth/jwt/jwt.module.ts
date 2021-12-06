@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule as NestJwt } from '@nestjs/jwt';
-import { JwtService } from './jwt.service';
+import { JwtAuthService } from './jwt.service';
 import { JwtAuthStrategy } from './jwt.strategy';
 
 @Global()
@@ -19,7 +19,7 @@ import { JwtAuthStrategy } from './jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [JwtService, JwtAuthStrategy],
-  exports: [NestJwt, JwtService],
+  providers: [JwtAuthService, JwtAuthStrategy],
+  exports: [NestJwt, JwtAuthService],
 })
-export class JwtModule {}
+export class JwtAuthModule {}
