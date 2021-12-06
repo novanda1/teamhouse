@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { useMeQuery } from "../../generated/graphql";
+import { WaitForAuth } from "../../modules/auth/WaitForAuth";
 import { useMessageSocketStore } from "../../modules/chat/useMessageSocket";
 import WithMessageSocket from "../../modules/chat/WithMessageSocket";
 import useTeam from "../../modules/team/useTeam";
@@ -56,47 +57,51 @@ const Team = () => {
   else if (error) return <>something went wrong</>;
   else
     return (
-      <MainLayout>
-        <WithMessageSocket>
-          <VStack minH="100vh" pt="5" justifyContent="space-between">
-            <HStack justifyContent="space-between" w="100%">
-              <Box>
-                <Heading>{data.team.title}</Heading>
-                <Text>{data.team.description}</Text>
-              </Box>
-              <Box>
-                <Popover placement="top-end">
-                  <PopoverTrigger>
-                    <Button>...</Button>
-                  </PopoverTrigger>
-                  <PopoverContent maxW="200px">
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverBody>
-                      <VStack>
-                        <Button w="100%" onClick={handleDeleteTeam}>
-                          Delete
-                        </Button>
-                      </VStack>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Box>
-            </HStack>
-            <Box pb="5" w="100%">
-              <VStack>
-                {messages?.map((chat) => (
-                  <Flex key={chat._id} justifyContent="flex-start" w="full">{chat.user.username}:{chat.message}</Flex>
-                ))}
-              </VStack>
-              <HStack w="100%">
-                <Input value={input} onChange={handleInputChange} />
-                <Button onClick={handleSendMessage}>Send</Button>
+      <WaitForAuth>
+        <MainLayout>
+          <WithMessageSocket>
+            <VStack minH="100vh" pt="5" justifyContent="space-between">
+              <HStack justifyContent="space-between" w="100%">
+                <Box>
+                  <Heading>{data.team.title}</Heading>
+                  <Text>{data.team.description}</Text>
+                </Box>
+                <Box>
+                  <Popover placement="top-end">
+                    <PopoverTrigger>
+                      <Button>...</Button>
+                    </PopoverTrigger>
+                    <PopoverContent maxW="200px">
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverBody>
+                        <VStack>
+                          <Button w="100%" onClick={handleDeleteTeam}>
+                            Delete
+                          </Button>
+                        </VStack>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Box>
               </HStack>
-            </Box>
-          </VStack>
-        </WithMessageSocket>
-      </MainLayout>
+              <Box pb="5" w="100%">
+                <VStack>
+                  {messages?.map((chat) => (
+                    <Flex key={chat._id} justifyContent="flex-start" w="full">
+                      {chat.user?.username}:{chat.message}
+                    </Flex>
+                  ))}
+                </VStack>
+                <HStack w="100%">
+                  <Input value={input} onChange={handleInputChange} />
+                  <Button onClick={handleSendMessage}>Send</Button>
+                </HStack>
+              </Box>
+            </VStack>
+          </WithMessageSocket>
+        </MainLayout>
+      </WaitForAuth>
     );
 };
 
