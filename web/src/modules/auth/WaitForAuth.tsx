@@ -16,7 +16,7 @@ export const WaitForAuth: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (data?.me) setMe(data.me);
-  }, [data.me, setMe]);
+  }, [data?.me, setMe]);
 
   if (loading) return <>loading</>;
   else if (error) return <>somthing went wrong</>;
