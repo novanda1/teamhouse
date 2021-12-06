@@ -86,7 +86,7 @@ const Team = () => {
             <Box pb="5" w="100%">
               <VStack>
                 {messages?.map((chat) => (
-                  <Flex key={chat._id} justifyContent="flex-start" w="full">{chat.userid}:{chat.message}</Flex>
+                  <Flex key={chat._id} justifyContent="flex-start" w="full">{chat.user.username}:{chat.message}</Flex>
                 ))}
               </VStack>
               <HStack w="100%">

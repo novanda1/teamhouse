@@ -15,6 +15,7 @@ const WithMessageSocket: React.FC = ({ children }) => {
       query: { groupid: query.id },
     });
     newSocket.on("allChats", (data) => {
+      console.log(`all c`, data)
       setMessages(data);
     });
     newSocket.on("newChat", (data) => {
