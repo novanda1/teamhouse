@@ -30,7 +30,7 @@ export class ChatGateway implements NestGateway {
     console.log('Connect', query);
     this.chatService.userConnected(query.username, query.userid);
     process.nextTick(async () => {
-      socket.emit('allChats', await this.chatService.getChats(query.groupid));
+      socket.emit('allChats', await this.chatService.getChatsIncludeUser(query.groupid));
     });
   }
 

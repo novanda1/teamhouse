@@ -17,6 +17,22 @@ export class ChatService {
     return await this.chatModel.find({ groupid }).exec();
   }
 
+  async getChatsIncludeUser(groupid: string): Promise<any> {
+    const messages = await this.getChats(groupid);
+
+    const result = messages.map(async (message) => {
+      const user = await this.userService.findOne(message.userid as string);
+      return {
+        // eslint-disable-next-line
+        // @ts-ignore
+        ...message._doc,
+        user,
+      };
+    });
+
+    return Promise.all(result);
+  }
+
   async saveChat(chat: Chat): Promise<void> {
     const createdChat = new this.chatModel(chat);
     await createdChat.save();
