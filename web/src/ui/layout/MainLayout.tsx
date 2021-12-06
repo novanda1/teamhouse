@@ -16,7 +16,7 @@ export const MainLayout: React.FC = ({ children }) => {
   return (
     <>
       <Box w="100vw" top="0">
-        <Container maxW="6xl" borderBottomWidth="1px" borderColor="gray.200">
+        <Container maxW="8xl" borderBottomWidth="1px" borderColor="gray.200">
           <HStack py="3" justifyContent="space-between">
             <Box>
               <NextLink href="/">
@@ -31,7 +31,7 @@ export const MainLayout: React.FC = ({ children }) => {
           </HStack>
         </Container>
       </Box>
-      <Container maxW="6xl">{children}</Container>
+      <Container maxW="8xl">{children}</Container>
     </>
   );
 };

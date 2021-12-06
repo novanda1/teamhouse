@@ -14,37 +14,30 @@ import { WaitForAuth } from "../modules/auth/WaitForAuth";
 import WithMessageSocket from "../modules/chat/WithMessageSocket";
 import CreateTeamModal from "../ui/component/CreateTeamModal";
 import Messages from "../ui/component/Messages";
+import PlayGround from "../ui/component/PlayGround";
 import TeamList from "../ui/component/TeamList";
 import { MainLayout } from "../ui/layout/MainLayout";
 import { withApollo } from "../utils/withApollo";
 
 const Home = () => {
   const { data, loading } = useTeamsQuery({ variables: { limit: 10 } });
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <WaitForAuth>
         <MainLayout>
           <WithMessageSocket>
-            <VStack alignItems="flex-start">
-              <HStack justifyContent="" pt="7">
-                <Heading size="sm">Your Teams</Heading>
-                <Badge
-                  cursor="pointer"
-                  backgroundColor="yellow.200"
-                  onClick={onOpen}
-                >
-                  + Add New
-                </Badge>
-              </HStack>
-              <Text fontWeight="xs">Select or create new</Text>
-            </VStack>
             <Box mt="3"></Box>
             {data?.teams.results.length ? (
               <>
-                <HStack h="80vh" alignItems="flex-start">
+                <HStack
+                  h="90vh"
+                  w="full"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                >
                   <TeamList teams={data?.teams.results} />
+                  <PlayGround />
                   <Messages />
                 </HStack>
               </>
@@ -60,7 +53,6 @@ const Home = () => {
             )}
           </WithMessageSocket>
         </MainLayout>
-        <CreateTeamModal isOpen={isOpen} onClose={onClose} />
       </WaitForAuth>
     </>
   );
