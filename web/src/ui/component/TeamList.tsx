@@ -68,7 +68,7 @@ const TeamList: React.FC<Props> = ({ teams }) => {
             borderColor="gray.200"
             flexDirection="column"
           >
-            {teams.map((team) => (
+            {teams?.map((team) => (
               <HStack
                 key={team.id}
                 w="100%"
