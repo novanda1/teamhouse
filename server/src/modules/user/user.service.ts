@@ -34,4 +34,14 @@ export class UserService {
 
     return true;
   }
+
+  findOneByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
+  }
+
+  async findOneOrCreate(createUserInput: CreateUserInput): Promise<User> {
+    const user = await this.findOneByEmail(createUserInput.email);
+    if (user?.email) return user;
+    else return this.create(createUserInput);
+  }
 }

@@ -21,7 +21,7 @@ export class GoogleController {
 
     if (user) {
       await this.userService
-        .create({
+        .findOneOrCreate({
           // eslint-disable-next-line
           // @ts-ignore
           displayName: user.firstName + ' ' + user.lastName,

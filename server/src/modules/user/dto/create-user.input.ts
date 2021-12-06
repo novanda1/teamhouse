@@ -7,4 +7,7 @@ export class CreateUserInput {
 
   @Field(() => String)
   displayName: string;
+
+  @Field(() => String)
+  email: string;
 }
