@@ -14,6 +14,7 @@ import React, { useCallback } from "react";
 import { Team } from "../../generated/graphql";
 import { useMessageSocketStore } from "../../modules/chat/useMessageSocket";
 import CreateTeamModal from "./CreateTeamModal";
+import Image from "next/image";
 
 type Props = {
   teams: Team[];
@@ -48,36 +49,48 @@ const TeamList: React.FC<Props> = ({ teams }) => {
           </HStack>
           <Text fontWeight="xs">Select or create new</Text>
         </VStack>
-        <Flex
-          bg="gray.50"
-          rounded="lg"
-          overflow="hidden"
-          borderWidth="1px"
-          borderColor="gray.200"
-          flexDirection="column"
-        >
-          {teams.map((team) => (
-            <HStack
-              key={team.id}
-              w="100%"
-              py="2"
-              px="3"
-              backgroundColor={
-                openedTeam?.id === team.id ? "gray.100" : "gray.50"
-              }
-              borderColor="gray.200"
-              cursor="pointer"
-              onClick={() => gotoTeam(team)}
-              _notLast={{ borderBottomWidth: "1px" }}
-            >
-              <Avatar size="lg" mr="2" name={team.title} />
-              <VStack alignItems="flex-start">
-                <Heading size="sm">{team.title}</Heading>
-                <Text fontSize="sm">{team.description}</Text>
-              </VStack>
-            </HStack>
-          ))}
-        </Flex>
+
+        {!teams ? (
+          <>
+            <Box w="100%" textAlign="center">
+              <Image src="/cat.png" width="100" height="100" alt="cat" />
+              <Text>
+                Didnt have team yet! <br /> Why not just create one?
+              </Text>
+            </Box>
+          </>
+        ) : (
+          <Flex
+            bg="gray.100"
+            rounded="lg"
+            overflow="hidden"
+            borderWidth="1px"
+            borderColor="gray.200"
+            flexDirection="column"
+          >
+            {teams.map((team) => (
+              <HStack
+                key={team.id}
+                w="100%"
+                py="2"
+                px="3"
+                backgroundColor={
+                  openedTeam?.id === team.id ? "gray.100" : "gray.50"
+                }
+                borderColor="gray.200"
+                cursor="pointer"
+                onClick={() => gotoTeam(team)}
+                _notLast={{ borderBottomWidth: "1px" }}
+              >
+                <Avatar size="lg" mr="2" name={team.title} />
+                <VStack alignItems="flex-start">
+                  <Heading size="sm">{team.title}</Heading>
+                  <Text fontSize="sm">{team.description}</Text>
+                </VStack>
+              </HStack>
+            ))}
+          </Flex>
+        )}
       </Flex>
       <CreateTeamModal isOpen={isOpen} onClose={onClose} />
     </>

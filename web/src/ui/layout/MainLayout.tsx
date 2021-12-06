@@ -19,7 +19,7 @@ export const MainLayout: React.FC = ({ children }) => {
         <Container maxW="8xl" borderBottomWidth="1px" borderColor="gray.200">
           <HStack py="3" justifyContent="space-between">
             <Box>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Link>
                   <Heading size="md">TeamHouse</Heading>
                 </Link>
