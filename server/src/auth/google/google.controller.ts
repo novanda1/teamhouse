@@ -41,6 +41,7 @@ export class GoogleController {
         })
         .then((response) => {
           const jwtLogin = this.jwtService.login(response);
+          console.log(`response`, response)
 
           req.user = null;
           // eslint-disable-next-line

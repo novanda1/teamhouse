@@ -1,21 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { JwtService as NestJwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/modules/user/entities/user.entity';
 import { JwtPayload } from './jwt.strategy';
 
 @Injectable()
 export class JwtAuthService {
-  constructor(@Inject(NestJwtService) private nestjwtService: NestJwtService) {}
+  constructor(private jwtService: JwtService) { }
   login(user: User) {
     const payload: JwtPayload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload)
+    console.log(`payload`, payload)
+    console.log(`token`, token)
     return {
-      accessToken: this.nestjwtService.sign(payload),
+      accessToken: token,
     };
   }
 
   getUserid(token: string): string {
     try {
-      const { sub } = this.nestjwtService.decode(token) as JwtPayload;
+      const { sub } = this.jwtService.decode(token) as JwtPayload;
       return sub;
     } catch (e) {
       throw Error(e);
@@ -28,7 +31,7 @@ export class JwtAuthService {
 
   verifyToken(token: string): boolean {
     try {
-      this.nestjwtService.verify(token);
+      this.jwtService.verify(token);
       return true;
     } catch {
       return false;
