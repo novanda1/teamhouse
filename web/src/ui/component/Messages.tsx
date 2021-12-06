@@ -15,51 +15,47 @@ import MessageInput from "./MessageInput";
 const Messages: React.FC = () => {
   const { messages, openedTeam } = useMessageSocketStore();
   return (
-    <VStack
+    <Box
+      bg="gray.50"
       rounded="lg"
       borderColor="gray.200"
       borderWidth="1px"
-      justifyContent="space-between"
       px="4"
       py="5"
-      w="full"
+      w="sm"
+      minW="sm"
       h="full"
     >
       {openedTeam ? (
-        <>
-          <HStack w="full">
-            <Box></Box>
-            <VStack w="full" alignItems="flex-start">
-              <Heading size="md">{openedTeam.title}</Heading>
-              <Text mt="0">{openedTeam.description}</Text>
-              <Divider pb="2" />
-            </VStack>
-          </HStack>
+        <VStack overflow="auto" w="full" h="full">
           <VStack w="full" h="full" mb="auto" justifyContent="flex-end">
-            {messages?.map((chat, i) => {
-              const color = generateColorFromString(chat.user?.username);
-
-              return (
-                <Flex
-                  key={chat._id || i}
-                  px="3"
-                  justifyContent="flex-start"
-                  w="full"
-                >
-                  <Text color={color}>{chat.user?.username}</Text> :{" "}
-                  {chat.message}
-                </Flex>
-              );
-            })}
+            <Box w="full">
+              {messages?.map((chat, i) => {
+                const color = generateColorFromString(chat.user?.username);
+                return (
+                  <Box
+                    key={chat._id || i}
+                    px="3"
+                    justifyContent="flex-start"
+                    w="full"
+                  >
+                    <Text float="left" color={color}>
+                      {chat.user?.username}:
+                    </Text>
+                    <Text wordBreak="break-word"> {chat.message}</Text>
+                  </Box>
+                );
+              })}
+            </Box>
           </VStack>
           <MessageInput />
-        </>
+        </VStack>
       ) : (
         <>
           <Text>Start Convertations</Text>
         </>
       )}
-    </VStack>
+    </Box>
   );
 };
 

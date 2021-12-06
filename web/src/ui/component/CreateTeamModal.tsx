@@ -90,7 +90,7 @@ const CreateTeamModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   <Button
                     mt="5"
                     ml="auto"
-                    colorScheme="teal"
+                    colorScheme="yellow"
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
