@@ -13,13 +13,14 @@ export class ChatService {
   private allUsers = [];
   private connectedUsers = [];
 
-  async getChats(): Promise<Chat[]> {
-    return await this.chatModel.find();
+  async getChats(groupid: string): Promise<Chat[]> {
+    return await this.chatModel.find({ groupid }).exec();
   }
 
   async saveChat(chat: Chat): Promise<void> {
     const createdChat = new this.chatModel(chat);
     await createdChat.save();
+    console.log(`createdChat`, createdChat);
   }
 
   userConnected(username: string, userid: string) {

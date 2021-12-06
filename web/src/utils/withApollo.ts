@@ -18,35 +18,36 @@ const createClient = (ctx: NextPageContext) => {
     },
   });
 
-  const wsLink = process.browser
-    ? new WebSocketLink({
-        uri: process.env.NEXT_PUBLIC_API_URL_WS,
-        options: {
-          reconnect: true,
-          connectionParams: {
-            authToken: token,
-          },
-        },
-      })
-    : null;
+  // const wsLink = process.browser
+  //   ? new WebSocketLink({
+  //       uri: process.env.NEXT_PUBLIC_API_URL_WS,
+  //       options: {
+  //         reconnect: true,
+  //         connectionParams: {
+  //           authToken: token,
+  //         },
+  //       },
+  //     })
+  //   : null;
 
-  const splitLink = process.browser
-    ? split(
-        ({ query }) => {
-          const definition = getMainDefinition(query);
-          return (
-            definition.kind === "OperationDefinition" &&
-            definition.operation === "subscription"
-          );
-        },
-        wsLink as any,
-        httpLink
-      )
-    : httpLink;
+  // const splitLink = process.browser
+  //   ? split(
+  //       ({ query }) => {
+  //         const definition = getMainDefinition(query);
+  //         return (
+  //           definition.kind === "OperationDefinition" &&
+  //           definition.operation === "subscription"
+  //         );
+  //       },
+  //       wsLink as any,
+  //       httpLink
+  //     )
+  //   : httpLink;
 
   return new ApolloClient({
     ssrMode: isServer,
-    link: splitLink,
+    // link: splitLink,
+    link: httpLink,
     cache: new InMemoryCache({}),
   });
 };
