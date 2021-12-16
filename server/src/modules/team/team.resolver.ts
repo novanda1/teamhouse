@@ -72,4 +72,15 @@ export class TeamResolver {
     if (allowed) return this.teamService.remove(id);
     else throw Error('not allowed');
   }
+
+  @UseGuards(JwtGuard)
+  @Mutation(() => Team)
+  async addTeamMember(
+    @Args('teamid') teamid: string,
+    @Args('memberid') memberid: string,
+  ) {
+    const updatedTeam = this.teamService.addMember(teamid, memberid);
+    if (updatedTeam) return updatedTeam;
+    else throw Error('failed update');
+  }
 }

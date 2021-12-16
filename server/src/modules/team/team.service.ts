@@ -52,4 +52,12 @@ export class TeamService {
 
     return true;
   }
+
+  async addMember(teamid: string, memberid: string): Promise<Team> {
+    await this.teamModel
+      .findOneAndUpdate({ id: teamid }, { $push: { members: memberid } })
+      .exec();
+
+    return this.findOne(teamid);
+  }
 }

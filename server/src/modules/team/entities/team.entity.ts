@@ -20,6 +20,10 @@ export class Team {
   @Prop({ required: true })
   @Field(() => String)
   description: string;
+
+  @Prop()
+  @Field(() => [String])
+  members: string[];
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
