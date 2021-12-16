@@ -27,11 +27,13 @@ export class TeamResolver {
   @UseGuards(JwtGuard)
   @Query(() => TeamPagination, { name: 'teams' })
   findAll(
+    @Token() token: string,
     @Args('limit', { type: () => Int, nullable: true }) limit?: number,
     @Args('next', { nullable: true }) next?: string,
     @Args('previous', { nullable: true }) previous?: string,
   ) {
-    return this.teamService.findAll(limit, previous, next);
+    const userid = this.jwtService.getUserid(token);
+    return this.teamService.findAll(userid, limit, previous, next);
   }
 
   @UseGuards(JwtGuard)

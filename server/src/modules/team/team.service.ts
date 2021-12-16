@@ -15,9 +15,14 @@ export class TeamService {
     return createdTeam.save();
   }
 
-  async findAll(limit = 10, previous = '', next = ''): Promise<TeamPagination> {
+  async findAll(
+    userid: string,
+    limit = 10,
+    previous = '',
+    next = '',
+  ): Promise<TeamPagination> {
     return this.teamModel
-      .paginate({ limit, previous, next })
+      .paginate({ query: { userid }, limit, previous, next })
       .then((r: TeamPagination) => {
         const teams = [...r.results];
 
